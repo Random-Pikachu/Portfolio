@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+/* Tailwind v4 design tokens */
+@theme {
+  --color-background: #080808;
+  --color-foreground: #e0e0e0;
+  --color-secondary: #888888;
+  --color-border: #222222;
+  --color-accent: #3b82f6;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  /* Global defaults */
+  * {
+    @apply border-border;
+    /* cursor: none !important; */
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Typography */
+  h1 {
+    font-family: "Inter", sans-serif;
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    font-family: "Inter", sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-family: "Inter", sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  p {
+    font-family: "Inter", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.75;
+  }
+
+  .mono {
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Smooth scroll / enter animation helper */
+  .animate-fadeInUp {
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  /* Responsive typography */
+  @media (max-width: 1024px) {
+    h1 {
+      font-size: 4rem;
+    }
+    h2 {
+      font-size: 2.5rem;
+    }
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    h2 {
+      font-size: 1.875rem;
+    }
+    h3 {
+      font-size: 1.25rem;
+    }
+  }
+}

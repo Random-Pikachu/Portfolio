@@ -1,5 +1,5 @@
 import Navigation from '../components/Navigation'
-export default function Projects() {
+export default function NotFound() {
   return (
     <div>
  

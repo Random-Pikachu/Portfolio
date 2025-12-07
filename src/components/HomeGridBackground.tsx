@@ -32,7 +32,7 @@ export default function HomeGridBackground({ delay = 0 }: GridProps) {
             <div className="relative z-10 h-full w-full flex items-center justify-center">
                 
                 <div 
-                    className="w-[480px] h-[480px] rounded-full bg-none border border-white/10 z-10 opacity-0 animate-scale-in"
+                    className="w-[300px] md:w-[480px] h-[300px] md:h-[480px] rounded-full bg-none border border-white/10 z-10 opacity-0 animate-scale-in"
                     style={{ animationDelay: `${delay-100}ms` }}
                 ></div>
 
@@ -42,29 +42,29 @@ export default function HomeGridBackground({ delay = 0 }: GridProps) {
                 ></div>
                 
                 <div 
-                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[220px] opacity-0 animate-fade-in"
+                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[140px] md:-translate-x-[220px] opacity-0 animate-fade-in"
                     style={{ animationDelay: `${delay + 800}ms` }}
                 ></div>
                 <div 
-                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[440px] opacity-0 animate-fade-in"
+                    className="hidden md:block absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[440px] opacity-0 animate-fade-in"
                     style={{ animationDelay: `${delay + 900}ms` }}
                 ></div>
 
                 <div 
-                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[220px] opacity-0 animate-fade-in"
+                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[140px] md:translate-x-[220px] opacity-0 animate-fade-in"
                     style={{ animationDelay: `${delay + 800}ms` }}
                 ></div>
                 <div 
-                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[440px] opacity-0 animate-fade-in"
+                    className="hidden md:block absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[440px] opacity-0 animate-fade-in"
                     style={{ animationDelay: `${delay + 900}ms` }}
                 ></div>
 
                 <div 
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[180px] w-[380px] h-px bg-white/5 origin-center opacity-0 animate-line-grow"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[150px] md:-translate-y-[180px] w-[280px] md:w-[380px] h-px bg-white/5 origin-center opacity-0 animate-line-grow"
                     style={{ animationDelay: `${delay + 400}ms` }}
                 ></div>
                 <div 
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-[180px] w-[380px] h-px bg-white/5 origin-center opacity-0 animate-line-grow"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-[150px] md:translate-y-[180px] w-[280px] md:w-[380px] h-px bg-white/5 origin-center opacity-0 animate-line-grow"
                     style={{ animationDelay: `${delay + 400}ms` }}
                 ></div>
             </div>

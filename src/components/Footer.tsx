@@ -3,12 +3,12 @@ import { Mail, Linkedin, Github } from "lucide-react";
 const Footer = () => {
   return (
     <>
-      <footer className="realtive border-t border-[#222222] py-24 overflow-hidden">
+      <footer className="realtive border-t border-[#222222] py-12 md:py-24 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-8" style={{ zIndex: 1 }}>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <div>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12">
+            <div className="text-center md:text-left">
               <p className="mono text-[#888888] mb-6">[ Get in touch ]</p>
-              <div className="flex gap-6">
+              <div className="flex justify-center md:justify-start gap-6">
                 <a
                   href="mailto:sangampratapsingh21012006@gmail.com"
                   target="_blank"
@@ -41,7 +41,7 @@ const Footer = () => {
             </div>
 
 
-            <div className="text-right">
+            <div className="text-center md:text-right">
               <p className="mono text-[#444444] mb-1">© 2025 Random-Pikachu</p>
               <p className="mono text-[#333333] text-sm">
                 [ Pokedex Entry #025 ]

@@ -11,7 +11,7 @@ export default function Home() {
           <HomeGridBackground delay={1400}/>
         </div>
 
-        <div className='absolute inset-0 flex flex-col justify-center items-center z-10'>
+        <div className='absolute inset-0 flex flex-col justify-center items-center z-10 px-4'>
           <h1 className="text-[#C0C0C0] tracking-tight text-center leading-tight mb-1 flex overflow-hidden">
             {name.map((char, index) => (
               <span
@@ -25,16 +25,16 @@ export default function Home() {
           </h1>
 
           <div 
-            className='w-72 h-10 bg-none border border-white/20 rounded-3xl overflow-hidden mb-4 opacity-0 animate-fade-in'
+            className='w-64 md:w-72 h-8 md:h-10 bg-none border border-white/20 rounded-3xl overflow-hidden mb-4 opacity-0 animate-fade-in'
             style={{ animationDelay: '600ms' }}
           >
             <Marquee pauseOnHover={true} speed={50} className="h-full flex items-center">
-              <div className="mono text-[#888888] tracking-wider text-sm mr-10">
+              <div className="mono text-[#888888] tracking-wider text-xs md:text-sm mr-10">
                 Developer ✦ Designer ✦ Cultured
               </div>
             </Marquee>
           </div>
-          <p className="mono text-[#888888] tracking-wider flex overflow-hidden">
+          <p className="mono text-[#888888] tracking-wider text-xs md:text-base flex overflow-hidden text-center">
             {tagline.map((char, index) => (
               <span
                 key={index}

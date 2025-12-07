@@ -3,17 +3,17 @@ import RegularGridBackground from '../components/RegularGridBackground';
 
 export default function NotFound() {
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[#080808] flex flex-col items-center justify-center">
+    <div className="relative h-screen w-screen overflow-hidden bg-[#080808] flex flex-col items-center justify-center p-4">
         <div className='absolute inset-0 opacity-40'>
           <RegularGridBackground />
         </div>
 
-        <div className="relative z-10 flex flex-col items-center gap-8 max-w-xl px-6 w-full">
+        <div className="relative z-10 flex flex-col items-center gap-8 max-w-xl px-4 md:px-6 w-full">
            
             <div className="w-full bg-[#080808] border-2 border-white rounded-md p-1 shadow-[0_0_0_4px_#080808,0_0_0_6px_#ffffff]">
-                <div className="bg-[#080808] p-6 relative min-h-[140px] flex flex-col justify-between">
+                <div className="bg-[#080808] p-4 md:p-6 relative min-h-[140px] flex flex-col justify-between">
                     
-                    <p className="mono text-[#e0e0e0] text-lg md:text-xl leading-relaxed tracking-wide font-medium">
+                    <p className="mono text-[#e0e0e0] text-base md:text-xl leading-relaxed tracking-wide font-medium">
                         <span className="text-[#3b82f6] font-bold">GUARD:</span> Halt! <br/>
                         You can't pass here, kiddo! <br/>
                         I don't see <span className="text-[#F7D02C]">8 BADGES</span> on you.

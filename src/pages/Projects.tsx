@@ -66,21 +66,21 @@ export default function Projects() {
 
   return (
     <>
-      <section className="relative py-32 min-h-screen pt-32">
+      <section className="relative py-20 md:py-32 min-h-screen pt-32">
         <div className='absolute inset-0 -z-10'>
           <RegularGridBackground/>
         </div>
-        <div className="relative mx-auto" style={{width:"70%"}}>
+        <div className="relative mx-auto w-full md:w-[70%]">
           {/* borders */}
-          <div className="absolute left-0 top-0 bottom-0 w-px bg-[#222222]" />
-          <div className="absolute right-0 top-0 bottom-0 w-px bg-[#222222]" />
+          <div className="absolute left-0 top-0 bottom-0 w-px bg-[#222222] hidden md:block" />
+          <div className="absolute right-0 top-0 bottom-0 w-px bg-[#222222] hidden md:block" />
 
-          <div className="mb-2 px-16">
+          <div className="mb-2 px-6 md:px-16">
           <h2 className="text-[#E0E0E0] mb-4">Projects</h2>
 
           </div>
 
-          <div className="px-16 space-y-16">
+          <div className="px-6 md:px-16 space-y-16">
             {
               projects.map((project, index) => (
                 <ProjectCard 

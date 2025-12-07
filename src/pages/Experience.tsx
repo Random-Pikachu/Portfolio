@@ -1,8 +1,71 @@
-import Navigation from '../components/Navigation'
+import RegularGridBackground from "../components/RegularGridBackground";
 export default function Experience() {
+  const experiences = [
+    {
+      period: "Jul 2025 — Sep 2025",
+      company: "OpenSphere",
+      role: "Software Development Intern",
+      description:
+        "Focused on enhancing platform collaboration by building a real-time commenting system that allows users to discuss and resolve feedback directly inside the text editor, eliminating the need for external text editor. I also redesigned the drafting workflow to remove redundant manual steps and developed a comprehensive activity dashboard to improve operational visibility for admins.",
+      stack: ["TypeScript", "AWS SES", "MongoDB", "Node.js", "Websockets", "React.js"],
+      url: "https://opensphere.ai/"
+    },
+    
+  ];
+
   return (
-    <div>
- 
-    </div>
-  )
+    <>
+      <section className="relative py-32 min-h-screen pt-32">
+      <div className='absolute inset-0 -z-10'>
+          <RegularGridBackground/>
+        </div>
+        <div
+          className="relative mx-auto"
+          style={{ width: "70%" }}
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-px bg-[#222222]" />
+          <div className="absolute right-0 top-0 bottom-0 w-px bg-[#222222]" />
+          <div className="mb-20 px-16">
+          <h2 className="text-[#E0E0E0] mb-4">Experience</h2>
+          </div>
+          <div className="space-y-16 px-16">
+            {experiences.map((exp, index) => (
+              <div
+                key={index}
+                className="relative border-l border-[#222222] pl-8 pb-16"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="absolute left-0 top-0 w-2 h-2 -translate-x-[4.5px] bg-[#F7D02C] rounded-full" />
+
+                <p className="mono text-[#888888] mb-2">
+                  {exp.period}
+                </p>
+
+                <h3 className="text-[#E0E0E0] mb-1">
+                  {exp.role}
+                </h3>
+                <a className="text-[#888888] mb-4" href={exp.url} target="_blank">
+                  {exp.company}
+                </a>
+
+                <p className="text-[#888888] mb-6 leading-relaxed">
+                  {exp.description}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {exp.stack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="mono px-3 py-1 bg-[#0A0A0A] border border-[#222222] text-[#888888]"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }

@@ -8,7 +8,8 @@ import Projects from './pages/Projects.tsx'
 import NotFound from './pages/NotFound.tsx'
 import RootLayout from './components/RootLayout.tsx';
 import Footer from './components/Footer.tsx'
-
+import ReactLenis from 'lenis/react'
+import CustomCursor from './components/CustomCursor';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -26,7 +27,22 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-    <Footer />
+    <ReactLenis
+      root
+        options={{
+          lerp: 0.1,
+          duration: 1.2,
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+        }}
+    >
+      <div className="hidden md:block">
+        <CustomCursor />
+      </div>
+      <RouterProvider router={router} />
+      <Footer />
+    </ReactLenis>
   </StrictMode>,
 )

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 export default function Navigation() {
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
+    
     return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-md border-b border-[#222222] text-[12px]">
       <div className="max-w-7xl mx-auto px-8 py-4 flex justify-center items-center">
@@ -39,9 +40,17 @@ export default function Navigation() {
           >
             [ experience ]
           </Link>
+          
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+          >
+            [ resume.pdf ]
+          </a>
+
         </div>
-        
-        
       </div>
     </nav>
     )

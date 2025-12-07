@@ -1,4 +1,8 @@
-export default function HomeGridBackground() {
+interface GridProps {
+    delay?: number;
+}
+
+export default function HomeGridBackground({ delay = 0 }: GridProps) {
     return (
         <div className="relative w-screen h-screen overflow-hidden">
             
@@ -20,30 +24,49 @@ export default function HomeGridBackground() {
                             />
                         </pattern>
                     </defs>
-                    {/* Ensure the rect is transparent so it doesn't cover the gradient */}
+                    
                     <rect width="100%" height="100%" fill="url(#grid)" />
                 </svg>
             </div>
 
             <div className="relative z-10 h-full w-full flex items-center justify-center">
                 
-                {/* Circle*/}
-                <div className="w-[480px] h-[480px] rounded-full bg-none border border-white/10 z-10"></div>
+                <div 
+                    className="w-[480px] h-[480px] rounded-full bg-none border border-white/10 z-10 opacity-0 animate-scale-in"
+                    style={{ animationDelay: `${delay-100}ms` }}
+                ></div>
 
-                {/* Vertical Line */}
-                <div className="w-px h-full border-r border-white/10 absolute top-0 left-1/2 -translate-x-1/2"></div>
+                <div 
+                    className="w-px h-full border-r border-white/10 absolute top-0 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${delay + 600}ms` }}
+                ></div>
                 
-                {/* Left Lines */}
-                <div className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[220px]"></div>
-                <div className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[440px]"></div>
+                <div 
+                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[220px] opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${delay + 800}ms` }}
+                ></div>
+                <div 
+                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 -translate-x-[440px] opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${delay + 900}ms` }}
+                ></div>
 
-                {/* Right Lines */}
-                <div className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[220px]"></div>
-                <div className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[440px]"></div>
+                <div 
+                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[220px] opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${delay + 800}ms` }}
+                ></div>
+                <div 
+                    className="absolute top-0 h-full w-px bg-white/5 left-1/2 translate-x-[440px] opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${delay + 900}ms` }}
+                ></div>
 
-                {/* Horizontal Lines */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[180px] w-[380px] h-px bg-white/5"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-[180px] w-[380px] h-px bg-white/5"></div>
+                <div 
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[180px] w-[380px] h-px bg-white/5 origin-center opacity-0 animate-line-grow"
+                    style={{ animationDelay: `${delay + 400}ms` }}
+                ></div>
+                <div 
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-[180px] w-[380px] h-px bg-white/5 origin-center opacity-0 animate-line-grow"
+                    style={{ animationDelay: `${delay + 400}ms` }}
+                ></div>
             </div>
         </div>
     )

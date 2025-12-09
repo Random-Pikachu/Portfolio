@@ -70,6 +70,13 @@ export default function Navigation() {
             >
               [ resume.pdf ]
             </a>
+            <a
+              href="https://www.cal.com/random-pikachu/15min"
+              target="_blank"
+              className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+            >
+              [ schedule_call ]
+            </a>
           </div>
 
           <button 
@@ -137,6 +144,13 @@ export default function Navigation() {
           className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
         >
           [ resume.pdf ]
+        </a>
+        <a
+          href="https://www.cal.com/random-pikachu/15min"
+          target="_blank"
+          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+        >
+          [ schedule_call ]
         </a>
       </div>
     </>

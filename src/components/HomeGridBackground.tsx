@@ -4,7 +4,7 @@ interface GridProps {
 
 export default function HomeGridBackground({ delay = 0 }: GridProps) {
     return (
-        <div className="relative w-screen h-screen overflow-hidden">
+        <div className="relative w-full h-screen overflow-hidden">
             
             <div className="absolute inset-0 pointer-events-none">
                 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

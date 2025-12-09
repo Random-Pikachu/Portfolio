@@ -10,7 +10,16 @@ export default function Experience() {
       stack: ["TypeScript", "AWS SES", "MongoDB", "Node.js", "Websockets", "React.js"],
       url: "https://opensphere.ai/"
     },
+    {
+      period: "Nov 2024 - Feb 2025",
+      company: "Divyajeevan NGO",
+      role: "Graphic Designer",
+      description:
+      "Designed the organization's 2024 Annual Magazine, crafting the full layout & visual storytelling. Additionally, conceptualized and delivered three strategic project pitch decks to aid in fundraising.",
     
+      stack: ["Adobe Photoshop",  "PowerPoint", "Canva"],
+      url: ""
+    },
   ];
 
   return (
@@ -43,9 +52,14 @@ export default function Experience() {
                 <h3 className="text-[#E0E0E0] mb-1">
                   {exp.role}
                 </h3>
-                <a className="text-[#888888] mb-4 block hover:text-[#F7D02C] transition-colors" href={exp.url} target="_blank">
+                {exp.url ?  
+                  <a className="text-[#888888] mb-4 block hover:text-[#F7D02C] transition-colors" href={exp.url} target="_blank">
+                  {exp.company}
+                </a>: <a className="text-[#888888] mb-4 block hover:text-[#F7D02C] transition-colors" >
                   {exp.company}
                 </a>
+                }
+                
 
                 <p className="text-[#888888] mb-6 leading-relaxed">
                   {exp.description}

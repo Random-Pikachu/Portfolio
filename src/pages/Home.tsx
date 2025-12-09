@@ -6,7 +6,7 @@ export default function Home() {
   const tagline = "Currently looking for work <3.".split("");
   return (
     <>
-      <div className = 'relative h-screen w-screen overflow-hidden'>
+      <div className = 'relative h-screen w-full overflow-hidden'>
         <div className='absolute inset-0 -z-10'>
           <HomeGridBackground delay={1400}/>
         </div>

@@ -3,7 +3,7 @@ import { Mail, Linkedin, Github } from "lucide-react";
 const Footer = () => {
   return (
     <>
-      <footer className="realtive border-t border-[#222222] py-12 md:py-24 overflow-hidden">
+      <footer className="relative border-t border-[#222222] py-12 md:py-24 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-8" style={{ zIndex: 1 }}>
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12">
             <div className="text-center md:text-left">

@@ -73,7 +73,7 @@ export default function Navigation() {
             <a
               href="https://www.cal.com/random-pikachu/15min"
               target="_blank"
-              className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
             >
               [ schedule_call ]
             </a>

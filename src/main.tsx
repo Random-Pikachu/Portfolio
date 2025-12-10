@@ -10,6 +10,7 @@ import RootLayout from './components/RootLayout.tsx';
 import Footer from './components/Footer.tsx'
 import ReactLenis from 'lenis/react'
 import CustomCursor from './components/CustomCursor';
+import { Analytics } from "@vercel/analytics/react"
 const router = createBrowserRouter([
   {
     path: '/',
@@ -43,6 +44,7 @@ createRoot(document.getElementById('root')!).render(
       </div>
       <RouterProvider router={router} />
       <Footer />
+      <Analytics />
     </ReactLenis>
   </StrictMode>,
 )

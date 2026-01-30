@@ -17,7 +17,8 @@ export default function Projects() {
       ],
       githubUrl: "https://github.com/Random-Pikachu/Astra",
       liveUrl: "",
-      img_url: "/assets/astra_.png"
+      img_url: "/assets/astra_.png",
+      youtubeUrl: "https://youtu.be/XFiMSWMZ4KU"
     },
     {
       index: "02",
@@ -32,7 +33,8 @@ export default function Projects() {
       ],
       githubUrl: "https://github.com/Random-Pikachu/SecurePDF",
       liveUrl: "https://secure-pdf-five.vercel.app/",
-      img_url: "/assets/securePDF_.png"
+      img_url: "/assets/securePDF_.png",
+      youtubeUrl: ""
     },
     {
       index: "03",
@@ -48,7 +50,8 @@ export default function Projects() {
       ],
       githubUrl: "https://github.com/Random-Pikachu/Code-Sync",
       liveUrl: "https://codesync-v8bl.onrender.com/",
-      img_url: "/assets/codeSync.png"
+      img_url: "/assets/codeSync.png",
+      youtubeUrl: ""
     },
     {
       index: "04",
@@ -60,7 +63,8 @@ export default function Projects() {
       ],
       githubUrl: "https://github.com/Random-Pikachu/Sorting-Visualizer-v2",
       liveUrl: "https://random-pikachu.github.io/Sorting-Visualizer-v2/",
-      img_url: "/assets/sortingVisualizer.png"
+      img_url: "/assets/sortingVisualizer.png",
+      youtubeUrl: ""
     },
   ];
 
@@ -93,6 +97,7 @@ export default function Projects() {
                   githubUrl = {project.githubUrl}
                   liveUrl = {project.liveUrl}
                   img_url = {project.img_url}
+                  youtubeUrl = {project.youtubeUrl}
                 />
               ))
             }

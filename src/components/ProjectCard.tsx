@@ -9,6 +9,7 @@ interface ProjectCardProps {
     githubUrl: string;
     liveUrl: string;
     img_url: string;
+    youtubeUrl: string;
   }
 
 const ProjectCard = ({
@@ -19,7 +20,8 @@ const ProjectCard = ({
         imageLeft,
         githubUrl,
         liveUrl,
-        img_url
+        img_url,
+        youtubeUrl
     }: ProjectCardProps) => {
         const [isVisible, setIsVisible] = useState(false);
         const cardRef = useRef<HTMLDivElement>(null);
@@ -94,6 +96,18 @@ const ProjectCard = ({
                                     >
                                         <ExternalLink className="w-4 h-4" />
                                         [ Live Demo ]
+                                    </a>
+                                )}
+                                
+                                {youtubeUrl !== "" && (
+                                    <a 
+                                        href={youtubeUrl}
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="mono px-4 py-2 border border-[#333333] text-[#888888] text-sm hover:border-[#F7D02C] hover:text-[#F7D02C] transition-all duration-300 flex items-center gap-2"
+                                    >
+                                        <ExternalLink className="w-4 h-4" />
+                                        [ Video Demo ]
                                     </a>
                                 )}
                             </div>

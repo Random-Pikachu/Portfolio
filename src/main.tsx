@@ -9,7 +9,8 @@ import NotFound from './pages/NotFound.tsx'
 import RootLayout from './components/RootLayout.tsx';
 import Footer from './components/Footer.tsx'
 import ReactLenis from 'lenis/react'
-import CustomCursor from './components/CustomCursor';
+// import CustomCursor from './components/CustomCursor';
+
 import { Analytics } from "@vercel/analytics/react"
 const router = createBrowserRouter([
   {
@@ -30,18 +31,19 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ReactLenis
       root
-        options={{
-          lerp: 0.1,
-          duration: 1.2,
-          orientation: 'vertical',
-          gestureOrientation: 'vertical',
-          smoothWheel: true,
-          wheelMultiplier: 1,
-        }}
+      options={{
+        lerp: 0.1,
+        duration: 1.2,
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+      }}
     >
-      <div className="hidden md:block">
+      {/* <div className="hidden md:block">
         <CustomCursor />
-      </div>
+      </div> */}
+
       <RouterProvider router={router} />
       <Footer />
       <Analytics />

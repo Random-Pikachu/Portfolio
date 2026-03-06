@@ -1,73 +1,117 @@
-# React + TypeScript + Vite
+# Personal Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal, dark-themed developer portfolio built with **React**, **TypeScript**, and **Tailwind CSS v4**. Deployed on **Vercel**.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✦ Live
 
-## React Compiler
+🔗 [random-pikachu-portfolio.vercel.app](https://random-pikachu-portfolio.vercel.app)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✦ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Layer       | Technology                                       |
+| ----------- | ------------------------------------------------ |
+| Framework   | [React 19](https://react.dev/) + TypeScript      |
+| Styling     | [Tailwind CSS v4](https://tailwindcss.com/)      |
+| Routing     | [React Router v7](https://reactrouter.com/)      |
+| Scrolling   | [Lenis](https://github.com/darkroomengineering/lenis) (smooth scroll) |
+| Icons       | [Lucide React](https://lucide.dev/)              |
+| Animations  | CSS keyframe animations + marquee via [react-fast-marquee](https://github.com/justin-chu/react-fast-marquee) |
+| Analytics   | [Umami](https://umami.is/) |
+| Deployment  | [Vercel](https://vercel.com/)                    |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ✦ Pages
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Route          | Description                                                                 |
+| -------------- | --------------------------------------------------------------------------- |
+| `/`            | **Home** — Animated name reveal with scrolling marquee tagline              |
+| `/experience`  | **Experience** — Timeline of work experience with resume-style bullet points |
+| `/projects`    | **Projects** — Showcase of featured projects with tech stacks and links      |
+| `/*`           | **404** — Custom not-found page                                             |
+
+---
+
+## ✦ Project Structure
+
+```
+Portfolio/
+├── public/
+│   ├── assets/            # Project screenshots
+│   ├── logo.svg           # Favicon / logo
+│   └── resume.pdf         # Downloadable resume
+├── src/
+│   ├── components/
+│   │   ├── CustomCursor.tsx
+│   │   ├── Footer.tsx
+│   │   ├── HomeGridBackground.tsx
+│   │   ├── Navigation.tsx
+│   │   ├── ProjectCard.tsx
+│   │   ├── RegularGridBackground.tsx
+│   │   └── RootLayout.tsx
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   ├── Experience.tsx
+│   │   ├── Projects.tsx
+│   │   └── NotFound.tsx
+│   ├── index.css          
+│   └── main.tsx           
+├── index.html
+├── vercel.json            
+├── vite.config.ts
+├── tsconfig.json
+└── package.json
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ✦ Featured Projects
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| #  | Project              | Description                                                       |
+| -- | -------------------- | ----------------------------------------------------------------- |
+| 01 | **Astra**            | Project packages security scanner with AI-powered vulnerability fix suggestions |
+| 02 | **SecurePDF**        | Offline PDF DRM tool with hardware binding and time-limited access |
+| 03 | **Code-Sync**        | Real-time collaborative code editor       |
+| 04 | **Sorting Visualizer** | Interactive visualization of sorting algorithms                  |
+
+---
+
+## ✦ Getting Started
+
+### Prerequisites
+
+- **Node.js** ≥ 18
+- **npm** ≥ 9
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/Random-Pikachu/Portfolio.git
+cd Portfolio
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
 ```
+
+The app will be available at `http://localhost:5173`.
+
+---
+
+## ✦ Connect
+
+- 📧 [sangampratapsingh21012006@gmail.com](mailto:sangampratapsingh21012006@gmail.com)
+- 💼 [LinkedIn](https://linkedin.com/in/sangam21)
+- 🐙 [GitHub](https://github.com/Random-Pikachu)
+
+---
+
+<p align="center">
+  <sub>© 2025 Random-Pikachu · [ Pokedex Entry #025 ]</sub>
+</p>

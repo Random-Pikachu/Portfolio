@@ -55,9 +55,7 @@ const ProjectCard = ({
     // Image parallax effect
     if (imageRef.current) {
       gsap.to(imageRef.current, {
-        y: (i) => {
-          return ScrollTrigger.getScrollY() * 0.3;
-        },
+        y: '20px',
         ease: 'none',
         scrollTrigger: {
           trigger: cardRef.current,

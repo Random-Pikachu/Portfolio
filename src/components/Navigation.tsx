@@ -26,72 +26,65 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 border-b border-[#222222]
-        ${isOpen ? 'bg-[#080808]' : 'bg-[#080808]/80 backdrop-blur-md'}`}
+        className={`fixed top-0 left-0 right-0 z-50 border-b border-border transition-all duration-300
+        ${isOpen ? 'bg-background' : 'bg-background/95 backdrop-blur-sm'}`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-8 flex justify-end md:justify-center items-center h-16 md:h-[73px]">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 flex justify-between md:justify-center items-center h-16">
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-8">
+          <div className="hidden md:flex gap-12">
             <a
               href="#hero"
               onClick={(e) => handleNavClick(e, 'hero')}
-              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+              className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
             >
-              [ home ]
+              home
             </a>
             <a
               href="#projects"
               onClick={(e) => handleNavClick(e, 'projects')}
-              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+              className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
             >
-              [ projects ]
+              projects
             </a>
             <a
               href="#experience"
               onClick={(e) => handleNavClick(e, 'experience')}
-              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+              className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
             >
-              [ experience ]
+              experience
             </a>
             <a
               href="#about"
               onClick={(e) => handleNavClick(e, 'about')}
-              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+              className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
             >
-              [ about ]
+              about
             </a>
             
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+              className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
             >
-              [ resume.pdf ]
-            </a>
-            <a
-              href="https://www.cal.com/random-pikachu/15min"
-              target="_blank"
-              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
-            >
-              [ schedule_call ]
+              resume
             </a>
           </div>
 
           <button 
-            className="md:hidden text-[#888888] hover:text-[#F7D02C] transition-colors p-2"
+            className="md:hidden text-secondary hover:text-foreground transition-colors p-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
-            <span className="relative block w-6 h-6">
+            <span className="relative block w-5 h-5">
               <Menu
-                size={24}
+                size={20}
                 className={`absolute inset-0 transition-all duration-300 ease-out
                   ${isOpen ? 'opacity-0 scale-75 rotate-90' : 'opacity-100 scale-100 rotate-0'}`}
               />
               <X
-                size={24}
+                size={20}
                 className={`absolute inset-0 transition-all duration-300 ease-out
                   ${isOpen ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-75 -rotate-90'}`}
               />
@@ -102,53 +95,46 @@ export default function Navigation() {
 
       <div
         className={`
-          fixed inset-0 bg-[#080808] z-40 flex flex-col items-center justify-center gap-8 md:hidden
-          transition-opacity duration-300
+          fixed inset-0 bg-background z-40 flex flex-col items-center justify-center gap-6 md:hidden
+          transition-opacity duration-300 pt-16
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
         `}
       >
         <a
           href="#hero"
           onClick={(e) => handleNavClick(e, 'hero')}
-          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+          className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
         >
-          [ home ]
+          home
         </a>
         <a
           href="#projects"
           onClick={(e) => handleNavClick(e, 'projects')}
-          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+          className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
         >
-          [ projects ]
+          projects
         </a>
         <a
           href="#experience"
           onClick={(e) => handleNavClick(e, 'experience')}
-          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+          className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
         >
-          [ experience ]
+          experience
         </a>
         <a
           href="#about"
           onClick={(e) => handleNavClick(e, 'about')}
-          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+          className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
         >
-          [ about ]
+          about
         </a>
         <a
           href="/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+          className="text-secondary hover:text-foreground transition-colors duration-200 text-sm font-500"
         >
-          [ resume.pdf ]
-        </a>
-        <a
-          href="https://www.cal.com/random-pikachu/15min"
-          target="_blank"
-          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
-        >
-          [ schedule_call ]
+          resume
         </a>
       </div>
     </>

@@ -2,10 +2,18 @@ import Marquee from "react-fast-marquee";
 import HomeGridBackground from '../components/HomeGridBackground'
 import RegularGridBackground from "../components/RegularGridBackground";
 import ProjectCard from "../components/ProjectCard";
+import { useState, useEffect, useRef } from "react";
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   const name = "/sangam".split("");
   const tagline = "Currently looking for work <3.".split("");
+  const [activeFilter, setActiveFilter] = useState('all');
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  const projectsTitleRef = useRef<HTMLDivElement>(null);
 
   const projects = [
     {
@@ -24,7 +32,9 @@ export default function Home() {
       githubUrl: "https://github.com/Random-Pikachu/Astra",
       liveUrl: "",
       img_url: "/assets/astra_.png",
-      youtubeUrl: "https://youtu.be/XFiMSWMZ4KU"
+      youtubeUrl: "https://youtu.be/XFiMSWMZ4KU",
+      featured: true,
+      category: "featured"
     },
     {
       index: "02",
@@ -40,7 +50,9 @@ export default function Home() {
       githubUrl: "https://github.com/Random-Pikachu/SecurePDF",
       liveUrl: "https://secure-pdf-five.vercel.app/",
       img_url: "/assets/securePDF_.png",
-      youtubeUrl: ""
+      youtubeUrl: "",
+      featured: false,
+      category: "all"
     },
     {
       index: "03",
@@ -57,7 +69,9 @@ export default function Home() {
       githubUrl: "https://github.com/Random-Pikachu/Code-Sync",
       liveUrl: "https://codesync-v8bl.onrender.com/",
       img_url: "/assets/codeSync.png",
-      youtubeUrl: ""
+      youtubeUrl: "",
+      featured: true,
+      category: "featured"
     },
     {
       index: "04",
@@ -70,7 +84,9 @@ export default function Home() {
       githubUrl: "https://github.com/Random-Pikachu/Sorting-Visualizer-v2",
       liveUrl: "https://random-pikachu.github.io/Sorting-Visualizer-v2/",
       img_url: "/assets/sortingVisualizer.png",
-      youtubeUrl: ""
+      youtubeUrl: "",
+      featured: false,
+      category: "all"
     },
   ];
 
@@ -118,6 +134,31 @@ export default function Home() {
     },
   ];
 
+  const filteredProjects = activeFilter === 'all' 
+    ? projects 
+    : projects.filter(p => p.featured);
+
+  useEffect(() => {
+    // Animate projects title on scroll
+    if (projectsTitleRef.current) {
+      gsap.fromTo(
+        projectsTitleRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: projectsTitleRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    }
+  }, []);
+
   return (
     <>
       {/* Hero Section */}
@@ -164,7 +205,7 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="relative py-20 md:py-32 min-h-screen pt-32">
+      <section id="projects" className="relative py-20 md:py-32 min-h-screen pt-32" ref={projectsSectionRef}>
         <div className='absolute inset-0 -z-10'>
           <RegularGridBackground/>
         </div>
@@ -173,27 +214,53 @@ export default function Home() {
           <div className="absolute left-0 top-0 bottom-0 w-px bg-[#222222] hidden md:block" />
           <div className="absolute right-0 top-0 bottom-0 w-px bg-[#222222] hidden md:block" />
 
-          <div className="mb-2 px-6 md:px-16">
-            <h2 className="text-[#E0E0E0] mb-4">Projects</h2>
+          <div className="mb-12 md:mb-20 px-6 md:px-16" ref={projectsTitleRef}>
+            <h2 className="text-[#E0E0E0] mb-8">Projects</h2>
+            
+            {/* Filter Tabs */}
+            <div className="flex gap-4 md:gap-6 flex-wrap">
+              <button
+                onClick={() => setActiveFilter('all')}
+                className={`mono px-4 py-2 border transition-all duration-300 text-sm ${
+                  activeFilter === 'all'
+                    ? 'border-[#F7D02C] text-[#F7D02C] bg-[#F7D02C]/5'
+                    : 'border-[#333333] text-[#888888] hover:border-[#F7D02C] hover:text-[#F7D02C]'
+                }`}
+              >
+                [ all ]
+              </button>
+              <button
+                onClick={() => setActiveFilter('featured')}
+                className={`mono px-4 py-2 border transition-all duration-300 text-sm ${
+                  activeFilter === 'featured'
+                    ? 'border-[#F7D02C] text-[#F7D02C] bg-[#F7D02C]/5'
+                    : 'border-[#333333] text-[#888888] hover:border-[#F7D02C] hover:text-[#F7D02C]'
+                }`}
+              >
+                [ featured ]
+              </button>
+            </div>
           </div>
 
           <div className="px-6 md:px-16 space-y-16">
-            {
-              projects.map((project, index) => (
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((project) => (
                 <ProjectCard 
-                  key = {project.index}
-                  index = {project.index}
-                  title = {project.title}
-                  description = {project.description}
-                  techStack = {project.techStack}
-                  imageLeft = {index%2 === 0 }
-                  githubUrl = {project.githubUrl}
-                  liveUrl = {project.liveUrl}
-                  img_url = {project.img_url}
-                  youtubeUrl = {project.youtubeUrl}
+                  key={project.index}
+                  index={project.index}
+                  title={project.title}
+                  description={project.description}
+                  techStack={project.techStack}
+                  imageLeft={parseInt(project.index) % 2 === 1}
+                  githubUrl={project.githubUrl}
+                  liveUrl={project.liveUrl}
+                  img_url={project.img_url}
+                  youtubeUrl={project.youtubeUrl}
                 />
               ))
-            }
+            ) : (
+              <p className="text-[#888888] text-center py-20">No projects found</p>
+            )}
           </div>
         </div>
       </section>
@@ -213,7 +280,7 @@ export default function Home() {
             {experiences.map((exp, index) => (
               <div
                 key={index}
-                className="relative border-l border-[#222222] pl-6 md:pl-8 pb-16"
+                className="relative border-l border-[#222222] pl-6 md:pl-8 pb-16 opacity-0 animate-fade-in-up"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="absolute left-0 top-0 w-2 h-2 -translate-x-[4.5px] bg-[#F7D02C] rounded-full" />
@@ -282,19 +349,19 @@ export default function Home() {
 
           <div className="px-6 md:px-16 space-y-8">
             <div className="space-y-6">
-              <p className="text-[#888888] leading-relaxed text-base">
+              <p className="text-[#888888] leading-relaxed text-base opacity-0 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                 I&apos;m Sangam, an IT student at IIIT Gwalior with a passion for building products that matter. I like to write code that solves real problems—whether that&apos;s security vulnerabilities in your dependencies, collaborative coding experiences, or tools that help engineers track their work.
               </p>
 
-              <p className="text-[#888888] leading-relaxed text-base">
+              <p className="text-[#888888] leading-relaxed text-base opacity-0 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                 Currently, I&apos;m working on <strong>devtrackr</strong>, an activity aggregator for software engineers. It tracks your progress across LeetCode, Codeforces, and GitHub, then sends you a nightly email digest showing exactly how much work you did that day. It&apos;s built for engineers who want real visibility into their growth without the noise.
               </p>
 
-              <p className="text-[#888888] leading-relaxed text-base">
+              <p className="text-[#888888] leading-relaxed text-base opacity-0 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                 Beyond code, I contribute to open source (especially KDE), design when the mood strikes, and I&apos;m an anime fan. I believe good design and clean code aren&apos;t luxuries—they&apos;re essentials. When I&apos;m not building or learning, you&apos;ll probably find me watching anime or experimenting with new ideas.
               </p>
 
-              <p className="text-[#888888] leading-relaxed text-base">
+              <p className="text-[#888888] leading-relaxed text-base opacity-0 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                 I&apos;m always open to interesting projects and conversations. If you want to talk about tech, design, anime, or just collaborate on something cool—let&apos;s connect.
               </p>
             </div>

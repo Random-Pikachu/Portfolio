@@ -1,16 +1,18 @@
-import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function Navigation() {
-  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
-
-  useEffect(() => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
     setIsOpen(false);
-  }, [location]);
+    
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -31,36 +33,34 @@ export default function Navigation() {
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
-            <Link
-              to="/"
-              className={`mono transition-colors duration-300 ${
-                isActive("/")
-                  ? "text-[#F7D02C]"
-                  : "text-[#888888] hover:text-[#F7D02C]"
-              }`}
+            <a
+              href="#hero"
+              onClick={(e) => handleNavClick(e, 'hero')}
+              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
             >
               [ home ]
-            </Link>
-            <Link
-              to="/projects"
-              className={`mono transition-colors duration-300 ${
-                isActive("/projects")
-                  ? "text-[#F7D02C]"
-                  : "text-[#888888] hover:text-[#F7D02C]"
-              }`}
+            </a>
+            <a
+              href="#projects"
+              onClick={(e) => handleNavClick(e, 'projects')}
+              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
             >
               [ projects ]
-            </Link>
-            <Link
-              to="/experience"
-              className={`mono transition-colors duration-300 ${
-                isActive("/experience")
-                  ? "text-[#F7D02C]"
-                  : "text-[#888888] hover:text-[#F7D02C]"
-              }`}
+            </a>
+            <a
+              href="#experience"
+              onClick={(e) => handleNavClick(e, 'experience')}
+              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
             >
               [ experience ]
-            </Link>
+            </a>
+            <a
+              href="#about"
+              onClick={(e) => handleNavClick(e, 'about')}
+              className="mono text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+            >
+              [ about ]
+            </a>
             
             <a
               href="/resume.pdf"
@@ -107,36 +107,34 @@ export default function Navigation() {
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
         `}
       >
-        <Link
-          to="/"
-          className={`mono text-lg transition-colors duration-300 ${
-            isActive("/")
-              ? "text-[#F7D02C]"
-              : "text-[#888888] hover:text-[#F7D02C]"
-          }`}
+        <a
+          href="#hero"
+          onClick={(e) => handleNavClick(e, 'hero')}
+          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
         >
           [ home ]
-        </Link>
-        <Link
-          to="/projects"
-          className={`mono text-lg transition-colors duration-300 ${
-            isActive("/projects")
-              ? "text-[#F7D02C]"
-              : "text-[#888888] hover:text-[#F7D02C]"
-          }`}
+        </a>
+        <a
+          href="#projects"
+          onClick={(e) => handleNavClick(e, 'projects')}
+          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
         >
           [ projects ]
-        </Link>
-        <Link
-          to="/experience"
-          className={`mono text-lg transition-colors duration-300 ${
-            isActive("/experience")
-              ? "text-[#F7D02C]"
-              : "text-[#888888] hover:text-[#F7D02C]"
-          }`}
+        </a>
+        <a
+          href="#experience"
+          onClick={(e) => handleNavClick(e, 'experience')}
+          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
         >
           [ experience ]
-        </Link>
+        </a>
+        <a
+          href="#about"
+          onClick={(e) => handleNavClick(e, 'about')}
+          className="mono text-lg text-[#888888] hover:text-[#F7D02C] transition-colors duration-300"
+        >
+          [ about ]
+        </a>
         <a
           href="/resume.pdf"
           target="_blank"

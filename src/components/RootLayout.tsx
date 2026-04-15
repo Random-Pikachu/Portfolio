@@ -1,11 +1,11 @@
 import Navigation from '../components/Navigation';
-import { Outlet } from 'react-router-dom';
+import { ReactNode } from 'react';
 
-export default function RootLayout() {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Navigation />
-      <Outlet />
+      {children}
     </>
   );
 }

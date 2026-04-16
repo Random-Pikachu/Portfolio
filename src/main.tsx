@@ -5,7 +5,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home.tsx'
 import Experience from './pages/Experience.tsx'
 import Projects from './pages/Projects.tsx'
-import NotFound from './pages/NotFound.tsx'
+// import NotFound from './pages/NotFound.tsx'
 import RootLayout from './components/RootLayout.tsx';
 import Footer from './components/Footer.tsx'
 import ReactLenis from 'lenis/react'
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       { path: 'home', element: <Navigate to="/" replace /> },
       { path: 'experience', element: <Experience /> },
       { path: 'projects', element: <Projects /> },
-      { path: '*', element: <NotFound /> },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
 ]);

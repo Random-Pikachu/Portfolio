@@ -99,6 +99,10 @@
     --border-inner: #d0d0d0;
     --border-badge: #c0c0c0;
     --accent: #d97706;
+    --heatmap-1: #9be9a8;
+    --heatmap-2: #40c463;
+    --heatmap-3: #30a14e;
+    --heatmap-4: #216e39;
     /* Darker yellow for visibility */
     scroll-behavior: smooth;
   }
@@ -118,6 +122,10 @@
     --border-inner: #1e1e1e;
     --border-badge: #1a1a1a;
     --accent: #f7d02c;
+    --heatmap-1: #0e4429;
+    --heatmap-2: #006d32;
+    --heatmap-3: #26a641;
+    --heatmap-4: #39d353;
   }
 
   body {

@@ -230,7 +230,7 @@ export default function SinglePage() {
             transition={{ delay: 1.4, duration: 0.6, ease }}
             className="mono text-text-faint text-sm tracking-[0.18em] mb-3"
           >
-            developer &nbsp;✦&nbsp; open source &nbsp;✦&nbsp; systems
+            developer &nbsp;✦&nbsp; open source &nbsp;✦&nbsp; cultured
           </motion.p>
 
           <motion.p
@@ -261,27 +261,26 @@ export default function SinglePage() {
 
           <FadeUp delay={0.1}>
             <p className="text-text-light text-lg leading-[2] max-w-[560px]">
-              3rd year{' '}
+              I am Sangam, 3rd year{' '}
               <span className="text-text-muted font-medium">Integrated Dual Degree</span> student
               (B.Tech IT + MBA) at ABV-IIITM Gwalior.
               <br />
               <br />
-              <span className="text-text-muted font-medium">4× KDE contributor</span> with merged
-              PRs in plasma-workspace, Marknote, and Drawy. Also contributed to{' '}
-              <span className="text-text-muted font-medium">Cilium</span> and{' '}
-              <span className="text-text-muted font-medium">Palisadoes Foundation</span>. Into
-              systems, reverse engineering, competitive programming.
+              I like building interesting projects and occasionally contributing to
+              open source. Currently reading about{' '}
+              <span className="text-text-muted font-medium">reverse engineering in Go</span> and{' '}
+              <span className="text-text-muted font-medium">databases</span>. Besides this,
+              I sometimes solve LC/CF problems to keep the brain warm.
               <br />
               <br />
-              When I&apos;m not digging through kernel code or solving LeetCode at 2am, I&apos;m
-              building things that don&apos;t exist yet.
+              When I&apos;m not doing any of that, I&apos;m probably sleeping.
             </p>
           </FadeUp>
 
           <FadeUp delay={0.2} className="flex flex-wrap gap-2 mt-8">
             {[
-              'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python',
-              'React', 'Node.js', 'PostgreSQL', 'Linux', 'WebSockets',
+              'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python', 'WebSockets',
+              'React', 'Node.js', 'PostgreSQL', 'Linux',
             ].map((s) => (
               <span
                 key={s}

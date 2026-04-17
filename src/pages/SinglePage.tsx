@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Mail, Linkedin, Github, ExternalLink } from 'lucide-react';
 import { useScramble } from '../hooks/useScramble';
+import ContributionHeatmap from '../components/ContributionHeatmap';
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -69,6 +70,11 @@ export default function SinglePage() {
           label: 'MR 172',
           text: 'Fix todo checkbox inheritance bug in KDE Marknote',
         },
+        {
+          href: 'https://invent.kde.org/graphics/drawy/-/merge_requests/430',
+          label: 'MR 430',
+          text: 'Added press and hold spacebar to switch to pan tool in KDE Drawy',
+        },
       ],
       stack: ['C++', 'Qt/QML', 'KConfig'],
     },
@@ -79,71 +85,71 @@ export default function SinglePage() {
       role: 'Software Development Intern',
       points: [
         { href: null, label: null, text: 'Built real-time commenting system integrated with in-house text editor' },
-        { href: null, label: null, text: 'Reworked drafting workflow — reduced manual intervention across the platform' },
-        { href: null, label: null, text: 'Streamlined task creation pipelines, accelerating client onboarding' },
-        { href: null, label: null, text: 'Built user activity tracking dashboard with granular action logs' },
+        { href: null, label: null, text: 'Reworked drafting workflow, reduced manual intervention across the platform' },
+        { href: null, label: null, text: 'Worked on task creation pipelines, accelerating client onboarding' },
+        { href: null, label: null, text: 'Built user activity tracking dashboard for action logs' },
       ],
       stack: ['TypeScript', 'Node.js', 'WebSockets', 'React', 'MongoDB', 'AWS SES'],
     },
-    {
-      period: 'Nov 2024 — Feb 2025',
-      company: 'Divyajeevan NGO',
-      companyUrl: '',
-      role: 'Graphic Designer',
-      points: [
-        { href: null, label: null, text: 'Designed 2024 Annual Magazine for the organization' },
-        { href: null, label: null, text: 'Delivered 3 pitch decks for fundraising campaigns' },
-      ],
-      stack: ['Adobe Photoshop', 'PowerPoint'],
-    },
+    // {
+    //   period: 'Nov 2024 — Feb 2025',
+    //   company: 'Divyajeevan NGO',
+    //   companyUrl: '',
+    //   role: 'Graphic Designer',
+    //   points: [
+    //     { href: null, label: null, text: 'Designed 2024 Annual Magazine for the organization' },
+    //     { href: null, label: null, text: 'Delivered 3 pitch decks for fundraising campaigns' },
+    //   ],
+    //   stack: ['Adobe Photoshop', 'PowerPoint'],
+    // },
   ];
 
   const projects = [
     {
       index: '01',
-      title: 'Astra',
+      title: 'CodeRivals',
       description:
-        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
-      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
-      github: 'https://github.com/Random-Pikachu/Astra',
-      live: '',
-      youtube: 'https://youtu.be/XFiMSWMZ4KU',
+        'A  real-time 1v1 competitive coding platform where players duel in live matches and strategically deploy power cards to influence round outcomes.',
+      stack: ['React', 'SpacetimeDB', 'AWS EC2', 'Monaco Editor'],
+      github: 'https://github.com/Sypher845/code-rivals',
+      live: 'https://code-rivals-six.vercel.app/',
+      youtube: 'https://www.youtube.com/watch?v=mmFpLflQln4',
     },
     {
       index: '02',
       title: 'Astra',
       description:
-        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
-      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
+        'A desktop tool that scans your code for security risks. It checks your project dependencies against vulnerability databases and uses AI to automatically suggest fixes, saving you from manual patching.',
+      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter', 'Socket.io'],
       github: 'https://github.com/Random-Pikachu/Astra',
       live: '',
       youtube: 'https://youtu.be/XFiMSWMZ4KU',
     },
     {
       index: '03',
-      title: 'Astra',
+      title: 'DevTrackr',
       description:
-        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
-      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
-      github: 'https://github.com/Random-Pikachu/Astra',
-      live: '',
-      youtube: 'https://youtu.be/XFiMSWMZ4KU',
+        ' Go service with PostgreSQL and REST APIs that aggregates user activity from platforms like GitHub, LeetCode, and Codeforces, & delivers daily digests',
+      stack: ['Go', 'PostgreSQL', 'React', 'Github/LC/CF APIs'],
+      github: 'https://github.com/Random-Pikachu/DevTrackr-Backend',
+      live: 'https://devtrackr-hci.vercel.app/',
+      youtube: '',
     },
     {
       index: '04',
-      title: 'Astra',
+      title: 'GitStory',
       description:
-        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
-      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
-      github: 'https://github.com/Random-Pikachu/Astra',
-      live: '',
-      youtube: 'https://youtu.be/XFiMSWMZ4KU',
+        'AI-powered tool designed to visualize and analyze GitHub repositories through a conversational interface. That can render rich, interactive components such as commit timelines, pull request summaries, diff viewers, and risk heatmaps.',
+      stack: ['React', 'TamboAI', 'Tailwind'],
+      github: 'https://github.com/Random-Pikachu/GitStory',
+      live: 'https://git-story-tan.vercel.app/',
+      youtube: '',
     },
     {
       index: '05',
       title: 'SecurePDF',
       description:
-        'Offline PDF locker with hardware binding and time limits. Completely disables print + copy.',
+        'An offline desktop tool that locks PDFs to a specific computer so they can\'t be shared. It uses hardware binding and time limits to control access, while completely disabling printing and copying to prevent leaks.',
       stack: ['Python', 'Fernet', 'PyMuPDF', 'CustomTkinter'],
       github: 'https://github.com/Random-Pikachu/SecurePDF',
       live: 'https://secure-pdf-five.vercel.app/',
@@ -153,8 +159,8 @@ export default function SinglePage() {
       index: '06',
       title: 'Code-Sync',
       description:
-        'Real-time collaborative code editor. Write code with others, see live cursors, run in 20+ languages.',
-      stack: ['React', 'Socket.io', 'Node.js', 'MongoDB'],
+        'A collaborative code editor that works like Google Docs for developers. It lets you write code with friends in real-time, see their cursor position in editor, and run code using Judge0.',
+      stack: ['React', 'Socket.io', 'Node.js', 'MongoDB', 'Monaco Editor'],
       github: 'https://github.com/Random-Pikachu/Code-Sync',
       live: 'https://codesync-v8bl.onrender.com/',
       youtube: '',
@@ -371,12 +377,12 @@ export default function SinglePage() {
         <div className="max-w-[900px] mx-auto">
           <SectionHeader num="02" title="projects" />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {projects.map((proj, i) => {
-              // Bento span map: ensures every row fills all 3 columns
-              const spanMap = [2, 1, 1, 2, 2, 1, 3];
-              const span = spanMap[i] ?? 1;
-              const colClass = span === 3 ? 'md:col-span-3' : span === 2 ? 'md:col-span-2' : '';
+              // Bento span map: 5-col grid, wide=3cols(60%), narrow=2cols(40%), full=5cols
+              const spanMap = [3, 2, 2, 3, 3, 2, 5];
+              const span = spanMap[i] ?? 2;
+              const colClass = span === 5 ? 'md:col-span-5' : span === 3 ? 'md:col-span-3' : 'md:col-span-2';
               return (
                 <FadeUp key={proj.index} delay={i * 0.06} className={colClass}>
                   <motion.div
@@ -446,7 +452,7 @@ export default function SinglePage() {
 
           <FadeUp delay={0.1}>
             <p className="mono text-text-faint text-sm mb-10">
-              open to remote internships &amp; interesting projects
+              open to remote work &amp; interesting projects
             </p>
           </FadeUp>
 
@@ -467,6 +473,10 @@ export default function SinglePage() {
                 {label} ↗
               </a>
             ))}
+          </FadeUp>
+
+          <FadeUp delay={0.18} className="mb-16">
+            <ContributionHeatmap />
           </FadeUp>
 
           <FadeUp delay={0.2}>

@@ -2,17 +2,23 @@
 @import "tailwindcss";
 
 @theme {
-
-  --color-background: #080808;
-  --color-foreground: #e0e0e0;
-  --color-secondary: #888888;
-  --color-border: #222222;
-  --color-accent: #3b82f6;
+  --color-bg-base: var(--bg-base);
+  --color-bg-card: var(--bg-card);
+  --color-bg-card-hover: var(--bg-card-hover);
+  --color-text-base: var(--text-base);
+  --color-text-muted: var(--text-muted);
+  --color-text-light: var(--text-light);
+  --color-text-faint: var(--text-faint);
+  --color-text-link: var(--text-link);
+  --color-text-card-title: var(--text-card-title);
+  --color-border-main: var(--border-main);
+  --color-border-inner: var(--border-inner);
+  --color-border-badge: var(--border-badge);
+  --color-accent: var(--accent);
 
   --animate-spin-slow: spin 20s linear infinite;
   --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
-
   --animate-letter-up: letterUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-fade-in: fadeIn 0.8s ease-out forwards;
   --animate-scale-in: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -29,7 +35,6 @@
       transform: translateY(0);
     }
   }
-
 
   @keyframes letterUp {
     0% {
@@ -76,39 +81,73 @@
       transform: scaleX(1);
     }
   }
-
 }
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
+    --bg-base: #ffffff;
+    --bg-card: #f9f9f9;
+    --bg-card-hover: #f1f1f1;
+    --text-base: #111111;
+    --text-muted: #555555;
+    --text-light: #777777;
+    --text-faint: #999999;
+    --text-link: #333333;
+    --text-card-title: #222222;
+    --border-main: #e0e0e0;
+    --border-inner: #d0d0d0;
+    --border-badge: #c0c0c0;
+    --accent: #d97706;
+    /* Darker yellow for visibility */
     scroll-behavior: smooth;
   }
 
+  :root.dark {
+    color-scheme: dark;
+    --bg-base: #080808;
+    --bg-card: #080808;
+    --bg-card-hover: #0d0d0d;
+    --text-base: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --text-light: #666666;
+    --text-faint: #444444;
+    --text-link: #3a3a3a;
+    --text-card-title: #c0c0c0;
+    --border-main: #111111;
+    --border-inner: #1e1e1e;
+    --border-badge: #1a1a1a;
+    --accent: #f7d02c;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-bg-base text-text-base;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
   }
 
-
   ::-webkit-scrollbar {
     width: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-background);
+    background: var(--bg-base);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
+    background: var(--border-inner);
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-secondary);
+    background: var(--border-badge);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg-base);
   }
 
   h1 {
@@ -145,15 +184,21 @@
     font-family: "JetBrains Mono", monospace;
   }
 
-  /* @media (pointer: fine) {
-    body {
-      cursor: none;
-    }
-    
-    a, button, [role="button"] {
-      cursor: none !important;
-    }
-  } */
+  /* View transitions logic */
+  ::view-transition-group(root) {
+    animation-duration: 0.7s;
+    animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
+  }
+
+  ::view-transition-new(root),
+  ::view-transition-old(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  .dark::view-transition-old(root) {
+    z-index: 100;
+  }
 
   @media (min-width: 640px) {
     h1 {

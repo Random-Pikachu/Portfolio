@@ -1,32 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
-import Home from './pages/Home.tsx'
-import Experience from './pages/Experience.tsx'
-import Projects from './pages/Projects.tsx'
-// import NotFound from './pages/NotFound.tsx'
-import RootLayout from './components/RootLayout.tsx';
-import Footer from './components/Footer.tsx'
-import ReactLenis from 'lenis/react'
-// import CustomCursor from './components/CustomCursor';
-
-import { Analytics } from "@vercel/analytics/react"
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootLayout />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'home', element: <Navigate to="/" replace /> },
-      { path: 'experience', element: <Experience /> },
-      { path: 'projects', element: <Projects /> },
-      { path: '*', element: <Navigate to="/" replace /> },
-    ],
-  },
-]);
-
-
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import Navigation from './components/Navigation';
+import SinglePage from './pages/SinglePage';
+import ReactLenis from 'lenis/react';
+import { Analytics } from '@vercel/analytics/react';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -41,13 +19,9 @@ createRoot(document.getElementById('root')!).render(
         wheelMultiplier: 1,
       }}
     >
-      {/* <div className="hidden md:block">
-        <CustomCursor />
-      </div> */}
-
-      <RouterProvider router={router} />
-      <Footer />
+      <Navigation />
+      <SinglePage />
       <Analytics />
     </ReactLenis>
-  </StrictMode>,
-)
+  </StrictMode>
+);

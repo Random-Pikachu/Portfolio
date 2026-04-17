@@ -39,7 +39,8 @@ function SectionHeader({ num, title }: { num: string; title: string }) {
 }
 
 export default function SinglePage() {
-  const { display: heroName } = useScramble('/sangam', 600);
+  const { display: heroName } = useScramble('/sangam', 800);
+
 
   const experiences = [
     {
@@ -110,6 +111,36 @@ export default function SinglePage() {
     },
     {
       index: '02',
+      title: 'Astra',
+      description:
+        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
+      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
+      github: 'https://github.com/Random-Pikachu/Astra',
+      live: '',
+      youtube: 'https://youtu.be/XFiMSWMZ4KU',
+    },
+    {
+      index: '03',
+      title: 'Astra',
+      description:
+        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
+      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
+      github: 'https://github.com/Random-Pikachu/Astra',
+      live: '',
+      youtube: 'https://youtu.be/XFiMSWMZ4KU',
+    },
+    {
+      index: '04',
+      title: 'Astra',
+      description:
+        'Desktop security scanner. Checks dependencies against vulnerability DBs and uses AI to auto-suggest fixes.',
+      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter'],
+      github: 'https://github.com/Random-Pikachu/Astra',
+      live: '',
+      youtube: 'https://youtu.be/XFiMSWMZ4KU',
+    },
+    {
+      index: '05',
       title: 'SecurePDF',
       description:
         'Offline PDF locker with hardware binding and time limits. Completely disables print + copy.',
@@ -119,7 +150,7 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '03',
+      index: '06',
       title: 'Code-Sync',
       description:
         'Real-time collaborative code editor. Write code with others, see live cursors, run in 20+ languages.',
@@ -129,7 +160,7 @@ export default function SinglePage() {
       youtube: '',
     },
     {
-      index: '04',
+      index: '07',
       title: 'Sorting Visualizer',
       description:
         'Interactive visualizer for sorting algorithms. Watch Merge Sort, Quick Sort and more in real-time.',
@@ -141,7 +172,7 @@ export default function SinglePage() {
   ];
 
   return (
-    <div className="bg-bg-base text-text-base font-mono min-h-screen transition-colors duration-500">
+    <div className="bg-bg-base text-text-base font-mono min-h-screen">
 
       {/* ─── HERO ─────────────────────────────────────────── */}
       <section
@@ -337,69 +368,71 @@ export default function SinglePage() {
 
       {/* ─── PROJECTS ─────────────────────────────────────── */}
       <section id="projects" className="py-24 px-6">
-        <div className="max-w-[680px] mx-auto">
+        <div className="max-w-[900px] mx-auto">
           <SectionHeader num="02" title="projects" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 border border-border-main">
-            {projects.map((proj, i) => (
-              <FadeUp key={proj.index} delay={i * 0.06}>
-                <motion.div
-                  whileHover={{ backgroundColor: 'var(--bg-card-hover)' }}
-                  transition={{ duration: 0.15 }}
-                  className={[
-                    'p-7 bg-bg-card',
-                    i < 2 ? 'border-b border-border-main' : '',
-                    i % 2 === 0 ? 'sm:border-r border-border-main' : '',
-                  ].join(' ')}
-                >
-                  <p className="mono text-xs text-text-light mb-3">{proj.index} ///</p>
-                  <h3 className="text-text-card-title text-lg font-semibold mb-2 tracking-tight">
-                    {proj.title}
-                  </h3>
-                  <p className="text-text-faint text-sm leading-relaxed mb-4">{proj.description}</p>
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {proj.stack.map((t) => (
-                      <span
-                        key={t}
-                        className="mono text-xs text-text-light border border-border-inner px-1.5 py-0.5"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-4">
-                    <a
-                      href={proj.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
-                    >
-                      <Github className="w-3 h-3" /> github ↗
-                    </a>
-                    {proj.live && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {projects.map((proj, i) => {
+              // Bento span map: ensures every row fills all 3 columns
+              const spanMap = [2, 1, 1, 2, 2, 1, 3];
+              const span = spanMap[i] ?? 1;
+              const colClass = span === 3 ? 'md:col-span-3' : span === 2 ? 'md:col-span-2' : '';
+              return (
+                <FadeUp key={proj.index} delay={i * 0.06} className={colClass}>
+                  <motion.div
+                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.2 }}
+                    className="p-7 border border-border-main rounded-lg h-full"
+                  >
+                    <p className="mono text-xs text-text-light mb-3">{proj.index} ///</p>
+                    <h3 className="text-text-card-title text-lg font-semibold mb-2 tracking-tight">
+                      {proj.title}
+                    </h3>
+                    <p className="text-text-faint text-sm leading-relaxed mb-4">{proj.description}</p>
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {proj.stack.map((t) => (
+                        <span
+                          key={t}
+                          className="mono text-xs text-text-light border border-border-inner px-1.5 py-0.5 rounded"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-4">
                       <a
-                        href={proj.live}
+                        href={proj.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
                       >
-                        <ExternalLink className="w-3 h-3" /> live ↗
+                        <Github className="w-3 h-3" /> github ↗
                       </a>
-                    )}
-                    {proj.youtube && (
-                      <a
-                        href={proj.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
-                      >
-                        <ExternalLink className="w-3 h-3" /> demo ↗
-                      </a>
-                    )}
-                  </div>
-                </motion.div>
-              </FadeUp>
-            ))}
+                      {proj.live && (
+                        <a
+                          href={proj.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" /> live ↗
+                        </a>
+                      )}
+                      {proj.youtube && (
+                        <a
+                          href={proj.youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" /> demo ↗
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                </FadeUp>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -407,7 +440,7 @@ export default function SinglePage() {
       <div className="border-t border-border-main max-w-[680px] mx-auto" />
 
       {/* ─── CONTACT ──────────────────────────────────────── */}
-      <section id="contact" className="py-24 px-6 text-center">
+      <section id="contact" className="min-h-screen flex flex-col justify-center py-24 px-6 text-center">
         <div className="max-w-[680px] mx-auto">
           <SectionHeader num="03" title="contact" />
 

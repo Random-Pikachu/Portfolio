@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import { Menu, X, CalendarDays, Sun, Moon } from 'lucide-react';
 
 const NAV_SECTIONS = ['about', 'experience', 'projects', 'contact'] as const;
@@ -41,7 +42,9 @@ export default function Navigation() {
     );
 
     const transition = document.startViewTransition(() => {
-      setIsDark(isDarkTarget);
+      flushSync(() => {
+        setIsDark(isDarkTarget);
+      });
     });
 
     transition.ready.then(() => {
@@ -71,21 +74,28 @@ export default function Navigation() {
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(e.target.id);
-        });
-      },
-      { threshold: 0.4 }
-    );
-    NAV_SECTIONS.forEach((id) => {
+  // Scroll-based active section detection
+  const updateActive = useCallback(() => {
+    const offset = 120; // navbar height + some buffer
+    let current = '';
+
+    for (const id of NAV_SECTIONS) {
       const el = document.getElementById(id);
-      if (el) obs.observe(el);
-    });
-    return () => obs.disconnect();
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= offset) {
+          current = id;
+        }
+      }
+    }
+    setActive(current);
   }, []);
+
+  useEffect(() => {
+    updateActive();
+    window.addEventListener('scroll', updateActive, { passive: true });
+    return () => window.removeEventListener('scroll', updateActive);
+  }, [updateActive]);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

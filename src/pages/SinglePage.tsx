@@ -4,7 +4,7 @@ import { Mail, Linkedin, Github, ExternalLink } from 'lucide-react';
 import { useScramble } from '../hooks/useScramble';
 import ContributionHeatmap from '../components/ContributionHeatmap';
 
-const ease = [0.16, 1, 0.3, 1];
+const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 function FadeUp({
   children,

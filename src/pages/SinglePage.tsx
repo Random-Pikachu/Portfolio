@@ -40,7 +40,7 @@ function SectionHeader({ num, title }: { num: string; title: string }) {
 }
 
 export default function SinglePage() {
-  const { display: heroName } = useScramble('/sangam', 800);
+  const { display: heroName } = useScramble('/sangam', 600);
 
 
   const experiences = [
@@ -304,11 +304,11 @@ export default function SinglePage() {
             {experiences.map((exp, i) => (
               <FadeUp key={exp.company} delay={i * 0.08}>
                 <div
-                  className={`grid grid-cols-[140px_1fr] gap-8 py-10 ${i < experiences.length - 1 ? 'border-b border-border-main' : ''
+                  className={`grid grid-cols-1 gap-4 py-8 sm:gap-6 md:grid-cols-[140px_1fr] md:gap-8 md:py-10 ${i < experiences.length - 1 ? 'border-b border-border-main' : ''
                     }`}
                 >
                   <div className="pt-0.5">
-                    <p className="mono text-sm text-text-link leading-relaxed mb-3">
+                    <p className="mono text-xs text-text-link leading-relaxed mb-2 sm:text-sm sm:mb-3 whitespace-pre-line">
                       {exp.period.replace('—', '\n—')}
                     </p>
                     {exp.companyUrl ? (
@@ -316,7 +316,7 @@ export default function SinglePage() {
                         href={exp.companyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mono text-sm text-accent hover:opacity-70 transition-opacity"
+                        className="mono text-sm text-accent hover:opacity-70 transition-opacity break-words"
                       >
                         {exp.company}
                       </a>
@@ -326,19 +326,19 @@ export default function SinglePage() {
                   </div>
 
                   <div>
-                    <p className="text-text-muted text-base font-medium mb-4">{exp.role}</p>
-                    <ul className="space-y-2 mb-5">
+                    <p className="text-text-muted text-base font-medium mb-4 leading-snug">{exp.role}</p>
+                    <ul className="space-y-3 mb-5">
                       {exp.points.map((pt, j) => (
-                        <li key={j} className="text-sm text-text-muted leading-relaxed flex gap-2">
+                        <li key={j} className="text-sm text-text-muted leading-relaxed flex gap-2 min-w-0">
                           <span className="text-text-faint mt-0.5 shrink-0">▸</span>
-                          <span>
+                          <span className="min-w-0 break-words">
                             {pt.href && pt.label ? (
                               <>
                                 <a
                                   href={pt.href}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-text-light border-b border-border-inner hover:text-accent hover:border-accent transition-colors"
+                                  className="text-text-light border-b border-border-inner hover:text-accent hover:border-accent transition-colors break-words"
                                 >
                                   {pt.label}
                                 </a>{' '}
@@ -445,8 +445,8 @@ export default function SinglePage() {
       <div className="border-t border-border-main max-w-[680px] mx-auto" />
 
       {/* ─── CONTACT ──────────────────────────────────────── */}
-      <section id="contact" className="min-h-screen flex flex-col justify-center py-24 px-6 text-center">
-        <div className="max-w-[680px] mx-auto">
+      <section id="contact" className="min-h-screen flex flex-col justify-center overflow-x-hidden py-24 px-6 text-center">
+        <div className="mx-auto w-full max-w-[680px]">
           <SectionHeader num="03" title="contact" />
 
           <FadeUp delay={0.1}>
@@ -455,7 +455,7 @@ export default function SinglePage() {
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.15} className="flex justify-center gap-8 mb-16">
+          <FadeUp delay={0.15} className="mb-12 flex flex-wrap justify-center gap-x-6 gap-y-4 sm:mb-16">
             {[
               { icon: Mail, label: 'mail', href: 'mailto:sangampratapsingh21012006@gmail.com' },
               { icon: Linkedin, label: 'linkedin', href: 'https://linkedin.com/in/sangam21' },
@@ -466,7 +466,7 @@ export default function SinglePage() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mono text-sm text-text-link border-b border-border-badge pb-0.5 hover:text-accent hover:border-accent transition-colors flex items-center gap-1.5"
+                className="mono inline-flex items-center gap-1.5 text-sm text-text-link border-b border-border-badge pb-0.5 hover:text-accent hover:border-accent transition-colors"
               >
                 <Icon className="w-3 h-3" />
                 {label} ↗
@@ -474,7 +474,7 @@ export default function SinglePage() {
             ))}
           </FadeUp>
 
-          <FadeUp delay={0.18} className="mb-16">
+          <FadeUp delay={0.18} className="mb-16 w-full max-w-full">
             <ContributionHeatmap />
           </FadeUp>
 
@@ -490,7 +490,7 @@ export default function SinglePage() {
           </FadeUp>
 
           <FadeUp delay={0.25}>
-            <p className="mono text-text-faint text-xs tracking-[0.15em]">
+            <p className="mono text-text-faint text-[10px] leading-relaxed tracking-[0.12em] sm:text-xs sm:tracking-[0.15em] break-words">
               © 2025 random-pikachu &nbsp;·&nbsp; [ pokedex entry #025 ]
             </p>
           </FadeUp>

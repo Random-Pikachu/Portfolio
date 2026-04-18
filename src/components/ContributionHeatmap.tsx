@@ -129,7 +129,7 @@ export default function ContributionHeatmap() {
     });
 
     return (
-        <div className="w-full">
+        <div className="w-full max-w-full overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-2">
                 <p className="mono text-sm text-text-muted">
                     <span className="text-accent font-semibold">{totalContribs}</span> contributions in {year}
@@ -156,7 +156,7 @@ export default function ContributionHeatmap() {
                 </a>
             </p>
 
-            <div className="overflow-x-auto pb-2">
+            <div className="max-w-full overflow-x-auto overflow-y-hidden pb-2 [-webkit-overflow-scrolling:touch]">
                 <svg width={svgWidth} height={svgHeight + 16} className="block">
                     {/* Month labels */}
                     {monthLabels.map(({ label, x }) => (
@@ -198,4 +198,3 @@ export default function ContributionHeatmap() {
         </div>
     );
 }
-

@@ -4,6 +4,11 @@ import { Menu, X, CalendarDays, Sun, Moon } from 'lucide-react';
 
 const NAV_SECTIONS = ['about', 'experience', 'projects', 'contact'] as const;
 
+function applyTheme(isDark: boolean) {
+  document.documentElement.classList.toggle('dark', isDark);
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
@@ -17,13 +22,7 @@ export default function Navigation() {
   });
 
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    applyTheme(isDark);
   }, [isDark]);
 
   const toggleTheme = (e: React.MouseEvent) => {
@@ -43,6 +42,7 @@ export default function Navigation() {
 
     const transition = document.startViewTransition(() => {
       flushSync(() => {
+        applyTheme(isDarkTarget);
         setIsDark(isDarkTarget);
       });
     });
@@ -57,8 +57,9 @@ export default function Navigation() {
           clipPath: isDarkTarget ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 600,
+          duration: 700,
           easing: 'cubic-bezier(0.87, 0, 0.13, 1)',
+          fill: 'both',
           pseudoElement: isDarkTarget ? '::view-transition-old(root)' : '::view-transition-new(root)',
         }
       );
@@ -108,7 +109,7 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md">
+      <nav className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-4 sm:px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md">
         <button
           onClick={() => scrollTo('hero')}
           className="mono text-sm text-text-light tracking-[0.1em] hover:text-text-muted transition-colors"
@@ -148,13 +149,17 @@ export default function Navigation() {
         </div>
 
         {/* Mobile controls */}
-        <div className="md:hidden flex items-center gap-4">
-          <button onClick={toggleTheme} className="text-text-faint hover:text-accent p-1 transition-colors">
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="text-text-faint hover:text-accent p-2 transition-colors"
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           <button
             onClick={() => setOpen(!open)}
-            className="text-text-faint hover:text-accent p-1 transition-colors"
+            className="text-text-faint hover:text-accent p-2 transition-colors"
             aria-label="Toggle menu"
           >
             {open ? <X size={20} /> : <Menu size={20} />}
@@ -164,35 +169,42 @@ export default function Navigation() {
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-bg-base flex flex-col items-center justify-center gap-8 md:hidden transition-opacity duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-x-0 top-[64px] bottom-0 z-40 border-b border-border-main bg-bg-base/95 backdrop-blur-md md:hidden transition-all duration-300 ${open ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-2'
           }`}
       >
-        {NAV_SECTIONS.map((id) => (
-          <button
-            key={id}
-            onClick={() => scrollTo(id)}
-            className={`mono text-xl transition-colors ${active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
-              }`}
-          >
-            {id}
-          </button>
-        ))}
-        <a
-          href="/resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mono text-xl text-text-faint hover:text-accent transition-colors"
-        >
-          resume ↗
-        </a>
-        <a
-          href="https://www.cal.com/random-pikachu/15min"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mono text-xl text-text-faint hover:text-accent transition-colors"
-        >
-          schedule ↗
-        </a>
+        <div className="flex h-full flex-col justify-between px-6 py-8">
+          <div className="flex flex-col gap-6">
+            {NAV_SECTIONS.map((id) => (
+              <button
+                key={id}
+                onClick={() => scrollTo(id)}
+                className={`mono text-left text-xl tracking-[0.08em] transition-colors ${active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
+                  }`}
+              >
+                {id}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-4 border-t border-border-main pt-6">
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mono text-sm text-text-faint hover:text-accent transition-colors"
+            >
+              resume ↗
+            </a>
+            <a
+              href="https://www.cal.com/random-pikachu/15min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mono text-sm text-text-faint hover:text-accent transition-colors"
+            >
+              schedule ↗
+            </a>
+          </div>
+        </div>
       </div>
     </>
   );

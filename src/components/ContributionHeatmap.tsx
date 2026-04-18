@@ -16,14 +16,6 @@ function getIntensity(count: number): string {
     return 'var(--heatmap-4, #216e39)';
 }
 
-function getToday(): string {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
 export default function ContributionHeatmap() {
     const [days, setDays] = useState<DayData[]>([]);
     const [loading, setLoading] = useState(true);
@@ -32,8 +24,11 @@ export default function ContributionHeatmap() {
     useEffect(() => {
         async function fetchData() {
             try {
-                // First call aggregate to refresh today's data
-                await fetch(`${BASE_URL}/${USER_ID}/aggregate?date=${getToday()}`);
+                // Refresh aggregate data using the same POST endpoint as the live client.
+                await fetch(`${BASE_URL}/${USER_ID}/aggregate`, {
+                    method: 'POST',
+                    credentials: 'omit',
+                });
 
                 // Then fetch heatmap
                 const year = new Date().getFullYear();

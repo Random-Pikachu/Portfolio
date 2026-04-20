@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const USER_ID = 'f185d110-c853-4086-9fac-5375d94c8a4a';
+const USER_ID = 'c3798d33-eaf0-4e93-8ea7-badda96de167';
 const BASE_URL = 'https://devtrackr-backend-84jw.onrender.com/users';
 
 interface DayData {

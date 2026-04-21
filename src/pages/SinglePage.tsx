@@ -133,7 +133,7 @@ export default function SinglePage() {
       stack: ['Go', 'PostgreSQL', 'React', 'Github/LC/CF APIs'],
       github: 'https://github.com/Random-Pikachu/DevTrackr-Backend',
       live: 'https://devtrackr-hci.vercel.app/',
-      youtube: '',
+      youtube: 'https://youtu.be/kUKd9O6k4Zg',
     },
     {
       index: '04',
@@ -280,7 +280,7 @@ export default function SinglePage() {
           <FadeUp delay={0.2} className="flex flex-wrap gap-2 mt-8">
             {[
               'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python', 'WebSockets',
-              'React', 'Node.js', 'PostgreSQL', 'Linux',
+              'React', 'Node.js', 'PostgreSQL','AWS', 'Linux',
             ].map((s) => (
               <span
                 key={s}

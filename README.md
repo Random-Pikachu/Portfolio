@@ -1,4 +1,4 @@
-# Personal Portfolio
+# Personal Portfolio :::
 
 A minimal, dark-themed developer portfolio built with **React**, **TypeScript**, and **Tailwind CSS v4**. Deployed on **Vercel**.
 

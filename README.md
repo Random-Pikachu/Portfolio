@@ -1,7 +1,6 @@
 # Personal Portfolio :::
 
-A minimal, dark-themed developer portfolio built with **React**, **TypeScript**, and **Tailwind CSS v4**. Deployed on **Vercel**.
-
+A minimal, dark-themed single-page developer portfolio built with **React**, **TypeScript**, and **Tailwind CSS v4**. Deployed on **Vercel**.
 
 ## ✦ Live
 
@@ -14,24 +13,27 @@ A minimal, dark-themed developer portfolio built with **React**, **TypeScript**,
 | Layer       | Technology                                       |
 | ----------- | ------------------------------------------------ |
 | Framework   | [React 19](https://react.dev/) + TypeScript      |
+| Build       | [Vite 7](https://vite.dev/)                      |
 | Styling     | [Tailwind CSS v4](https://tailwindcss.com/)      |
-| Routing     | [React Router v7](https://reactrouter.com/)      |
+| Animations  | [Framer Motion](https://motion.dev/) (scroll-triggered fade-ups) + custom text-scramble hook |
 | Scrolling   | [Lenis](https://github.com/darkroomengineering/lenis) (smooth scroll) |
 | Icons       | [Lucide React](https://lucide.dev/)              |
-| Animations  | CSS keyframe animations + marquee via [react-fast-marquee](https://github.com/justin-chu/react-fast-marquee) |
-| Analytics   | [Umami](https://umami.is/) |
+| Analytics   | [Umami](https://umami.is/) + [Vercel Analytics](https://vercel.com/analytics) |
 | Deployment  | [Vercel](https://vercel.com/)                    |
 
 ---
 
-## ✦ Pages
+## ✦ Sections
 
-| Route          | Description                                                                 |
-| -------------- | --------------------------------------------------------------------------- |
-| `/`            | **Home** — Animated name reveal with scrolling marquee tagline              |
-| `/experience`  | **Experience** — Timeline of work experience with resume-style bullet points |
-| `/projects`    | **Projects** — Showcase of featured projects with tech stacks and links      |
-| `/*`           | **404** — Custom not-found page                                             |
+Everything lives on a single page (`/` — all other routes redirect home):
+
+| Section        | Description                                                                  |
+| -------------- | ---------------------------------------------------------------------------- |
+| **Hero**       | Animated text-scramble name reveal on a grid background                      |
+| **About**      | Short intro with a skills badge cloud                                        |
+| **Experience** | Timeline of work — KDE open source contributions (with MR links) and internships |
+| **Projects**   | Bento-grid showcase of projects with tech stacks, GitHub / live / demo links |
+| **Contact**    | Social links, GitHub contribution heatmap (powered by DevTrackr), and a Pikachu |
 
 ---
 
@@ -40,27 +42,21 @@ A minimal, dark-themed developer portfolio built with **React**, **TypeScript**,
 ```
 Portfolio/
 ├── public/
-│   ├── assets/            # Project screenshots
-│   ├── logo.svg           # Favicon / logo
-│   └── resume.pdf         # Downloadable resume
+│   ├── assets/                    # Project screenshots
+│   ├── logo.svg                   # Favicon / logo
+│   └── resume.pdf                 # Downloadable resume (linked in nav)
 ├── src/
 │   ├── components/
-│   │   ├── CustomCursor.tsx
-│   │   ├── Footer.tsx
-│   │   ├── HomeGridBackground.tsx
-│   │   ├── Navigation.tsx
-│   │   ├── ProjectCard.tsx
-│   │   ├── RegularGridBackground.tsx
-│   │   └── RootLayout.tsx
+│   │   ├── ContributionHeatmap.tsx  # GitHub activity heatmap via DevTrackr API
+│   │   └── Navigation.tsx
+│   ├── hooks/
+│   │   └── useScramble.ts           # Hero text-scramble animation
 │   ├── pages/
-│   │   ├── Home.tsx
-│   │   ├── Experience.tsx
-│   │   ├── Projects.tsx
-│   │   └── NotFound.tsx
-│   ├── index.css          
-│   └── main.tsx           
+│   │   └── SinglePage.tsx           # The entire site: hero → about → experience → projects → contact
+│   ├── index.css
+│   └── main.tsx
 ├── index.html
-├── vercel.json            
+├── vercel.json
 ├── vite.config.ts
 ├── tsconfig.json
 └── package.json
@@ -70,12 +66,15 @@ Portfolio/
 
 ## ✦ Featured Projects
 
-| #  | Project              | Description                                                       |
-| -- | -------------------- | ----------------------------------------------------------------- |
-| 01 | **Astra**            | Project packages security scanner with AI-powered vulnerability fix suggestions |
-| 02 | **SecurePDF**        | Offline PDF DRM tool with hardware binding and time-limited access |
-| 03 | **Code-Sync**        | Real-time collaborative code editor       |
-| 04 | **Sorting Visualizer** | Interactive visualization of sorting algorithms                  |
+| #  | Project                | Description                                                        |
+| -- | ---------------------- | ------------------------------------------------------------------ |
+| 01 | **CodeRivals**         | Real-time 1v1 competitive coding platform with strategic power cards |
+| 02 | **Astra**              | Project packages security scanner with AI-powered vulnerability fix suggestions |
+| 03 | **DevTrackr**          | Go + PostgreSQL service aggregating GitHub/LeetCode/Codeforces activity into daily digests |
+| 04 | **GitStory**           | AI-powered conversational GitHub repo explorer with interactive visualizations |
+| 05 | **SecurePDF**          | Offline PDF DRM tool with hardware binding and time-limited access |
+| 06 | **Code-Sync**          | Real-time collaborative code editor                                |
+| 07 | **Sorting Visualizer** | Interactive visualization of sorting algorithms                    |
 
 ---
 

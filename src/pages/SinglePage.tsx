@@ -45,15 +45,28 @@ export default function SinglePage() {
 
   const experiences = [
     {
-      period: 'Dec 2025 — Present',
-      company: 'KDE Linux',
+      period: 'Jun 2026 — Present',
+      company: 'Retsguide',
+      companyUrl: 'https://retsguide.dk/',
+      role: 'Software Engineer Intern (Full Stack)',
+      points: [
+        { href: null, label: null, text: 'Owned three customer-facing application flows end-to-end, from design to deployment' },
+        { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations on production' },
+        { href: null, label: null, text: 'Built modular REST services with state-machine transitions and an AI-assisted document-classification pipeline' },
+        { href: null, label: null, text: 'Cut server response time from 2s+ to 150ms by restructuring the SSR data path' },
+      ],
+      stack: ['TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Prisma', 'Azure'],
+    },
+    {
+      period: 'Dec 2025 — May 2026',
+      company: 'KDE Plasma',
       companyUrl: 'https://kde.org/',
       role: 'Open Source Contributor',
       points: [
         {
-          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6103',
-          label: 'MR 6103',
-          text: '"Enter" key accessibility for calendar headers in Plasma Digital Clock',
+          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6280',
+          label: 'MR 6280',
+          text: 'SHA-256 content-hash caching for Plasma Wallpaper Gallery',
         },
         {
           href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6208',
@@ -61,9 +74,9 @@ export default function SinglePage() {
           text: 'KConfig-based wallpaper directory persistence across sessions',
         },
         {
-          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6280',
-          label: 'MR 6280',
-          text: 'SHA-256 content-hash caching for Plasma Wallpaper Gallery',
+          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6103',
+          label: 'MR 6103',
+          text: '"Enter" key accessibility for calendar headers in Plasma Digital Clock',
         },
         {
           href: 'https://invent.kde.org/office/marknote/-/merge_requests/172',
@@ -75,6 +88,11 @@ export default function SinglePage() {
           label: 'MR 430',
           text: 'Added press and hold spacebar to switch to pan tool in KDE Drawy',
         },
+        {
+          href: 'https://blogs.kde.org/2026/02/07/this-week-in-plasma-beefed-up-window-list-widget/',
+          label: 'This Week in Plasma',
+          text: 'work featured in KDE\'s weekly blog (Feb 2026)',
+        },
       ],
       stack: ['C++', 'Qt/QML', 'KConfig'],
     },
@@ -84,8 +102,8 @@ export default function SinglePage() {
       companyUrl: 'https://opensphere.ai/',
       role: 'Software Development Intern',
       points: [
-        { href: null, label: null, text: 'Built real-time commenting system integrated with in-house text editor' },
-        { href: null, label: null, text: 'Reworked drafting workflow, reduced manual intervention across the platform' },
+        { href: null, label: null, text: 'Built concurrent WebSocket service powering real-time threaded commenting in the text editor' },
+        { href: null, label: null, text: 'Reworked drafting workflow, removing a redundant data-filing stage and doubling throughput' },
         { href: null, label: null, text: 'Worked on task creation pipelines, accelerating client onboarding' },
         { href: null, label: null, text: 'Built user activity tracking dashboard for action logs' },
       ],
@@ -239,7 +257,7 @@ export default function SinglePage() {
             transition={{ delay: 1.6, duration: 0.6, ease }}
             className="mono text-accent text-base"
           >
-            currently looking for work ♥
+            building a legal tech startup for denmark...
           </motion.p>
 
           <motion.div
@@ -268,9 +286,9 @@ export default function SinglePage() {
               <br />
               I like building interesting projects and occasionally contributing to
               open source. Currently reading about{' '}
-              <span className="text-text-muted font-medium">reverse engineering in Go</span> and{' '}
               <span className="text-text-muted font-medium">databases</span>. Besides this,
-              I sometimes solve LC/CF problems to keep the brain warm.
+              I like doing <span className="text-text-muted font-medium">photography</span> and
+              sometimes solve LC/CF problems to keep the brain warm.
               <br />
               <br />
               When I&apos;m not doing any of that, I&apos;m probably sleeping.
@@ -279,7 +297,7 @@ export default function SinglePage() {
 
           <FadeUp delay={0.2} className="flex flex-wrap gap-2 mt-8">
             {[
-              'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python', 'WebSockets',
+              'Photography', 'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python', 'WebSockets',
               'React', 'Node.js', 'PostgreSQL','AWS', 'Linux',
             ].map((s) => (
               <span

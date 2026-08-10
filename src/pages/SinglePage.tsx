@@ -239,7 +239,8 @@ export default function SinglePage() {
               fontVariantNumeric: 'tabular-nums',
             }}
           >
-            {heroName}
+            <span className="sr-only">Sangam Pratap Singh</span>
+            <span aria-hidden>{heroName}</span>
           </motion.h1>
 
           <motion.p
@@ -279,7 +280,7 @@ export default function SinglePage() {
 
           <FadeUp delay={0.1}>
             <p className="text-text-light text-lg leading-[2] max-w-[560px]">
-              I am Sangam, 3rd year{' '}
+              I am Sangam Pratap Singh, 3rd year{' '}
               <span className="text-text-muted font-medium">Integrated Dual Degree</span> student
               (B.Tech IT + MBA) at ABV-IIITM Gwalior.
               <br />

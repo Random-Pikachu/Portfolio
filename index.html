@@ -4,9 +4,66 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="apple-touch-icon" href="/logo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080808" />
+
+  <!-- Primary SEO -->
+  <title>Sangam Pratap Singh — Software Engineer & Open Source Contributor</title>
+  <meta name="description"
+    content="Portfolio of Sangam Pratap Singh (Random-Pikachu) — software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra, DevTrackr and more. C++, Go, TypeScript, React, PostgreSQL." />
+  <meta name="author" content="Sangam Pratap Singh" />
+  <link rel="canonical" href="https://random-pikachu.dev/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://random-pikachu.dev/" />
+  <meta property="og:site_name" content="Sangam Pratap Singh" />
+  <meta property="og:title" content="Sangam Pratap Singh — Software Engineer & Open Source Contributor" />
+  <meta property="og:description"
+    content="Software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra and DevTrackr. C++, Go, TypeScript, React, PostgreSQL." />
+  <meta property="og:image" content="https://random-pikachu.dev/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="/sangam — Sangam Pratap Singh, Software Engineer" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sangam Pratap Singh — Software Engineer & Open Source Contributor" />
+  <meta name="twitter:description"
+    content="Software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra and DevTrackr." />
+  <meta name="twitter:image" content="https://random-pikachu.dev/og.png" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sangam Pratap Singh",
+    "alternateName": ["Random-Pikachu", "random pikachu"],
+    "url": "https://random-pikachu.dev/",
+    "image": "https://random-pikachu.dev/og.png",
+    "jobTitle": "Software Engineer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Retsguide",
+      "url": "https://retsguide.dk/"
+    },
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "ABV-IIITM Gwalior",
+      "url": "https://www.iiitm.ac.in/"
+    },
+    "knowsAbout": ["C++", "Go", "TypeScript", "React", "Node.js", "PostgreSQL", "Qt/QML", "KDE Plasma", "Open Source", "Legal Tech", "Photography"],
+    "sameAs": [
+      "https://github.com/Random-Pikachu",
+      "https://linkedin.com/in/sangam21",
+      "https://invent.kde.org/randompikachu"
+    ]
+  }
+  </script>
+
   <script defer src="https://cloud.umami.is/script.js" data-website-id="6b32c0a9-7f49-481a-8fc1-a95133286f30"></script>
-  <title>Sangam-Portfolio</title>
   <script>
     try {
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -20,6 +77,13 @@
 
 <body>
   <div id="root"></div>
+  <noscript>
+    <h1>Sangam Pratap Singh</h1>
+    <p>Software engineer building legal tech at <a href="https://retsguide.dk/">Retsguide</a> and open source
+      contributor to KDE Plasma. Builder of CodeRivals, Astra, DevTrackr, GitStory, SecurePDF and Code-Sync.</p>
+    <p><a href="https://github.com/Random-Pikachu">GitHub</a> · <a
+        href="https://linkedin.com/in/sangam21">LinkedIn</a> · <a href="/resume.pdf">Resume</a></p>
+  </noscript>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 

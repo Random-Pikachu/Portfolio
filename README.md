@@ -4,7 +4,7 @@ A minimal, dark-themed single-page developer portfolio built with **React**, **T
 
 ## ✦ Live
 
-🔗 [random-pikachu-portfolio.vercel.app](https://random-pikachu-portfolio.vercel.app)
+🔗 [random-pikachu.dev](https://random-pikachu.dev)
 
 ---
 

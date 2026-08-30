@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw photography originals — derivatives in public/photos are what ship.
+# NOTE: these are NOT backed up by git. Keep your own copy.
+photos-raw

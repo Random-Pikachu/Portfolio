@@ -10,9 +10,20 @@ function applyTheme(isDark: boolean) {
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
-export default function Navigation() {
+/**
+ * `home` wires the section links as in-page anchors with smooth scrolling.
+ * `sub` is for standalone pages like /photography, where those same links have
+ * to point back at the home page (`/#about`) instead of at nothing.
+ */
+export default function Navigation({
+  variant = 'home',
+}: {
+  variant?: 'home' | 'sub';
+}) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
+  const isHome = variant === 'home';
+  const sectionHref = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 
   /**
    * The current theme is never held in React state. Both icons are rendered and
@@ -77,6 +88,7 @@ export default function Navigation() {
    * active once it reaches the top of the viewport.
    */
   useEffect(() => {
+    if (!isHome) return;
     const els = NAV_IDS.map((id) => document.getElementById(id)).filter(
       (el): el is HTMLElement => el !== null
     );
@@ -104,11 +116,12 @@ export default function Navigation() {
 
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [isHome]);
 
   // Real anchors keep the links crawlable and keyboard-operable; this only takes
   // over to add smooth scrolling and to close the mobile sheet.
   const handleAnchor = (id: string) => (e: React.MouseEvent) => {
+    if (!isHome) return;
     const el = document.getElementById(id);
     if (!el) return;
     e.preventDefault();
@@ -136,7 +149,7 @@ export default function Navigation() {
         className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-4 sm:px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md"
       >
         <a
-          href="#hero"
+          href={isHome ? '#hero' : '/'}
           onClick={handleAnchor('hero')}
           className="mono text-sm text-text-light tracking-[0.1em] hover:text-text-muted transition-colors"
         >
@@ -148,7 +161,7 @@ export default function Navigation() {
           {SECTIONS.map(({ id, label }) => (
             <a
               key={id}
-              href={`#${id}`}
+              href={sectionHref(id)}
               onClick={handleAnchor(id)}
               aria-current={active === id ? 'true' : undefined}
               className={linkClass(id)}
@@ -156,6 +169,15 @@ export default function Navigation() {
               {label}
             </a>
           ))}
+          <a
+            href="/photography"
+            aria-current={!isHome ? 'page' : undefined}
+            className={`mono text-sm tracking-[0.08em] transition-colors duration-200 ${
+              !isHome ? 'text-accent' : 'text-text-faint hover:text-accent'
+            }`}
+          >
+            photography
+          </a>
           <div className="w-px h-3 bg-border-inner" aria-hidden="true" />
           <a
             href={SITE.resume}
@@ -223,7 +245,7 @@ export default function Navigation() {
             {SECTIONS.map(({ id, label }) => (
               <a
                 key={id}
-                href={`#${id}`}
+                href={sectionHref(id)}
                 onClick={handleAnchor(id)}
                 tabIndex={open ? 0 : -1}
                 className={`mono text-left text-xl tracking-[0.08em] transition-colors ${
@@ -236,6 +258,15 @@ export default function Navigation() {
           </div>
 
           <div className="flex flex-col gap-4 border-t border-border-main pt-6">
+            <a
+              href="/photography"
+              tabIndex={open ? 0 : -1}
+              className={`mono text-sm transition-colors ${
+                !isHome ? 'text-accent' : 'text-text-faint hover:text-accent'
+              }`}
+            >
+              photography
+            </a>
             <a
               href={SITE.resume}
               target="_blank"

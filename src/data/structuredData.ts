@@ -1,4 +1,5 @@
 import { SITE, ORIGIN, EXPERIENCES, PROJECTS, KNOWS_ABOUT, SECTIONS } from './site';
+import { PHOTOS } from './photos';
 
 const PERSON_ID = `${ORIGIN}/#person`;
 const WEBSITE_ID = `${ORIGIN}/#website`;
@@ -150,6 +151,65 @@ export function buildStructuredData(lastModified: string) {
       },
       person,
       projectList,
+    ],
+  };
+}
+
+const GALLERY_ID = `${ORIGIN}/photography#gallery`;
+
+/**
+ * Graph for /photography. ImageObject entries are what put individual photos
+ * into Google Images, which is the main discovery channel for a gallery page.
+ */
+export function buildPhotographyStructuredData(lastModified: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ImageGallery',
+        '@id': GALLERY_ID,
+        url: `${ORIGIN}/photography`,
+        name: `Photography by ${SITE.name}`,
+        description:
+          'A gallery of street, night and travel frames shot mostly on a phone.',
+        inLanguage: SITE.lang,
+        isPartOf: { '@id': WEBSITE_ID },
+        author: { '@id': PERSON_ID },
+        creator: { '@id': PERSON_ID },
+        copyrightHolder: { '@id': PERSON_ID },
+        dateModified: lastModified,
+        numberOfItems: PHOTOS.length,
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: `${ORIGIN}/` },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Photography',
+              item: `${ORIGIN}/photography`,
+            },
+          ],
+        },
+        associatedMedia: PHOTOS.map((p) => ({
+          '@type': 'ImageObject',
+          '@id': `${ORIGIN}/photography#${p.slug}`,
+          contentUrl: `${ORIGIN}/photos/${p.slug}-800.webp`,
+          thumbnailUrl: `${ORIGIN}/photos/${p.slug}-400.webp`,
+          width: p.width,
+          height: p.height,
+          encodingFormat: 'image/webp',
+          ...(p.alt ? { name: p.alt, description: p.alt, caption: p.alt } : {}),
+          ...(p.date ? { dateCreated: p.date } : {}),
+          ...(p.location
+            ? { contentLocation: { '@type': 'Place', name: p.location } }
+            : {}),
+          author: { '@id': PERSON_ID },
+          creator: { '@id': PERSON_ID },
+          copyrightHolder: { '@id': PERSON_ID },
+          creditText: SITE.name,
+        })),
+      },
     ],
   };
 }

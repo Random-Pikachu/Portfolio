@@ -163,8 +163,11 @@ export default function SinglePage() {
               I like building interesting projects and occasionally contributing to
               open source. Currently reading about{' '}
               <span className="text-text-muted font-medium">databases</span>. Besides this,
-              I like doing <span className="text-text-muted font-medium">photography</span> and
-              sometimes solve LC/CF problems to keep the brain warm.
+              I like doing{' '}
+              <a href="/photography" className="link-wavy font-medium">
+                photography
+              </a>{' '}
+              and sometimes solve LC/CF problems to keep the brain warm.
               <br />
               <br />
               When I&apos;m not doing any of that, I&apos;m probably sleeping.
@@ -174,14 +177,25 @@ export default function SinglePage() {
           <FadeUp delay={0.2} className="mt-8">
             <h3 className="sr-only">Skills and interests</h3>
             <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
-              {SKILLS.map((s) => (
-                <li
-                  key={s}
-                  className="mono text-sm text-text-faint border border-border-inner px-[10px] py-[5px] hover:text-text-base hover:border-border-badge transition-all duration-200"
-                >
-                  {s}
-                </li>
-              ))}
+              {SKILLS.map((s) =>
+                s === 'Photography' ? (
+                  <li key={s}>
+                    <a
+                      href="/photography"
+                      className="mono block text-sm text-accent border border-accent/40 px-[10px] py-[5px] hover:border-accent transition-all duration-200"
+                    >
+                      {s} ↗
+                    </a>
+                  </li>
+                ) : (
+                  <li
+                    key={s}
+                    className="mono text-sm text-text-faint border border-border-inner px-[10px] py-[5px] hover:text-text-base hover:border-border-badge transition-all duration-200"
+                  >
+                    {s}
+                  </li>
+                )
+              )}
             </ul>
           </FadeUp>
         </div>

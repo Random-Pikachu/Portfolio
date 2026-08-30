@@ -1,4 +1,68 @@
+# https://random-pikachu.dev/robots.txt
+
+# Everything is crawlable, including /assets/ — Googlebot needs the JS and CSS
+# bundles to render and to assess mobile usability.
 User-agent: *
 Allow: /
+
+# Answer engines and LLM crawlers — explicitly welcomed. These read raw HTML and
+# never run JavaScript, which is why the site is prerendered.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+# Aggressive commercial SEO scrapers add crawl load and return nothing.
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
 
 Sitemap: https://random-pikachu.dev/sitemap.xml

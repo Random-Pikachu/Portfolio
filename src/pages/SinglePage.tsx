@@ -1,11 +1,17 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Mail, Linkedin, Github, ExternalLink } from 'lucide-react';
+import { Mail, Linkedin, Github, ExternalLink, Youtube } from 'lucide-react';
 import { useScramble } from '../hooks/useScramble';
 import ContributionHeatmap from '../components/ContributionHeatmap';
+import { SITE, SECTIONS, SKILLS, EXPERIENCES, PROJECTS } from '../data/site';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+/**
+ * `reveal` is the hook the <noscript> stylesheet in index.html uses to force
+ * everything visible when JavaScript never runs, so the prerendered content is
+ * readable rather than stuck at opacity 0.
+ */
 function FadeUp({
   children,
   delay = 0,
@@ -23,188 +29,56 @@ function FadeUp({
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay, ease }}
-      className={className}
+      className={`reveal ${className}`}
     >
       {children}
     </motion.div>
   );
 }
 
-function SectionHeader({ num, title }: { num: string; title: string }) {
+/**
+ * Visible label stays lowercase to match the design; the descriptive half is
+ * exposed to screen readers and crawlers so each heading says what it is about.
+ */
+function SectionHeader({
+  num,
+  label,
+  heading,
+  id,
+}: {
+  num: string;
+  label: string;
+  heading: string;
+  id: string;
+}) {
   return (
     <FadeUp className="mb-12">
-      <p className="mono text-accent text-sm tracking-[0.2em] mb-2">{`[ ${num} ]`}</p>
-      <h2 className="text-text-base text-2xl font-semibold tracking-tight">{title}</h2>
+      <p className="mono text-accent text-sm tracking-[0.2em] mb-2" aria-hidden="true">{`[ ${num} ]`}</p>
+      <h2 id={`${id}-heading`} className="text-text-base text-2xl font-semibold tracking-tight">
+        <span aria-hidden="true">{label}</span>
+        <span className="sr-only">{heading}</span>
+      </h2>
     </FadeUp>
   );
 }
 
+const SECTION_BY_ID = Object.fromEntries(SECTIONS.map((s) => [s.id, s]));
+
 export default function SinglePage() {
   const { display: heroName } = useScramble('/sangam', 600);
-
-
-  const experiences = [
-    {
-      period: 'Jun 2026 — Present',
-      company: 'Retsguide',
-      companyUrl: 'https://retsguide.dk/',
-      role: 'Software Engineer Intern (Full Stack)',
-      points: [
-        { href: null, label: null, text: 'Owned three customer-facing application flows end-to-end, from design to deployment' },
-        { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations on production' },
-        { href: null, label: null, text: 'Built modular REST services with state-machine transitions and an AI-assisted document-classification pipeline' },
-        { href: null, label: null, text: 'Cut server response time from 2s+ to 150ms by restructuring the SSR data path' },
-      ],
-      stack: ['TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Prisma', 'Azure'],
-    },
-    {
-      period: 'Dec 2025 — May 2026',
-      company: 'KDE Plasma',
-      companyUrl: 'https://kde.org/',
-      role: 'Open Source Contributor',
-      points: [
-        {
-          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6280',
-          label: 'MR 6280',
-          text: 'SHA-256 content-hash caching for Plasma Wallpaper Gallery',
-        },
-        {
-          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6208',
-          label: 'MR 6208',
-          text: 'KConfig-based wallpaper directory persistence across sessions',
-        },
-        {
-          href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6103',
-          label: 'MR 6103',
-          text: '"Enter" key accessibility for calendar headers in Plasma Digital Clock',
-        },
-        {
-          href: 'https://invent.kde.org/office/marknote/-/merge_requests/172',
-          label: 'MR 172',
-          text: 'Fix todo checkbox inheritance bug in KDE Marknote',
-        },
-        {
-          href: 'https://invent.kde.org/graphics/drawy/-/merge_requests/430',
-          label: 'MR 430',
-          text: 'Added press and hold spacebar to switch to pan tool in KDE Drawy',
-        },
-        {
-          href: 'https://blogs.kde.org/2026/02/07/this-week-in-plasma-beefed-up-window-list-widget/',
-          label: 'This Week in Plasma',
-          text: 'work featured in KDE\'s weekly blog (Feb 2026)',
-        },
-      ],
-      stack: ['C++', 'Qt/QML', 'KConfig'],
-    },
-    {
-      period: 'Jul 2025 — Sep 2025',
-      company: 'OpenSphere',
-      companyUrl: 'https://opensphere.ai/',
-      role: 'Software Development Intern',
-      points: [
-        { href: null, label: null, text: 'Built concurrent WebSocket service powering real-time threaded commenting in the text editor' },
-        { href: null, label: null, text: 'Reworked drafting workflow, removing a redundant data-filing stage and doubling throughput' },
-        { href: null, label: null, text: 'Worked on task creation pipelines, accelerating client onboarding' },
-        { href: null, label: null, text: 'Built user activity tracking dashboard for action logs' },
-      ],
-      stack: ['TypeScript', 'Node.js', 'WebSockets', 'React', 'MongoDB', 'AWS SES'],
-    },
-    // {
-    //   period: 'Nov 2024 — Feb 2025',
-    //   company: 'Divyajeevan NGO',
-    //   companyUrl: '',
-    //   role: 'Graphic Designer',
-    //   points: [
-    //     { href: null, label: null, text: 'Designed 2024 Annual Magazine for the organization' },
-    //     { href: null, label: null, text: 'Delivered 3 pitch decks for fundraising campaigns' },
-    //   ],
-    //   stack: ['Adobe Photoshop', 'PowerPoint'],
-    // },
-  ];
-
-  const projects = [
-    {
-      index: '01',
-      title: 'CodeRivals',
-      description:
-        'A  real-time 1v1 competitive coding platform where players duel in live matches and strategically deploy power cards to influence round outcomes.',
-      stack: ['React', 'SpacetimeDB', 'AWS EC2', 'Monaco Editor'],
-      github: 'https://github.com/Sypher845/code-rivals',
-      live: 'https://code-rivals-six.vercel.app/',
-      youtube: 'https://www.youtube.com/watch?v=mmFpLflQln4',
-    },
-    {
-      index: '02',
-      title: 'Astra',
-      description:
-        'A desktop tool that scans your code for security risks. It checks your project dependencies against vulnerability databases and uses AI to automatically suggest fixes, saving you from manual patching.',
-      stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter', 'Socket.io'],
-      github: 'https://github.com/Random-Pikachu/Astra',
-      live: '',
-      youtube: 'https://youtu.be/XFiMSWMZ4KU',
-    },
-    {
-      index: '03',
-      title: 'DevTrackr',
-      description:
-        ' Go service with PostgreSQL and REST APIs that aggregates user activity from platforms like GitHub, LeetCode, and Codeforces, & delivers daily digests',
-      stack: ['Go', 'PostgreSQL', 'React', 'Github/LC/CF APIs'],
-      github: 'https://github.com/Random-Pikachu/DevTrackr-Backend',
-      live: 'https://devtrackr-hci.vercel.app/',
-      youtube: 'https://youtu.be/kUKd9O6k4Zg',
-    },
-    {
-      index: '04',
-      title: 'GitStory',
-      description:
-        'AI-powered tool designed to visualize and analyze GitHub repositories through a conversational interface. That can render rich, interactive components such as commit timelines, pull request summaries, diff viewers, and risk heatmaps.',
-      stack: ['React', 'TamboAI', 'Tailwind'],
-      github: 'https://github.com/Random-Pikachu/GitStory',
-      live: 'https://git-story-tan.vercel.app/',
-      youtube: '',
-    },
-    {
-      index: '05',
-      title: 'SecurePDF',
-      description:
-        'An offline desktop tool that locks PDFs to a specific computer so they can\'t be shared. It uses hardware binding and time limits to control access, while completely disabling printing and copying to prevent leaks.',
-      stack: ['Python', 'Fernet', 'PyMuPDF', 'CustomTkinter'],
-      github: 'https://github.com/Random-Pikachu/SecurePDF',
-      live: 'https://secure-pdf-five.vercel.app/',
-      youtube: '',
-    },
-    {
-      index: '06',
-      title: 'Code-Sync',
-      description:
-        'A collaborative code editor that works like Google Docs for developers. It lets you write code with friends in real-time, see their cursor position in editor, and run code using Judge0.',
-      stack: ['React', 'Socket.io', 'Node.js', 'MongoDB', 'Monaco Editor'],
-      github: 'https://github.com/Random-Pikachu/Code-Sync',
-      live: 'https://codesync-v8bl.onrender.com/',
-      youtube: '',
-    },
-    {
-      index: '07',
-      title: 'Sorting Visualizer',
-      description:
-        'Interactive visualizer for sorting algorithms. Watch Merge Sort, Quick Sort and more in real-time.',
-      stack: ['React'],
-      github: 'https://github.com/Random-Pikachu/Sorting-Visualizer-v2',
-      live: 'https://random-pikachu.github.io/Sorting-Visualizer-v2/',
-      youtube: '',
-    },
-  ];
+  const year = new Date().getFullYear();
 
   return (
-    <div className="bg-bg-base text-text-base font-mono min-h-screen">
+    <main id="main" className="bg-bg-base text-text-base font-mono min-h-screen">
 
       {/* ─── HERO ─────────────────────────────────────────── */}
       <section
         id="hero"
+        aria-label="Introduction"
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
         {/* grid bg */}
-        <div className="absolute inset-0 pointer-events-none opacity-40">
+        <div className="absolute inset-0 pointer-events-none opacity-40" aria-hidden="true">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -220,8 +94,8 @@ export default function SinglePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.4, duration: 1 }}
-          className="absolute top-24 right-8 md:right-16 text-text-faint text-sm leading-relaxed select-none pointer-events-none hidden md:block"
-          aria-hidden
+          className="reveal absolute top-24 right-8 md:right-16 text-text-faint text-sm leading-relaxed select-none pointer-events-none hidden md:block"
+          aria-hidden="true"
         >
           {` (\\__/)
 (•ω•)
@@ -233,21 +107,21 @@ export default function SinglePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.1 }}
-            className="text-text-base font-bold tracking-tight leading-none mb-8"
+            className="reveal text-text-base font-bold tracking-tight leading-none mb-8"
             style={{
               fontSize: 'clamp(52px, 12vw, 112px)',
               fontVariantNumeric: 'tabular-nums',
             }}
           >
-            <span className="sr-only">Sangam Pratap Singh</span>
-            <span aria-hidden>{heroName}</span>
+            <span className="sr-only">{SITE.name} — {SITE.jobTitle}</span>
+            <span aria-hidden="true">{heroName}</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.6, ease }}
-            className="mono text-text-faint text-sm tracking-[0.18em] mb-3"
+            className="reveal mono text-text-faint text-sm tracking-[0.18em] mb-3"
           >
             developer &nbsp;✦&nbsp; open source &nbsp;✦&nbsp; cultured
           </motion.p>
@@ -256,7 +130,7 @@ export default function SinglePage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.6, duration: 0.6, ease }}
-            className="mono text-accent text-base"
+            className="reveal mono text-accent text-base"
           >
             building a legal tech startup for denmark...
           </motion.p>
@@ -265,7 +139,8 @@ export default function SinglePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.2, duration: 0.8 }}
-            className="flex flex-col items-center gap-2 mt-16"
+            className="reveal flex flex-col items-center gap-2 mt-16"
+            aria-hidden="true"
           >
             <div className="w-px h-8 bg-gradient-to-b from-transparent to-border-inner" />
             <span className="mono text-text-light text-xs tracking-[0.25em]">keep scrolling</span>
@@ -274,13 +149,13 @@ export default function SinglePage() {
       </section>
 
       {/* ─── ABOUT ────────────────────────────────────────── */}
-      <section id="about" className="py-24 px-6">
+      <section id="about" aria-labelledby="about-heading" className="py-24 px-6">
         <div className="max-w-[680px] mx-auto">
-          <SectionHeader num="00" title="about" />
+          <SectionHeader {...SECTION_BY_ID.about} id="about" />
 
           <FadeUp delay={0.1}>
             <p className="text-text-light text-lg leading-[2] max-w-[560px]">
-              I am Sangam Pratap Singh, 3rd year{' '}
+              I am {SITE.name}, 3rd year{' '}
               <span className="text-text-muted font-medium">Integrated Dual Degree</span> student
               (B.Tech IT + MBA) at ABV-IIITM Gwalior.
               <br />
@@ -296,45 +171,52 @@ export default function SinglePage() {
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.2} className="flex flex-wrap gap-2 mt-8">
-            {[
-              'Photography', 'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python', 'WebSockets',
-              'React', 'Node.js', 'PostgreSQL','AWS', 'Linux',
-            ].map((s) => (
-              <span
-                key={s}
-                className="mono text-sm text-text-faint border border-border-inner px-[10px] py-[5px] hover:text-text-base hover:border-border-badge transition-all duration-200"
-              >
-                {s}
-              </span>
-            ))}
+          <FadeUp delay={0.2} className="mt-8">
+            <h3 className="sr-only">Skills and interests</h3>
+            <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
+              {SKILLS.map((s) => (
+                <li
+                  key={s}
+                  className="mono text-sm text-text-faint border border-border-inner px-[10px] py-[5px] hover:text-text-base hover:border-border-badge transition-all duration-200"
+                >
+                  {s}
+                </li>
+              ))}
+            </ul>
           </FadeUp>
         </div>
       </section>
 
-      <div className="border-t border-border-main max-w-[680px] mx-auto" />
+      <div className="border-t border-border-main max-w-[680px] mx-auto" aria-hidden="true" />
 
       {/* ─── EXPERIENCE ───────────────────────────────────── */}
-      <section id="experience" className="py-24 px-6">
+      <section id="experience" aria-labelledby="experience-heading" className="py-24 px-6">
         <div className="max-w-[680px] mx-auto">
-          <SectionHeader num="01" title="experience" />
+          <SectionHeader {...SECTION_BY_ID.experience} id="experience" />
 
           <div className="space-y-0">
-            {experiences.map((exp, i) => (
+            {EXPERIENCES.map((exp, i) => (
               <FadeUp key={exp.company} delay={i * 0.08}>
-                <div
-                  className={`grid grid-cols-1 gap-4 py-8 sm:gap-6 md:grid-cols-[140px_1fr] md:gap-8 md:py-10 ${i < experiences.length - 1 ? 'border-b border-border-main' : ''
-                    }`}
+                <article
+                  className={`grid grid-cols-1 gap-4 py-8 sm:gap-6 md:grid-cols-[140px_1fr] md:gap-8 md:py-10 ${
+                    i < EXPERIENCES.length - 1 ? 'border-b border-border-main' : ''
+                  }`}
                 >
                   <div className="pt-0.5">
                     <p className="mono text-xs text-text-link leading-relaxed mb-2 sm:text-sm sm:mb-3 whitespace-pre-line">
-                      {exp.period.replace('—', '\n—')}
+                      <time dateTime={exp.startDate}>{exp.period.split('—')[0].trim()}</time>
+                      {'\n— '}
+                      {exp.endDate ? (
+                        <time dateTime={exp.endDate}>{exp.period.split('—')[1].trim()}</time>
+                      ) : (
+                        'Present'
+                      )}
                     </p>
                     {exp.companyUrl ? (
                       <a
                         href={exp.companyUrl}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener"
                         className="mono text-sm text-accent hover:opacity-70 transition-opacity break-words"
                       >
                         {exp.company}
@@ -345,18 +227,21 @@ export default function SinglePage() {
                   </div>
 
                   <div>
-                    <p className="text-text-muted text-base font-medium mb-4 leading-snug">{exp.role}</p>
+                    <h3 className="text-text-muted text-base font-medium mb-4 leading-snug">
+                      {exp.role}
+                      <span className="sr-only"> at {exp.company}</span>
+                    </h3>
                     <ul className="space-y-3 mb-5">
                       {exp.points.map((pt, j) => (
                         <li key={j} className="text-sm text-text-muted leading-relaxed flex gap-2 min-w-0">
-                          <span className="text-text-faint mt-0.5 shrink-0">▸</span>
+                          <span className="text-text-faint mt-0.5 shrink-0" aria-hidden="true">▸</span>
                           <span className="min-w-0 break-words">
                             {pt.href && pt.label ? (
                               <>
                                 <a
                                   href={pt.href}
                                   target="_blank"
-                                  rel="noopener noreferrer"
+                                  rel="noopener"
                                   className="text-text-light border-b border-border-inner hover:text-accent hover:border-accent transition-colors break-words"
                                 >
                                   {pt.label}
@@ -370,90 +255,96 @@ export default function SinglePage() {
                         </li>
                       ))}
                     </ul>
-                    <div className="flex flex-wrap gap-1.5">
+                    <ul className="flex flex-wrap gap-1.5 list-none p-0 m-0">
                       {exp.stack.map((t) => (
-                        <span
+                        <li
                           key={t}
                           className="mono text-xs text-text-light border border-border-badge px-2 py-0.5"
                         >
                           {t}
-                        </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
-                </div>
+                </article>
               </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="border-t border-border-main max-w-[680px] mx-auto" />
+      <div className="border-t border-border-main max-w-[680px] mx-auto" aria-hidden="true" />
 
       {/* ─── PROJECTS ─────────────────────────────────────── */}
-      <section id="projects" className="py-24 px-6">
+      <section id="projects" aria-labelledby="projects-heading" className="py-24 px-6">
         <div className="max-w-[900px] mx-auto">
-          <SectionHeader num="02" title="projects" />
+          <SectionHeader {...SECTION_BY_ID.projects} id="projects" />
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {projects.map((proj, i) => {
-              // Bento span map: 5-col grid, wide=3cols(60%), narrow=2cols(40%), full=5cols
-              const spanMap = [3, 2, 2, 3, 3, 2, 5];
-              const span = spanMap[i] ?? 2;
-              const colClass = span === 5 ? 'md:col-span-5' : span === 3 ? 'md:col-span-3' : 'md:col-span-2';
+            {PROJECTS.map((proj, i) => {
+              const colClass =
+                proj.span === 5 ? 'md:col-span-5' : proj.span === 3 ? 'md:col-span-3' : 'md:col-span-2';
+              const slug = proj.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
               return (
                 <FadeUp key={proj.index} delay={i * 0.06} className={colClass}>
-                  <motion.div
+                  <motion.article
                     whileHover={{ y: -2 }}
                     transition={{ duration: 0.2 }}
+                    aria-labelledby={`project-${slug}`}
                     className="p-7 border border-border-main rounded-lg h-full"
                   >
-                    <p className="mono text-xs text-text-light mb-3">{proj.index} ///</p>
-                    <h3 className="text-text-card-title text-lg font-semibold mb-2 tracking-tight">
+                    <p className="mono text-xs text-text-light mb-3" aria-hidden="true">{proj.index} ///</p>
+                    <h3
+                      id={`project-${slug}`}
+                      className="text-text-card-title text-lg font-semibold mb-2 tracking-tight"
+                    >
                       {proj.title}
                     </h3>
                     <p className="text-text-faint text-sm leading-relaxed mb-4">{proj.description}</p>
-                    <div className="flex flex-wrap gap-1.5 mb-4">
+                    <ul className="flex flex-wrap gap-1.5 mb-4 list-none p-0 m-0">
                       {proj.stack.map((t) => (
-                        <span
+                        <li
                           key={t}
                           className="mono text-xs text-text-light border border-border-inner px-1.5 py-0.5 rounded"
                         >
                           {t}
-                        </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                     <div className="flex gap-4">
                       <a
                         href={proj.github}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener"
+                        aria-label={`${proj.title} source code on GitHub`}
                         className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
                       >
-                        <Github className="w-3 h-3" /> github ↗
+                        <Github className="w-3 h-3" aria-hidden="true" /> github ↗
                       </a>
                       {proj.live && (
                         <a
                           href={proj.live}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="noopener"
+                          aria-label={`${proj.title} live demo`}
                           className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
                         >
-                          <ExternalLink className="w-3 h-3" /> live ↗
+                          <ExternalLink className="w-3 h-3" aria-hidden="true" /> live ↗
                         </a>
                       )}
                       {proj.youtube && (
                         <a
                           href={proj.youtube}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="noopener"
+                          aria-label={`${proj.title} video walkthrough on YouTube`}
                           className="mono text-xs text-text-link border-b border-border-inner hover:text-accent hover:border-accent transition-colors flex items-center gap-1"
                         >
-                          <ExternalLink className="w-3 h-3" /> demo ↗
+                          <Youtube className="w-3 h-3" aria-hidden="true" /> demo ↗
                         </a>
                       )}
                     </div>
-                  </motion.div>
+                  </motion.article>
                 </FadeUp>
               );
             })}
@@ -461,12 +352,16 @@ export default function SinglePage() {
         </div>
       </section>
 
-      <div className="border-t border-border-main max-w-[680px] mx-auto" />
+      <div className="border-t border-border-main max-w-[680px] mx-auto" aria-hidden="true" />
 
       {/* ─── CONTACT ──────────────────────────────────────── */}
-      <section id="contact" className="min-h-screen flex flex-col justify-center overflow-x-hidden py-24 px-6 text-center">
+      <section
+        id="contact"
+        aria-labelledby="contact-heading"
+        className="min-h-screen flex flex-col justify-center overflow-x-hidden py-24 px-6 text-center"
+      >
         <div className="mx-auto w-full max-w-[680px]">
-          <SectionHeader num="03" title="contact" />
+          <SectionHeader {...SECTION_BY_ID.contact} id="contact" />
 
           <FadeUp delay={0.1}>
             <p className="mono text-text-faint text-sm mb-10">
@@ -474,33 +369,55 @@ export default function SinglePage() {
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.15} className="mb-12 flex flex-wrap justify-center gap-x-6 gap-y-4 sm:mb-16">
-            {[
-              { icon: Mail, label: 'mail', href: 'mailto:sangampratapsingh21012006@gmail.com' },
-              { icon: Linkedin, label: 'linkedin', href: 'https://linkedin.com/in/sangam21' },
-              { icon: Github, label: 'github', href: 'https://github.com/Random-Pikachu' },
-            ].map(({ icon: Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mono inline-flex items-center gap-1.5 text-sm text-text-link border-b border-border-badge pb-0.5 hover:text-accent hover:border-accent transition-colors"
-              >
-                <Icon className="w-3 h-3" />
-                {label} ↗
-              </a>
-            ))}
+          <FadeUp delay={0.15} className="mb-12 sm:mb-16">
+            <address className="not-italic flex flex-wrap justify-center gap-x-6 gap-y-4">
+              {[
+                {
+                  icon: Mail,
+                  label: 'mail',
+                  href: `mailto:${SITE.email}`,
+                  aria: `Email ${SITE.name}`,
+                  me: false,
+                },
+                {
+                  icon: Linkedin,
+                  label: 'linkedin',
+                  href: SITE.profiles.linkedin,
+                  aria: `${SITE.name} on LinkedIn`,
+                  me: true,
+                },
+                {
+                  icon: Github,
+                  label: 'github',
+                  href: SITE.profiles.github,
+                  aria: `${SITE.name} on GitHub`,
+                  me: true,
+                },
+              ].map(({ icon: Icon, label, href, aria, me }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel={me ? 'me noopener' : 'noopener'}
+                  aria-label={aria}
+                  className="mono inline-flex items-center gap-1.5 text-sm text-text-link border-b border-border-badge pb-0.5 hover:text-accent hover:border-accent transition-colors"
+                >
+                  <Icon className="w-3 h-3" aria-hidden="true" />
+                  {label} ↗
+                </a>
+              ))}
+            </address>
           </FadeUp>
 
           <FadeUp delay={0.18} className="mb-16 w-full max-w-full">
+            <h3 className="sr-only">Coding activity</h3>
             <ContributionHeatmap />
           </FadeUp>
 
           <FadeUp delay={0.2}>
             <pre
               className="mono text-text-faint text-sm leading-relaxed select-none mb-8"
-              aria-hidden
+              aria-hidden="true"
             >
               {` (\\__/)
 (•ω•)ノ
@@ -510,11 +427,11 @@ export default function SinglePage() {
 
           <FadeUp delay={0.25}>
             <p className="mono text-text-faint text-[10px] leading-relaxed tracking-[0.12em] sm:text-xs sm:tracking-[0.15em] break-words">
-              © 2025 random-pikachu &nbsp;·&nbsp; [ pokedex entry #025 ]
+              © {year} {SITE.handle.toLowerCase()} &nbsp;·&nbsp; [ pokedex entry #025 ]
             </p>
           </FadeUp>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

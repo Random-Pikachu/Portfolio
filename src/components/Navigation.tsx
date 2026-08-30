@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { flushSync } from 'react-dom';
 import { Menu, X, CalendarDays, Sun, Moon } from 'lucide-react';
+import { SECTIONS, SITE } from '../data/site';
 
-const NAV_SECTIONS = ['about', 'experience', 'projects', 'contact'] as const;
+const NAV_IDS = SECTIONS.map((s) => s.id);
 
 function applyTheme(isDark: boolean) {
   document.documentElement.classList.toggle('dark', isDark);
@@ -12,26 +13,22 @@ function applyTheme(isDark: boolean) {
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return document.documentElement.classList.contains('dark') ||
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) ||
-        (localStorage.getItem('theme') === 'dark');
-    }
-    return true;
-  });
 
-  useEffect(() => {
-    applyTheme(isDark);
-  }, [isDark]);
-
+  /**
+   * The current theme is never held in React state. Both icons are rendered and
+   * CSS picks one off the `.dark` class that the inline script in index.html sets
+   * before first paint — so the prerendered HTML and the hydrated tree always
+   * match, and there is no wrong-icon flash on load.
+   */
   const toggleTheme = (e: React.MouseEvent) => {
-    const isDarkTarget = !isDark;
-    const x = e.clientX;
-    const y = e.clientY;
+    const isDarkTarget = !document.documentElement.classList.contains('dark');
+    const { clientX: x, clientY: y } = e;
 
-    if (!document.startViewTransition) {
-      setIsDark(isDarkTarget);
+    if (
+      !document.startViewTransition ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      applyTheme(isDarkTarget);
       return;
     }
 
@@ -41,164 +38,218 @@ export default function Navigation() {
     );
 
     const transition = document.startViewTransition(() => {
-      flushSync(() => {
-        applyTheme(isDarkTarget);
-        setIsDark(isDarkTarget);
-      });
+      flushSync(() => applyTheme(isDarkTarget));
     });
 
     transition.ready.then(() => {
       const clipPath = [
         `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`
+        `circle(${endRadius}px at ${x}px ${y}px)`,
       ];
       document.documentElement.animate(
-        {
-          clipPath: isDarkTarget ? [...clipPath].reverse() : clipPath,
-        },
+        { clipPath: isDarkTarget ? [...clipPath].reverse() : clipPath },
         {
           duration: 700,
           easing: 'cubic-bezier(0.87, 0, 0.13, 1)',
           fill: 'both',
-          pseudoElement: isDarkTarget ? '::view-transition-old(root)' : '::view-transition-new(root)',
+          pseudoElement: isDarkTarget
+            ? '::view-transition-old(root)'
+            : '::view-transition-new(root)',
         }
       );
     });
   };
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => {
       document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
+    };
   }, [open]);
 
-  // Scroll-based active section detection
-  const updateActive = useCallback(() => {
-    const offset = 120; // navbar height + some buffer
-    let current = '';
+  /**
+   * Active-section tracking via IntersectionObserver rather than a scroll
+   * listener. The old version called getBoundingClientRect() on every section on
+   * every scroll event, which forces a synchronous layout each time and shows up
+   * as interaction latency; the observer costs nothing between transitions.
+   *
+   * rootMargin carves out a band just under the navbar — a section counts as
+   * active once it reaches the top of the viewport.
+   */
+  useEffect(() => {
+    const els = NAV_IDS.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null
+    );
+    if (!els.length) return;
 
-    for (const id of NAV_SECTIONS) {
-      const el = document.getElementById(id);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= offset) {
-          current = id;
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
         }
-      }
-    }
-    setActive(current);
+        // Deepest section currently in the band wins, matching reading order.
+        let next = '';
+        for (let i = NAV_IDS.length - 1; i >= 0; i--) {
+          if (visible.has(NAV_IDS[i])) {
+            next = NAV_IDS[i];
+            break;
+          }
+        }
+        setActive(next);
+      },
+      { rootMargin: '-120px 0px -80% 0px', threshold: 0 }
+    );
+
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    updateActive();
-    window.addEventListener('scroll', updateActive, { passive: true });
-    return () => window.removeEventListener('scroll', updateActive);
-  }, [updateActive]);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  // Real anchors keep the links crawlable and keyboard-operable; this only takes
+  // over to add smooth scrolling and to close the mobile sheet.
+  const handleAnchor = (id: string) => (e: React.MouseEvent) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: 'smooth' });
+    history.replaceState(null, '', `#${id}`);
     setOpen(false);
   };
 
   const linkClass = (id: string) =>
-    `mono text-sm tracking-[0.08em] transition-colors duration-200 ${active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
+    `mono text-sm tracking-[0.08em] transition-colors duration-200 ${
+      active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
     }`;
+
+  const themeIcons = (
+    <>
+      <Sun size={18} className="hidden dark:block" aria-hidden="true" />
+      <Moon size={18} className="block dark:hidden" aria-hidden="true" />
+    </>
+  );
 
   return (
     <>
-      <nav className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-4 sm:px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md">
-        <button
-          onClick={() => scrollTo('hero')}
+      <nav
+        aria-label="Primary"
+        className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-4 sm:px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md"
+      >
+        <a
+          href="#hero"
+          onClick={handleAnchor('hero')}
           className="mono text-sm text-text-light tracking-[0.1em] hover:text-text-muted transition-colors"
         >
           random-pikachu
-        </button>
+        </a>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6">
-          {NAV_SECTIONS.map((id) => (
-            <button key={id} onClick={() => scrollTo(id)} className={linkClass(id)}>
-              {id}
-            </button>
+          {SECTIONS.map(({ id, label }) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              onClick={handleAnchor(id)}
+              aria-current={active === id ? 'true' : undefined}
+              className={linkClass(id)}
+            >
+              {label}
+            </a>
           ))}
-          <div className="w-px h-3 bg-border-inner" />
+          <div className="w-px h-3 bg-border-inner" aria-hidden="true" />
           <a
-            href="/resume.pdf"
+            href={SITE.resume}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="mono text-sm text-text-faint hover:text-accent transition-colors"
           >
             resume ↗
           </a>
           <a
-            href="https://www.cal.com/random-pikachu/15min"
+            href={SITE.calendar}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="mono text-sm text-text-faint hover:text-accent transition-colors flex items-center gap-1"
           >
-            <CalendarDays className="w-4 h-4" />
+            <CalendarDays className="w-4 h-4" aria-hidden="true" />
             schedule ↗
           </a>
-          <div className="w-px h-3 bg-border-inner" />
-          <button onClick={toggleTheme} className="text-text-faint hover:text-accent p-1 transition-colors">
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+          <div className="w-px h-3 bg-border-inner" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle colour theme"
+            className="text-text-faint hover:text-accent p-1 transition-colors"
+          >
+            {themeIcons}
           </button>
         </div>
 
         {/* Mobile controls */}
         <div className="md:hidden flex items-center gap-2">
           <button
+            type="button"
             onClick={toggleTheme}
             className="text-text-faint hover:text-accent p-2 transition-colors"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label="Toggle colour theme"
           >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            {themeIcons}
           </button>
           <button
+            type="button"
             onClick={() => setOpen(!open)}
             className="text-text-faint hover:text-accent p-2 transition-colors"
-            aria-label="Toggle menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
         </div>
       </nav>
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-x-0 top-[64px] bottom-0 z-40 border-b border-border-main bg-bg-base/95 backdrop-blur-md md:hidden transition-all duration-300 ${open ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-2'
-          }`}
+        id="mobile-menu"
+        aria-label="Primary"
+        className={`fixed inset-x-0 top-[64px] bottom-0 z-40 border-b border-border-main bg-bg-base/95 backdrop-blur-md md:hidden transition-all duration-300 ${
+          open
+            ? 'opacity-100 pointer-events-auto translate-y-0'
+            : 'opacity-0 pointer-events-none -translate-y-2'
+        }`}
       >
         <div className="flex h-full flex-col justify-between px-6 py-8">
           <div className="flex flex-col gap-6">
-            {NAV_SECTIONS.map((id) => (
-              <button
+            {SECTIONS.map(({ id, label }) => (
+              <a
                 key={id}
-                onClick={() => scrollTo(id)}
-                className={`mono text-left text-xl tracking-[0.08em] transition-colors ${active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
-                  }`}
+                href={`#${id}`}
+                onClick={handleAnchor(id)}
+                tabIndex={open ? 0 : -1}
+                className={`mono text-left text-xl tracking-[0.08em] transition-colors ${
+                  active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
+                }`}
               >
-                {id}
-              </button>
+                {label}
+              </a>
             ))}
           </div>
 
           <div className="flex flex-col gap-4 border-t border-border-main pt-6">
             <a
-              href="/resume.pdf"
+              href={SITE.resume}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
+              tabIndex={open ? 0 : -1}
               className="mono text-sm text-text-faint hover:text-accent transition-colors"
             >
               resume ↗
             </a>
             <a
-              href="https://www.cal.com/random-pikachu/15min"
+              href={SITE.calendar}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
+              tabIndex={open ? 0 : -1}
               className="mono text-sm text-text-faint hover:text-accent transition-colors"
             >
               schedule ↗

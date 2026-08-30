@@ -42,19 +42,29 @@ Everything lives on a single page (`/` — all other routes redirect home):
 ```
 Portfolio/
 ├── public/
-│   ├── assets/                    # Project screenshots
-│   ├── logo.svg                   # Favicon / logo
-│   └── resume.pdf                 # Downloadable resume (linked in nav)
+│   ├── favicon*.png / favicon.ico  # Generated icon set
+│   ├── og.png                      # 1200×630 social share card
+│   ├── robots.txt                  # Crawler rules (incl. LLM/answer engines)
+│   ├── site.webmanifest            # PWA / install metadata
+│   └── resume.pdf                  # Downloadable resume (linked in nav)
+├── scripts/
+│   └── prerender.mjs               # Post-build SSG: static HTML + JSON-LD + sitemap + llms.txt
 ├── src/
+│   ├── data/
+│   │   ├── site.ts                 # Single source of truth: bio, experience, projects, skills
+│   │   └── structuredData.ts       # schema.org @graph built from site.ts
 │   ├── components/
-│   │   ├── ContributionHeatmap.tsx  # GitHub activity heatmap via DevTrackr API
-│   │   └── Navigation.tsx
+│   │   ├── ContributionHeatmap.tsx # GitHub activity heatmap via DevTrackr API
+│   │   ├── Navigation.tsx
+│   │   └── SmoothScroll.tsx        # Lenis wrapper, respects prefers-reduced-motion
 │   ├── hooks/
-│   │   └── useScramble.ts           # Hero text-scramble animation
+│   │   └── useScramble.ts          # Hero text-scramble animation
 │   ├── pages/
-│   │   └── SinglePage.tsx           # The entire site: hero → about → experience → projects → contact
+│   │   └── SinglePage.tsx          # The entire site: hero → about → experience → projects → contact
+│   ├── App.tsx                     # Shared tree for browser + prerender
+│   ├── entry-server.tsx            # Prerender entry (renderToString)
 │   ├── index.css
-│   └── main.tsx
+│   └── main.tsx                    # Browser entry (hydrateRoot)
 ├── index.html
 ├── vercel.json
 ├── vite.config.ts
@@ -75,6 +85,39 @@ Portfolio/
 | 05 | **SecurePDF**          | Offline PDF DRM tool with hardware binding and time-limited access |
 | 06 | **Code-Sync**          | Real-time collaborative code editor                                |
 | 07 | **Sorting Visualizer** | Interactive visualization of sorting algorithms                    |
+
+---
+
+## ✦ Search & Performance
+
+The site is a client-rendered SPA, so `npm run build` adds a prerender pass
+(`scripts/prerender.mjs`) that renders the app to static HTML and bakes it into
+`dist/index.html`. Googlebot runs JavaScript, but Bing, DuckDuckGo, LinkedIn,
+Slack and every LLM crawler read raw HTML only — prerendering is what makes the
+content visible to them.
+
+The build pipeline:
+
+```
+tsc -b                                  # typecheck
+vite build                              # client bundle
+vite build --ssr src/entry-server.tsx   # prerender bundle (deleted after use)
+node scripts/prerender.mjs              # inject HTML + JSON-LD, emit sitemap.xml + llms.txt
+```
+
+`sitemap.xml` and `llms.txt` are **generated at build time** — do not add them to
+`public/`, they would be overwritten.
+
+Everything a crawler reads (bio, roles, project list, schema.org `@graph`) comes
+from `src/data/site.ts`, so the structured data can never drift from the page.
+
+### Routing note
+
+`vercel.json` rewrites every path to `/` on purpose: arbitrary URLs like
+`/some-company` are used as open-tracking tokens for outreach emails. Those paths
+serve the homepage but carry an `X-Robots-Tag: noindex, follow` header and the
+page's canonical points at `/`, so they never appear in search results as
+duplicate pages.
 
 ---
 

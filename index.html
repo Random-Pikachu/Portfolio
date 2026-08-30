@@ -3,67 +3,100 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-  <link rel="apple-touch-icon" href="/logo.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#080808" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- Resource hints: font CSS and the analytics/heatmap origins are all
+       cross-origin, so warming the connections early removes a full RTT each. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://cloud.umami.is" />
+  <link rel="dns-prefetch" href="https://devtrackr-backend-84jw.onrender.com" />
+  <link rel="preconnect" href="https://devtrackr-backend-84jw.onrender.com" crossorigin />
+
+  <!-- Loaded from HTML rather than @import in CSS: an @import puts the font
+       request behind the stylesheet in the critical chain instead of beside it. -->
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+
+  <!-- Icons -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="dark light" />
 
   <!-- Primary SEO -->
   <title>Sangam Pratap Singh — Software Engineer & Open Source Contributor</title>
   <meta name="description"
     content="Portfolio of Sangam Pratap Singh (Random-Pikachu) — software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra, DevTrackr and more. C++, Go, TypeScript, React, PostgreSQL." />
   <meta name="author" content="Sangam Pratap Singh" />
+  <meta name="creator" content="Sangam Pratap Singh" />
+  <meta name="publisher" content="Sangam Pratap Singh" />
+  <meta name="keywords"
+    content="Sangam Pratap Singh, Random-Pikachu, software engineer, full stack developer, KDE Plasma contributor, open source, C++, Go, TypeScript, React, PostgreSQL, ABV-IIITM Gwalior, portfolio" />
+  <meta name="application-name" content="Sangam Pratap Singh" />
+  <meta name="apple-mobile-web-app-title" content="Sangam" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <!-- Let Google use full-length snippets and large image previews. -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
   <link rel="canonical" href="https://random-pikachu.dev/" />
+  <link rel="alternate" hreflang="en" href="https://random-pikachu.dev/" />
+  <link rel="alternate" hreflang="x-default" href="https://random-pikachu.dev/" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+  <!-- Identity: rel=me ties this page to the profiles it claims. -->
+  <link rel="me" href="https://github.com/Random-Pikachu" />
+  <link rel="me" href="https://linkedin.com/in/sangam21" />
+  <link rel="me" href="https://invent.kde.org/randompikachu" />
+  <link rel="author" href="https://github.com/Random-Pikachu" />
 
   <!-- Open Graph -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://random-pikachu.dev/" />
   <meta property="og:site_name" content="Sangam Pratap Singh" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Sangam Pratap Singh — Software Engineer & Open Source Contributor" />
   <meta property="og:description"
     content="Software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra and DevTrackr. C++, Go, TypeScript, React, PostgreSQL." />
   <meta property="og:image" content="https://random-pikachu.dev/og.png" />
+  <meta property="og:image:secure_url" content="https://random-pikachu.dev/og.png" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="/sangam — Sangam Pratap Singh, Software Engineer" />
+  <meta property="og:image:alt" content="Sangam Pratap Singh — Software Engineer" />
+  <meta property="profile:first_name" content="Sangam" />
+  <meta property="profile:last_name" content="Singh" />
+  <meta property="profile:username" content="Random-Pikachu" />
 
-  <!-- Twitter -->
+  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://random-pikachu.dev/" />
   <meta name="twitter:title" content="Sangam Pratap Singh — Software Engineer & Open Source Contributor" />
   <meta name="twitter:description"
     content="Software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra and DevTrackr." />
   <meta name="twitter:image" content="https://random-pikachu.dev/og.png" />
+  <meta name="twitter:image:alt" content="Sangam Pratap Singh — Software Engineer" />
 
-  <!-- Structured data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Sangam Pratap Singh",
-    "alternateName": ["Random-Pikachu", "random pikachu"],
-    "url": "https://random-pikachu.dev/",
-    "image": "https://random-pikachu.dev/og.png",
-    "jobTitle": "Software Engineer",
-    "worksFor": {
-      "@type": "Organization",
-      "name": "Retsguide",
-      "url": "https://retsguide.dk/"
-    },
-    "alumniOf": {
-      "@type": "CollegeOrUniversity",
-      "name": "ABV-IIITM Gwalior",
-      "url": "https://www.iiitm.ac.in/"
-    },
-    "knowsAbout": ["C++", "Go", "TypeScript", "React", "Node.js", "PostgreSQL", "Qt/QML", "KDE Plasma", "Open Source", "Legal Tech", "Photography"],
-    "sameAs": [
-      "https://github.com/Random-Pikachu",
-      "https://linkedin.com/in/sangam21",
-      "https://invent.kde.org/randompikachu"
-    ]
-  }
-  </script>
+  <!-- Structured data (injected at build time by scripts/prerender.mjs) -->
+  <!--structured-data-->
 
   <script defer src="https://cloud.umami.is/script.js" data-website-id="6b32c0a9-7f49-481a-8fc1-a95133286f30"></script>
+
+  <!-- Applies the saved theme before first paint so there is no flash. Must stay
+       inline and blocking; the same class drives the nav's theme icons. -->
   <script>
     try {
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -73,17 +106,21 @@
       }
     } catch (_) { }
   </script>
+
+  <!-- The prerendered markup carries Framer Motion's initial opacity:0. Without
+       JS those elements would never animate in, so force them visible. -->
+  <noscript>
+    <style>
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    </style>
+  </noscript>
 </head>
 
 <body>
   <div id="root"></div>
-  <noscript>
-    <h1>Sangam Pratap Singh</h1>
-    <p>Software engineer building legal tech at <a href="https://retsguide.dk/">Retsguide</a> and open source
-      contributor to KDE Plasma. Builder of CodeRivals, Astra, DevTrackr, GitStory, SecurePDF and Code-Sync.</p>
-    <p><a href="https://github.com/Random-Pikachu">GitHub</a> · <a
-        href="https://linkedin.com/in/sangam21">LinkedIn</a> · <a href="/resume.pdf">Resume</a></p>
-  </noscript>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 

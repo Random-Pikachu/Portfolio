@@ -162,7 +162,7 @@ export default function SinglePage() {
               <br />
               I like building interesting projects and occasionally contributing to
               open source. Currently reading about{' '}
-              <span className="text-text-muted font-medium">databases</span>. Besides this,
+              <span className="text-text-muted font-medium">machine learning</span>. Besides this,
               I like doing{' '}
               <a href="/photography" className="link-wavy font-medium">
                 photography

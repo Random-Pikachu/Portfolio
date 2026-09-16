@@ -15,7 +15,7 @@ A minimal, dark-themed single-page developer portfolio built with **React**, **T
 | Framework   | [React 19](https://react.dev/) + TypeScript      |
 | Build       | [Vite 7](https://vite.dev/)                      |
 | Styling     | [Tailwind CSS v4](https://tailwindcss.com/)      |
-| Animations  | [Framer Motion](https://motion.dev/) (scroll-triggered fade-ups) + custom text-scramble hook |
+| Animations  | [Framer Motion](https://motion.dev/): five primitives in `src/motion/` (mask reveal, fade-up, scroll-linked word highlighter, scroll-linked track, counter) + a text-scramble hook |
 | Scrolling   | [Lenis](https://github.com/darkroomengineering/lenis) (smooth scroll) |
 | Icons       | [Lucide React](https://lucide.dev/)              |
 | Analytics   | [Umami](https://umami.is/) + [Vercel Analytics](https://vercel.com/analytics) |
@@ -47,8 +47,11 @@ Portfolio/
 │   ├── robots.txt                  # Crawler rules (incl. LLM/answer engines)
 │   ├── site.webmanifest            # PWA / install metadata
 │   └── resume.pdf                  # Downloadable resume (linked in nav)
+├── design/shots/                   # Project screenshot sources (committed)
+├── public/work/                    # Project banners, WebP at 1600 and 960 (generated, committed)
 ├── scripts/
-│   └── prerender.mjs               # Post-build SSG: static HTML + JSON-LD + sitemap + llms.txt
+│   ├── prerender.mjs               # Post-build SSG: static HTML + JSON-LD + sitemap + llms.txt
+│   └── build-work.mjs              # Cuts public/work from design/shots (`npm run work`)
 ├── src/
 │   ├── data/
 │   │   ├── site.ts                 # Single source of truth: bio, experience, projects, skills
@@ -59,11 +62,15 @@ Portfolio/
 │   │   └── SmoothScroll.tsx        # Lenis wrapper, respects prefers-reduced-motion
 │   ├── hooks/
 │   │   └── useScramble.ts          # Hero text-scramble animation
+│   ├── motion/
+│   │   ├── tokens.ts               # One easing, three durations, one stagger
+│   │   └── primitives.tsx          # Reveal, FadeUp, Words, Counter
+│   ├── sections/                   # Hero, About, Experience, Work (the horizontal strip), Contact, Footer
 │   ├── pages/
-│   │   └── SinglePage.tsx          # The entire site: hero → about → experience → projects → contact
+│   │   └── SinglePage.tsx          # Composes the sections in order
 │   ├── App.tsx                     # Shared tree for browser + prerender
 │   ├── entry-server.tsx            # Prerender entry (renderToString)
-│   ├── index.css
+│   ├── index.css                   # Tokens (one grey ramp, one accent), type scale, grid, work strip
 │   └── main.tsx                    # Browser entry (hydrateRoot)
 ├── index.html
 ├── vercel.json

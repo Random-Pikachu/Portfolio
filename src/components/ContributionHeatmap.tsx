@@ -24,13 +24,9 @@ export default function ContributionHeatmap() {
     useEffect(() => {
         async function fetchData() {
             try {
-                // Refresh aggregate data using the same POST endpoint as the live client.
-                await fetch(`${BASE_URL}/${USER_ID}/aggregate`, {
-                    method: 'POST',
-                    credentials: 'omit',
-                });
-
-                // Then fetch heatmap
+                // Read only. The aggregate refresh used to be triggered from here on
+                // every visit, which meant a cold Render dyno and a thirty-second
+                // wait for each visitor; the service refreshes on its own schedule.
                 const year = new Date().getFullYear();
                 const res = await fetch(
                     `${BASE_URL}/${USER_ID}/heatmap?start=${year}-01-01&end=${year}-12-31`
@@ -52,14 +48,27 @@ export default function ContributionHeatmap() {
     }, []);
 
     if (loading) {
+        // The shape of the chart, in faint dots, while it loads.
         return (
-            <div className="flex items-center justify-center py-8">
-                <span className="mono text-xs text-text-faint animate-pulse">loading contributions...</span>
+            <div className="w-full max-w-full overflow-hidden" aria-busy="true" aria-label="Loading contributions">
+                <div className="h-5 w-40 skeleton-dot rounded-sm bg-border-main" />
+                <div className="mt-6 grid grid-flow-col gap-[3px]" style={{ gridTemplateRows: 'repeat(7, 12px)' }}>
+                    {Array.from({ length: 53 * 7 }, (_, i) => (
+                        <span
+                            key={i}
+                            className="skeleton-dot block h-[10px] w-[10px] rounded-full bg-border-main"
+                            style={{ animationDelay: `${(i % 53) * 20}ms` }}
+                        />
+                    ))}
+                </div>
             </div>
         );
     }
 
-    if (days.length === 0) return null;
+    // The feed lives on a free dyno; when it is asleep, say so rather than leave a hole.
+    if (days.length === 0) {
+        return <p className="mono text-xs text-text-faint">the activity feed is asleep right now.</p>;
+    }
 
     // Build the grid: 53 columns (weeks) x 7 rows (days)
     // First, find the starting day of week for Jan 1
@@ -127,7 +136,7 @@ export default function ContributionHeatmap() {
         <div className="w-full max-w-full overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-2">
                 <p className="mono text-sm text-text-muted">
-                    <span className="text-accent font-semibold">{totalContribs}</span> contributions in {year}
+                    <span className="text-text-base font-semibold tabular-nums">{totalContribs}</span> contributions in {year}
                 </p>
                 <div className="flex items-center gap-1.5 mono text-xs text-text-faint">
                     <span>less</span>
@@ -145,7 +154,7 @@ export default function ContributionHeatmap() {
                     href="https://devtrackr-hci.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent hover:underline"
+                    className="underline-draw text-text-base"
                 >
                     DevTrackr
                 </a>
@@ -160,7 +169,7 @@ export default function ContributionHeatmap() {
                             x={x}
                             y={10}
                             className="fill-text-faint"
-                            style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace' }}
+                            style={{ fontSize: '10px', fontFamily: 'var(--font-mono)' }}
                         >
                             {label}
                         </text>

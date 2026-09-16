@@ -1,9 +1,22 @@
 import { useState, useEffect } from 'react';
 import { flushSync } from 'react-dom';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Menu, X, CalendarDays, Sun, Moon } from 'lucide-react';
 import { SECTIONS, SITE } from '../data/site';
 
 const NAV_IDS = SECTIONS.map((s) => s.id);
+
+/** The active link shows its index, so the nav and the section rail agree. */
+function Index({ num, on }: { num: string; on: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`mono mr-1.5 text-[10px] text-accent transition-opacity duration-300 ${on ? 'opacity-100' : 'opacity-0'}`}
+    >
+      {num}
+    </span>
+  );
+}
 
 function applyTheme(isDark: boolean) {
   document.documentElement.classList.toggle('dark', isDark);
@@ -22,7 +35,13 @@ export default function Navigation({
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
+  const [scrolled, setScrolled] = useState(false);
   const isHome = variant === 'home';
+
+  // Transparent over the hero; the hairline and blur arrive with the first
+  // scroll. The progress line under the bar is the page's position.
+  const { scrollY, scrollYProgress } = useScroll();
+  useMotionValueEvent(scrollY, 'change', (v) => setScrolled(v > 24));
   const sectionHref = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 
   /**
@@ -131,9 +150,10 @@ export default function Navigation({
   };
 
   const linkClass = (id: string) =>
-    `mono text-sm tracking-[0.08em] transition-colors duration-200 ${
-      active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
+    `mono inline-flex items-center text-[13px] tracking-[0.08em] transition-colors duration-200 ${
+      active === id ? 'text-text-base' : 'text-text-faint hover:text-text-base'
     }`;
+
 
   const themeIcons = (
     <>
@@ -146,19 +166,31 @@ export default function Navigation({
     <>
       <nav
         aria-label="Primary"
-        className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-4 sm:px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md"
+        className={`fixed top-0 inset-x-0 z-50 h-14 flex items-center justify-between px-5 sm:px-8 transition-[background-color,border-color] duration-500 ${
+          scrolled || open || !isHome
+            ? 'border-b border-border-main bg-bg-base/80 backdrop-blur-md'
+            : 'border-b border-transparent bg-transparent'
+        }`}
       >
         <a
           href={isHome ? '#hero' : '/'}
           onClick={handleAnchor('hero')}
-          className="mono text-sm text-text-light tracking-[0.1em] hover:text-text-muted transition-colors"
+          className="mono text-sm text-text-base tracking-[0.04em] transition-colors"
+          aria-label="Back to the top"
         >
-          random-pikachu
+          /sangam<span className="caret" aria-hidden="true" />
         </a>
+        {isHome ? (
+          <motion.span
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-accent"
+            style={{ scaleX: scrollYProgress }}
+          />
+        ) : null}
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6">
-          {SECTIONS.map(({ id, label }) => (
+          {SECTIONS.map(({ id, label, num }) => (
             <a
               key={id}
               href={sectionHref(id)}
@@ -166,16 +198,18 @@ export default function Navigation({
               aria-current={active === id ? 'true' : undefined}
               className={linkClass(id)}
             >
+              <Index num={num} on={active === id} />
               {label}
             </a>
           ))}
           <a
             href="/photography"
             aria-current={!isHome ? 'page' : undefined}
-            className={`mono text-sm tracking-[0.08em] transition-colors duration-200 ${
-              !isHome ? 'text-accent' : 'text-text-faint hover:text-accent'
+            className={`mono text-[13px] tracking-[0.08em] transition-colors duration-200 ${
+              !isHome ? 'text-text-base' : 'text-text-faint hover:text-text-base'
             }`}
           >
+            <Index num="05" on={!isHome} />
             photography
           </a>
           <div className="w-px h-3 bg-border-inner" aria-hidden="true" />
@@ -183,7 +217,7 @@ export default function Navigation({
             href={SITE.resume}
             target="_blank"
             rel="noopener"
-            className="mono text-sm text-text-faint hover:text-accent transition-colors"
+            className="mono text-[13px] text-text-faint hover:text-text-base transition-colors"
           >
             resume ↗
           </a>
@@ -191,7 +225,7 @@ export default function Navigation({
             href={SITE.calendar}
             target="_blank"
             rel="noopener"
-            className="mono text-sm text-text-faint hover:text-accent transition-colors flex items-center gap-1"
+            className="mono text-[13px] text-text-faint hover:text-text-base transition-colors flex items-center gap-1"
           >
             <CalendarDays className="w-4 h-4" aria-hidden="true" />
             schedule ↗
@@ -201,7 +235,7 @@ export default function Navigation({
             type="button"
             onClick={toggleTheme}
             aria-label="Toggle colour theme"
-            className="text-text-faint hover:text-accent p-1 transition-colors"
+            className="text-text-faint hover:text-text-base p-1 transition-colors"
           >
             {themeIcons}
           </button>
@@ -212,7 +246,7 @@ export default function Navigation({
           <button
             type="button"
             onClick={toggleTheme}
-            className="text-text-faint hover:text-accent p-2 transition-colors"
+            className="text-text-faint hover:text-text-base p-2 transition-colors"
             aria-label="Toggle colour theme"
           >
             {themeIcons}
@@ -220,7 +254,7 @@ export default function Navigation({
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className="text-text-faint hover:text-accent p-2 transition-colors"
+            className="text-text-faint hover:text-text-base p-2 transition-colors"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -234,7 +268,7 @@ export default function Navigation({
       <div
         id="mobile-menu"
         aria-label="Primary"
-        className={`fixed inset-x-0 top-[64px] bottom-0 z-40 border-b border-border-main bg-bg-base/95 backdrop-blur-md md:hidden transition-all duration-300 ${
+        className={`fixed inset-x-0 top-14 bottom-0 z-40 border-b border-border-main bg-bg-base/95 backdrop-blur-md md:hidden transition-all duration-300 ${
           open
             ? 'opacity-100 pointer-events-auto translate-y-0'
             : 'opacity-0 pointer-events-none -translate-y-2'
@@ -249,7 +283,7 @@ export default function Navigation({
                 onClick={handleAnchor(id)}
                 tabIndex={open ? 0 : -1}
                 className={`mono text-left text-xl tracking-[0.08em] transition-colors ${
-                  active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
+                  active === id ? 'text-text-base' : 'text-text-faint hover:text-text-base'
                 }`}
               >
                 {label}
@@ -262,7 +296,7 @@ export default function Navigation({
               href="/photography"
               tabIndex={open ? 0 : -1}
               className={`mono text-sm transition-colors ${
-                !isHome ? 'text-accent' : 'text-text-faint hover:text-accent'
+                !isHome ? 'text-text-base' : 'text-text-faint hover:text-text-base'
               }`}
             >
               photography
@@ -272,7 +306,7 @@ export default function Navigation({
               target="_blank"
               rel="noopener"
               tabIndex={open ? 0 : -1}
-              className="mono text-sm text-text-faint hover:text-accent transition-colors"
+              className="mono text-[13px] text-text-faint hover:text-text-base transition-colors"
             >
               resume ↗
             </a>
@@ -281,7 +315,7 @@ export default function Navigation({
               target="_blank"
               rel="noopener"
               tabIndex={open ? 0 : -1}
-              className="mono text-sm text-text-faint hover:text-accent transition-colors"
+              className="mono text-[13px] text-text-faint hover:text-text-base transition-colors"
             >
               schedule ↗
             </a>

@@ -13,7 +13,7 @@ export default function Photography() {
       <section className="px-6 pt-32 pb-16" aria-labelledby="photography-heading">
         <div className="max-w-[1200px] mx-auto">
           <p className="mono text-accent text-sm tracking-[0.2em] mb-2" aria-hidden="true">
-            [ 04 ]
+            [ 05 ]
           </p>
           <h1
             id="photography-heading"

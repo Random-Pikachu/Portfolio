@@ -160,6 +160,17 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     index: '01',
+    title: 'Ephemeris',
+    description:
+      'A daily planner, habit tracker and journal that asks for thirty seconds an evening. Name the blocks of a good day, record which ones happened, keep a streak and a Markdown diary, and get one email at dusk in your own time zone. Gemini summarises a day or reviews a week from your own entries.',
+    stack: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Gemini', 'Resend'],
+    github: 'https://github.com/Random-Pikachu/ephemeris-client',
+    live: 'https://ephemeris.random-pikachu.dev/',
+    youtube: '',
+    span: 5,
+  },
+  {
+    index: '02',
     title: 'CodeRivals',
     description:
       'A real-time 1v1 competitive coding platform where players duel in live matches and strategically deploy power cards to influence round outcomes.',
@@ -170,7 +181,7 @@ export const PROJECTS: Project[] = [
     span: 3,
   },
   {
-    index: '02',
+    index: '03',
     title: 'Astra',
     description:
       'A desktop tool that scans your code for security risks. It checks your project dependencies against vulnerability databases and uses AI to automatically suggest fixes, saving you from manual patching.',
@@ -181,7 +192,7 @@ export const PROJECTS: Project[] = [
     span: 2,
   },
   {
-    index: '03',
+    index: '04',
     title: 'DevTrackr',
     description:
       'Go service with PostgreSQL and REST APIs that aggregates user activity from platforms like GitHub, LeetCode, and Codeforces, and delivers daily digests.',
@@ -192,7 +203,7 @@ export const PROJECTS: Project[] = [
     span: 2,
   },
   {
-    index: '04',
+    index: '05',
     title: 'GitStory',
     description:
       'AI-powered tool designed to visualize and analyze GitHub repositories through a conversational interface. It renders rich, interactive components such as commit timelines, pull request summaries, diff viewers, and risk heatmaps.',
@@ -203,7 +214,7 @@ export const PROJECTS: Project[] = [
     span: 3,
   },
   {
-    index: '05',
+    index: '06',
     title: 'SecurePDF',
     description:
       "An offline desktop tool that locks PDFs to a specific computer so they can't be shared. It uses hardware binding and time limits to control access, while completely disabling printing and copying to prevent leaks.",
@@ -214,7 +225,7 @@ export const PROJECTS: Project[] = [
     span: 3,
   },
   {
-    index: '06',
+    index: '07',
     title: 'Code-Sync',
     description:
       'A collaborative code editor that works like Google Docs for developers. It lets you write code with friends in real-time, see their cursor position in the editor, and run code using Judge0.',
@@ -225,7 +236,7 @@ export const PROJECTS: Project[] = [
     span: 2,
   },
   {
-    index: '07',
+    index: '08',
     title: 'Sorting Visualizer',
     description:
       'Interactive visualizer for sorting algorithms. Watch Merge Sort, Quick Sort and more in real-time.',

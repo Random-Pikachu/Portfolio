@@ -15,7 +15,7 @@ const [ABOUT, EXPERIENCE, PROJECTS, CONTACT] = SECTIONS;
  */
 export default function SinglePage() {
   return (
-    <main id="main" className="min-h-screen text-text-base">
+    <main id="main" className="min-h-screen">
       <Sheet id={COVER.id} num={COVER.num} block={COVER.block} heading={COVER.heading} caption={`${PLACE.city} · ${PLACE.coords}`}>
         <Cover />
       </Sheet>

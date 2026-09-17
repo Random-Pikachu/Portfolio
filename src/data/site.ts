@@ -24,8 +24,8 @@ export const SITE = {
   ogImage: `${ORIGIN}/og.png`,
   locale: 'en_US',
   lang: 'en',
-  themeColorDark: '#080808',
-  themeColorLight: '#ffffff',
+  themeColorDark: '#0a0a0a',
+  themeColorLight: '#f3f0e8',
   calendar: 'https://www.cal.com/random-pikachu/15min',
   resume: '/resume.pdf',
   location: {

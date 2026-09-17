@@ -24,20 +24,6 @@
   --heatmap-3: #6b6963;
   --heatmap-4: #161616;
 
-  /* Legacy names, kept until every section is rebuilt on the new ones. */
-  --bg-base: var(--paper);
-  --bg-card: var(--paper-2);
-  --bg-card-hover: var(--paper-2);
-  --text-base: var(--ink);
-  --text-muted: var(--ink-2);
-  --text-light: var(--ink-2);
-  --text-faint: var(--ink-3);
-  --text-link: var(--ink-2);
-  --text-card-title: var(--ink);
-  --border-main: var(--line);
-  --border-inner: var(--line-2);
-  --border-badge: var(--line-2);
-
   /* Type roles. Sizes in rem; the viewport term keeps display type on the
      sheet at every width. */
   --text-display-1: clamp(3.5rem, 7.6vw, 7rem);

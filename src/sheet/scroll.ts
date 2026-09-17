@@ -35,7 +35,8 @@ export function attachLenis(instance: Lenis) {
     type: 'proximity',
     distanceThreshold: coarse ? '25%' : '45%',
     debounce: 400,
-    duration: 0.9,
+    // A jump is not motion: under reduced motion the snap still lands, at once.
+    duration: reducedMotion() ? 0 : 0.9,
     easing: easeInOut,
   });
   sheets.forEach((_, el) => snap?.addElement(el, { align: 'start' }));

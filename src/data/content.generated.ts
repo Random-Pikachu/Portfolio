@@ -30,7 +30,7 @@ export interface Note {
 
 export const WORK: Record<string, WorkMeta> = {
   "astra": {
-    "published": true,
+    "published": false,
     "role": "",
     "hardest": "",
     "outcomes": [],
@@ -38,7 +38,7 @@ export const WORK: Record<string, WorkMeta> = {
     "headings": []
   },
   "code-sync": {
-    "published": true,
+    "published": false,
     "role": "",
     "hardest": "",
     "outcomes": [],
@@ -46,7 +46,7 @@ export const WORK: Record<string, WorkMeta> = {
     "headings": []
   },
   "coderivals": {
-    "published": true,
+    "published": false,
     "role": "",
     "hardest": "",
     "outcomes": [],
@@ -54,7 +54,7 @@ export const WORK: Record<string, WorkMeta> = {
     "headings": []
   },
   "devtrackr": {
-    "published": true,
+    "published": false,
     "role": "",
     "hardest": "",
     "outcomes": [],
@@ -62,7 +62,7 @@ export const WORK: Record<string, WorkMeta> = {
     "headings": []
   },
   "ephemeris": {
-    "published": true,
+    "published": false,
     "role": "",
     "hardest": "",
     "outcomes": [],
@@ -70,7 +70,7 @@ export const WORK: Record<string, WorkMeta> = {
     "headings": []
   },
   "gitstory": {
-    "published": true,
+    "published": false,
     "role": "",
     "hardest": "",
     "outcomes": [],
@@ -80,27 +80,4 @@ export const WORK: Record<string, WorkMeta> = {
 };
 
 /** Newest first. */
-export const NOTES: Note[] = [
-  {
-    "slug": "_example",
-    "title": "An example note",
-    "date": "2026-09-17",
-    "summary": "The shape of a note: front matter, headings, a code block. Delete or rename this file.",
-    "draft": true,
-    "minutes": 1,
-    "html": "<p>This file begins with an underscore and is marked draft, so a normal build\nignores it; <code>CONTENT_DRAFTS=1 npm run build</code> includes it, which is how the\nnote template is reviewed. Copy it to <code>content/blog/&#x3C;slug>.md</code>, give it a\nreal title, date and summary, set <code>draft: false</code>, and the note is built at\n<code>/blog/&#x3C;slug></code> on the next build.</p>\n<h2 id=\"headings-become-the-outline\">Headings become the outline</h2>\n<p>Every <code>##</code> and <code>###</code> heading appears in the \"On this sheet\" column and gets\nan id you can link to.</p>\n<h3 id=\"code-is-highlighted-at-build\">Code is highlighted at build</h3>\n<pre class=\"shiki ink\" style=\"color:var(--ink)\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:var(--ink);font-weight:bold\">export</span><span style=\"color:var(--ink);font-weight:bold\"> function</span><span style=\"color:var(--ink)\"> moonPhase</span><span style=\"color:var(--ink-4)\">(</span><span style=\"color:var(--ink)\">date</span><span style=\"color:var(--ink-4);font-weight:bold\">:</span><span style=\"color:var(--ink)\"> Date</span><span style=\"color:var(--ink-4)\">)</span><span style=\"color:var(--ink-4)\"> {</span></span>\n<span class=\"line\"><span style=\"color:var(--ink);font-weight:bold\">  const</span><span style=\"color:var(--ink)\"> jd</span><span style=\"color:var(--ink-4);font-weight:bold\"> =</span><span style=\"color:var(--ink)\"> date</span><span style=\"color:var(--ink-4)\">.</span><span style=\"color:var(--ink)\">getTime</span><span style=\"color:var(--ink-4)\">()</span><span style=\"color:var(--ink-4);font-weight:bold\"> /</span><span style=\"color:var(--ink-2)\"> 86400000</span><span style=\"color:var(--ink-4);font-weight:bold\"> +</span><span style=\"color:var(--ink-2)\"> 2440587.5</span><span style=\"color:var(--ink-4)\">;</span></span>\n<span class=\"line\"><span style=\"color:var(--ink);font-weight:bold\">  return</span><span style=\"color:var(--ink-4)\"> (</span><span style=\"color:var(--ink-2)\">1</span><span style=\"color:var(--ink-4);font-weight:bold\"> -</span><span style=\"color:var(--ink)\"> Math</span><span style=\"color:var(--ink-4)\">.</span><span style=\"color:var(--ink)\">cos</span><span style=\"color:var(--ink-4)\">(</span><span style=\"color:var(--ink)\">elongation</span><span style=\"color:var(--ink-4)\">(</span><span style=\"color:var(--ink)\">jd</span><span style=\"color:var(--ink-4)\">)))</span><span style=\"color:var(--ink-4);font-weight:bold\"> /</span><span style=\"color:var(--ink-2)\"> 2</span><span style=\"color:var(--ink-4)\">;</span><span style=\"color:var(--ink-3);font-style:italic\"> // illuminated fraction</span></span>\n<span class=\"line\"><span style=\"color:var(--ink-4)\">}</span></span></code></pre>\n<p>Tables, task lists and footnotes work too, since the Markdown is\nGitHub-flavoured.</p>\n<table>\n<thead>\n<tr>\n<th>Field</th>\n<th>Where it shows</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>title</td>\n<td>the index and the top</td>\n</tr>\n<tr>\n<td>summary</td>\n<td>under the title</td>\n</tr>\n</tbody>\n</table>",
-    "headings": [
-      {
-        "depth": 2,
-        "id": "headings-become-the-outline",
-        "text": "Headings become the outline"
-      },
-      {
-        "depth": 3,
-        "id": "code-is-highlighted-at-build",
-        "text": "Code is highlighted at build"
-      }
-    ],
-    "number": "001"
-  }
-];
+export const NOTES: Note[] = [];

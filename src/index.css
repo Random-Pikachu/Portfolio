@@ -47,19 +47,6 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
 
-  --color-bg-base: var(--bg-base);
-  --color-bg-card: var(--bg-card);
-  --color-bg-card-hover: var(--bg-card-hover);
-  --color-text-base: var(--text-base);
-  --color-text-muted: var(--text-muted);
-  --color-text-light: var(--text-light);
-  --color-text-faint: var(--text-faint);
-  --color-text-link: var(--text-link);
-  --color-text-card-title: var(--text-card-title);
-  --color-border-main: var(--border-main);
-  --color-border-inner: var(--border-inner);
-  --color-border-badge: var(--border-badge);
-
   --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-display: "Zodiak", Georgia, "Times New Roman", serif;
@@ -131,12 +118,10 @@
 
 /* ─── Type roles ───────────────────────────────────────────────────────────
    Eight roles. Zodiak never below 24px, Plex Mono never above 14px, italics
-   only in Zodiak, uppercase only in labels. The legacy class names alias
-   the roles until every section is rebuilt.
+   only in Zodiak, uppercase only in labels.
    ────────────────────────────────────────────────────────────────────────── */
 @layer components {
-  .t-display-1,
-  .t-display {
+  .t-display-1 {
     font-family: var(--font-display);
     font-weight: 400;
     font-size: var(--text-display-1);
@@ -144,9 +129,7 @@
     letter-spacing: -0.015em;
   }
 
-  .t-display-2,
-  .t-title,
-  .t-card {
+  .t-display-2 {
     font-family: var(--font-display);
     font-weight: 400;
     font-size: var(--text-display-2);
@@ -180,16 +163,14 @@
     line-height: 1.5;
   }
 
-  .t-data,
-  .t-mono {
+  .t-data {
     font-family: var(--font-mono);
     font-size: var(--text-data);
     line-height: 1.6;
     font-variant-numeric: tabular-nums;
   }
 
-  .t-label,
-  .t-meta {
+  .t-label {
     font-family: var(--font-mono);
     font-weight: 500;
     font-size: var(--text-label);
@@ -480,7 +461,7 @@
     /* The placeholder lives in --lqip and is painted only by ::before. Setting it
        as this element's own background-image tiled the 20px image across the
        frame, because ::before owns the background-size. */
-    background-color: var(--border-main);
+    background-color: var(--line);
   }
 
   /* The blurred placeholder is painted by a pseudo-element rather than by the

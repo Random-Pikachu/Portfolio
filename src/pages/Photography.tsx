@@ -24,7 +24,7 @@ export default function Photography() {
       >
         <div className="sheet survey">
           <p className="t-pull survey__line">
-            All of it shot on a Nothing Phone (1), mostly at night, mostly while walking somewhere else.
+            All of it shot on a Nothing Phone (1), mostly while walking somewhere else.
           </p>
           <p className="t-label survey__hint" aria-hidden="true">
             hover for colour · click to open

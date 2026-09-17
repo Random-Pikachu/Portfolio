@@ -943,10 +943,10 @@
     color: var(--accent);
     white-space: nowrap;
     font-weight: 400;
-    transform: translateY(-14px);
     position: absolute;
     left: 14px;
     top: 50%;
+    transform: translateY(8px);
   }
 
   .schedule__detail {

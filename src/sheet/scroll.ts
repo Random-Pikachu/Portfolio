@@ -66,7 +66,11 @@ function ensureObserver() {
           break;
         }
       }
-      sheetStore.set({ sheet: next });
+      if (sheetStore.get().sheet !== next) {
+        sheetStore.set({ sheet: next });
+        // The hash follows the reader, without a history entry per sheet.
+        syncHash(next === order[0] ? '' : `#${next}`);
+      }
     },
     { rootMargin: '-45% 0px -55% 0px', threshold: 0 }
   );

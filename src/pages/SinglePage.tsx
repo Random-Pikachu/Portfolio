@@ -1,4 +1,4 @@
-import { Hero } from '../sections/Hero';
+import { Cover } from '../sections/Cover';
 import { About } from '../sections/About';
 import { Experience } from '../sections/Experience';
 import { Work } from '../sections/Work';
@@ -18,7 +18,7 @@ export default function SinglePage() {
   return (
     <main id="main" className="min-h-screen text-text-base">
       <Sheet id={COVER.id} num={COVER.num} block={COVER.block} heading={COVER.heading} caption={`${PLACE.city} · ${PLACE.coords}`}>
-        <Hero />
+        <Cover />
       </Sheet>
       <Sheet id={ABOUT.id} num={ABOUT.num} block={ABOUT.block} heading={ABOUT.heading}>
         <About />

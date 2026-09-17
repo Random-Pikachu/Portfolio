@@ -1,0 +1,274 @@
+/* ─── Sections ─────────────────────────────────────────────────────────────
+   Styles for the content of each sheet. The shell (rules, rail, title block)
+   lives in sheet/sheet.css; tokens in tokens.css.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  /* ─── Dimension lines ───────────────────────────────────────────────── */
+  .dim {
+    position: relative;
+    display: block;
+    height: 12px;
+    color: var(--ink-4);
+  }
+
+  .dim__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left center;
+  }
+
+  .dim__tick {
+    position: absolute;
+    top: 50%;
+    width: 11px;
+    height: 1px;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .dim__tick--a {
+    left: 0;
+  }
+
+  .dim__tick--b {
+    left: 100%;
+  }
+
+  .dim__label {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    padding-bottom: 3px;
+    white-space: nowrap;
+    color: var(--ink-3);
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  .dim--v {
+    width: 12px;
+    height: 100%;
+  }
+
+  .dim--v .dim__line {
+    left: 50%;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    height: auto;
+    transform-origin: center top;
+  }
+
+  .dim--v .dim__tick--a {
+    left: 50%;
+    top: 0;
+  }
+
+  .dim--v .dim__tick--b {
+    left: 50%;
+    top: 100%;
+  }
+
+  .dim--v .dim__label {
+    left: auto;
+    right: 100%;
+    bottom: auto;
+    top: 50%;
+    transform: rotate(180deg) translateY(50%);
+    writing-mode: vertical-rl;
+    padding: 0 6px 0 0;
+  }
+
+  .dim--draw .dim__line {
+    animation: dim-draw var(--dur-3) var(--ease-out) 600ms both;
+  }
+
+  .dim--draw .dim__tick,
+  .dim--draw .dim__label {
+    animation: ink-in var(--dur-2) var(--ease-out) 900ms both;
+  }
+
+  @keyframes dim-draw {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  .dim--v.dim--draw .dim__line {
+    animation-name: dim-draw-v;
+  }
+
+  @keyframes dim-draw-v {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes ink-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* ─── Sheet 00 · Cover ──────────────────────────────────────────────── */
+  .cover {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: var(--sp-8);
+    padding-bottom: var(--sp-24);
+    min-height: calc(100svh - var(--nav-h) - 40px);
+  }
+
+  .cover__grid {
+    align-items: center;
+    row-gap: var(--sp-8);
+  }
+
+  .cover__text {
+    grid-column: 1 / span 5;
+    position: relative;
+    padding-right: var(--sp-6);
+  }
+
+  .cover__dim-cols {
+    margin-bottom: var(--sp-6);
+  }
+
+  .cover__name {
+    margin: 0;
+    color: var(--ink);
+    animation: ink-in var(--dur-3) var(--ease-out) 200ms both;
+  }
+
+  .cover__lede {
+    margin: var(--sp-8) 0 0;
+    max-width: 36ch;
+    color: var(--ink-2);
+    animation: ink-in var(--dur-3) var(--ease-out) 320ms both;
+  }
+
+  .cover__cta {
+    margin: var(--sp-8) 0 0;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    animation: ink-in var(--dur-3) var(--ease-out) 420ms both;
+  }
+
+  .cover__qty {
+    color: var(--ink-3);
+  }
+
+  .cover__wash {
+    grid-column: 6 / span 5;
+  }
+
+  /* The wash: ink on paper. In night mode it is a paper sheet on the night
+     ground, with the sheet's own edge drawn. */
+  .wash {
+    position: relative;
+    margin: 0;
+    border: 1px solid transparent;
+  }
+
+  .dark .wash {
+    border-color: var(--line-2);
+  }
+
+  .wash img {
+    display: block;
+    width: 100%;
+    height: auto;
+    animation: wash-in var(--dur-4) var(--ease-out) both;
+    mask-image: radial-gradient(ellipse at 55% 45%, #000 45%, transparent 72%);
+    mask-size: 400% 400%;
+    mask-position: center;
+    mask-repeat: no-repeat;
+  }
+
+  @keyframes wash-in {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+      mask-size: 20% 20%;
+    }
+    60% {
+      opacity: 1;
+    }
+  }
+
+  /* Everything drawn on the wash is ink on paper in both modes: the sheet
+     does not change colour when the room does. */
+  .wash__moon {
+    position: absolute;
+    left: 78%;
+    top: 12%;
+    width: 44px;
+    height: 44px;
+    color: #161616;
+    animation: ink-in var(--dur-3) var(--ease-out) 700ms both;
+  }
+
+  .wash .dim {
+    color: #8a877f;
+  }
+
+  .wash .dim__label {
+    color: #6b6963;
+  }
+
+  .wash__moon .moon circle {
+    stroke-width: 0.8;
+  }
+
+  .wash__dim {
+    position: absolute;
+    right: 14px;
+    top: calc(12% + 22px);
+    height: calc(50% - 12% - 22px);
+  }
+
+  @media (max-width: 47.99rem) {
+    .cover {
+      padding-top: var(--sp-4);
+      padding-bottom: var(--sp-12);
+      justify-content: flex-start;
+    }
+
+    .cover__text {
+      grid-column: 1 / -1;
+      order: 2;
+      padding-right: 0;
+    }
+
+    .cover__wash {
+      grid-column: 1 / -1;
+      order: 1;
+    }
+
+    .cover__dim-cols {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cover__name,
+    .cover__lede,
+    .cover__cta,
+    .wash img,
+    .wash__moon,
+    .dim--draw .dim__line,
+    .dim--draw .dim__tick,
+    .dim--draw .dim__label {
+      animation: none;
+    }
+  }
+}

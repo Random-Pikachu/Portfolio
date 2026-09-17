@@ -7,6 +7,7 @@
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 @import "./sheet/sheet.css";
+@import "./sections/sections.css";
 
 @font-face {
   font-family: "Zodiak";

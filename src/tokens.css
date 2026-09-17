@@ -62,7 +62,7 @@
   --sp-32: 128px;
 
   /* Sheet and grid. */
-  --cols: 8;
+  --cols: 10;
   --gutter: 24px;
   --sheet-max: 1440px;
   --rail: 48px;

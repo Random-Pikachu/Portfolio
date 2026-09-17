@@ -5,7 +5,7 @@
 export function SheetRule({ className = '' }: { className?: string }) {
   return (
     <div className={`sheet-rule ${className}`} aria-hidden="true">
-      {Array.from({ length: 8 }, (_, i) => (
+      {Array.from({ length: 10 }, (_, i) => (
         <i key={i} />
       ))}
     </div>

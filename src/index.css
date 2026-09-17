@@ -197,7 +197,7 @@
   /* ─── Sheet and grid ─────────────────────────────────────────────────────
      The sheet is the page: at most 1440 wide, 88px from the left edge on
      desktop (48px rail plus 40) and 64px from the right, 24px on phones.
-     Eight columns with 24px gutters, four on phones. Legacy .wrap, .grid-12,
+     Ten columns with 24px gutters, four on phones. Legacy .wrap, .grid-12,
      .rail and .content sit on the same columns until the sections move. */
   .sheet,
   .wrap {
@@ -236,8 +236,8 @@
   }
 
   /* ─── Grid layer and sheet rules ─────────────────────────────────────────
-     The columns are a fixed layer at z-index -1: under every block, above the
-     paper. Sections therefore carry no background of their own. */
+     Ten faint columns on a fixed layer at z-index -1: under every block, above
+     the paper. Sections therefore carry no background of their own. */
   .grid-layer {
     position: fixed;
     inset: 0;
@@ -260,7 +260,7 @@
   .grid-layer__sheet::after {
     display: block;
     border-left: 1px solid var(--line);
-    opacity: 0.7;
+    opacity: 0.4;
   }
 
   .grid-layer__sheet::after {

@@ -1225,6 +1225,14 @@
       height: 48px;
     }
 
+    .schedule__month:nth-child(even) {
+      display: none;
+    }
+
+    .schedule__feat-label {
+      display: none;
+    }
+
     .schedule__detail-head,
     .schedule__points {
       grid-column: 1 / -1;

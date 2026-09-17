@@ -14,7 +14,7 @@ export function Notes() {
   const years = [...new Set(NOTES.map((n) => n.date.slice(0, 4)))];
   return (
     <main id="main" className="min-h-screen">
-      <Sheet id="notes" num="N" block="Notes" heading="Notes by Sangam Pratap Singh" caption={`${NOTES.length} ${NOTES.length === 1 ? 'note' : 'notes'}`}>
+      <Sheet id="notes" kind="Notes" num="" block="Index" heading="Notes by Sangam Pratap Singh" caption={`${NOTES.length} ${NOTES.length === 1 ? 'note' : 'notes'}`}>
         <div className="sheet notes">
           {NOTES.length === 0 ? (
             <p className="t-body notes__empty">No notes issued yet.</p>

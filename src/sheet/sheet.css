@@ -437,6 +437,26 @@
       width: auto;
       max-width: none;
       margin: var(--sp-8) var(--margin-r) var(--sp-8) var(--margin-l);
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .tb-cell {
+      white-space: normal;
+    }
+
+    .tb-cell:nth-child(2) {
+      border-right: 0;
+    }
+
+    .tb-rev {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line-2);
+      border-right: 0;
+    }
+
+    .tb-foot {
+      flex-wrap: wrap;
+      row-gap: 2px;
     }
 
     .sheet-head {

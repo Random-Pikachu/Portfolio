@@ -1,44 +1,38 @@
 import PhotoGrid from '../components/PhotoGrid';
 import { PHOTOS } from '../data/photos';
 import { SITE } from '../data/site';
+import { Sheet } from '../sheet/Sheet';
 
+/**
+ * /photography, the survey sheet: every frame on one sheet, the packer
+ * unchanged, the print in the lightbox unchanged. Monochrome until hovered,
+ * as a contact sheet is until the print is made.
+ */
 export default function Photography() {
   const years = PHOTOS.map((p) => p.date.slice(0, 4)).filter(Boolean);
-  const span = years.length
-    ? `${Math.min(...years.map(Number))}—${Math.max(...years.map(Number))}`
-    : '';
+  const span = years.length ? `${Math.min(...years.map(Number))}–${Math.max(...years.map(Number))}` : '';
 
   return (
-    <main id="main" className="text-text-base font-mono min-h-screen">
-      <section className="px-6 pt-32 pb-16" aria-labelledby="photography-heading">
-        <div className="max-w-[1200px] mx-auto">
-          <p className="mono text-accent text-sm tracking-[0.2em] mb-2" aria-hidden="true">
-            [ 05 ]
+    <main id="main" className="min-h-screen">
+      <Sheet
+        id="survey"
+        kind="Survey"
+        num=""
+        block="Photography"
+        heading={`Photography by ${SITE.name}`}
+        caption={`${PHOTOS.length} frames${span ? ` · ${span}` : ''} · Nothing Phone (1)`}
+      >
+        <div className="sheet survey">
+          <p className="t-pull survey__line">
+            All of it shot on a Nothing Phone (1), mostly at night, mostly while walking somewhere else.
           </p>
-          <h1
-            id="photography-heading"
-            className="text-text-base text-2xl font-semibold tracking-tight mb-4"
-          >
-            <span aria-hidden="true">photography</span>
-            <span className="sr-only">Photography by {SITE.name}</span>
-          </h1>
-
-          <p className="text-text-light text-base leading-[1.9] max-w-[580px]">
-            All of it shot on a <span className="text-text-muted font-medium">Nothing Phone (1)</span>.
+          <p className="t-label survey__hint" aria-hidden="true">
+            hover for colour · click to open
           </p>
-
-          <p className="mono text-text-faint text-xs tracking-[0.15em] mt-6">
-            {PHOTOS.length} frames{span && ` · ${span}`} · hover for colour · click to open
-          </p>
-        </div>
-      </section>
-
-      <section className="px-6 pb-32">
-        <div className="max-w-[1200px] mx-auto">
           <h2 className="sr-only">Photo gallery</h2>
           <PhotoGrid />
         </div>
-      </section>
+      </Sheet>
     </main>
   );
 }

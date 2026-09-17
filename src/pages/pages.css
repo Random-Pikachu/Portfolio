@@ -2,9 +2,22 @@
 @layer components {
   .notes,
   .note,
-  .detail {
+  .detail,
+  .survey {
     padding-top: var(--sp-8);
     padding-bottom: var(--sp-24);
+  }
+
+  .survey__line {
+    margin: 0;
+    max-width: 36ch;
+    color: var(--ink);
+  }
+
+  .survey__hint {
+    margin: var(--sp-4) 0 var(--sp-8);
+    color: var(--ink-3);
+    font-weight: 400;
   }
 
   .notes__empty {
@@ -133,19 +146,19 @@
     top: calc(var(--nav-h) + 24px);
   }
 
-  .outline__title {
+  .on-sheet__title {
     margin: 0 0 var(--sp-3);
     color: var(--ink-3);
   }
 
-  .outline__list {
+  .on-sheet__list {
     list-style: none;
     margin: 0;
     padding: 0;
     border-left: 1px solid var(--line);
   }
 
-  .outline__item a {
+  .on-sheet__item a {
     display: block;
     padding: 5px 0 5px 14px;
     color: var(--ink-3);
@@ -154,15 +167,15 @@
     transition: color var(--dur-2) ease, border-color var(--dur-2) ease;
   }
 
-  .outline__item--3 a {
+  .on-sheet__item--3 a {
     padding-left: 26px;
   }
 
-  .outline__item a:hover {
+  .on-sheet__item a:hover {
     color: var(--ink);
   }
 
-  .outline__item.is-active a {
+  .on-sheet__item.is-active a {
     color: var(--ink);
     border-left-color: var(--accent);
   }

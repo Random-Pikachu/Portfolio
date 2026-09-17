@@ -28,11 +28,11 @@ export function Outline({ headings, articleId }: { headings: Heading[]; articleI
 
   if (!headings.length) return null;
   return (
-    <nav className="outline" aria-label="On this sheet">
-      <p className="t-label outline__title">On this sheet</p>
-      <ol className="outline__list">
+    <nav className="on-sheet" aria-label="On this sheet">
+      <p className="t-label on-sheet__title">On this sheet</p>
+      <ol className="on-sheet__list">
         {headings.map((h) => (
-          <li key={h.id} className={`outline__item outline__item--${h.depth} ${active === h.id ? 'is-active' : ''}`}>
+          <li key={h.id} className={`on-sheet__item on-sheet__item--${h.depth} ${active === h.id ? 'is-active' : ''}`}>
             <a href={`#${h.id}`} className="t-data">
               {h.text}
             </a>

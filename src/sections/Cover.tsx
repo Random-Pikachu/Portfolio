@@ -16,7 +16,7 @@ export function Cover() {
       <div className="grid-8 cover__grid">
         <div className="cover__text">
           <DimensionLine label="5 col" className="cover__dim-cols" draw />
-          <h1 className="t-display-1 cover__name">
+          <h1 id="cover-h1" tabIndex={-1} data-sheet-heading className="t-display-1 cover__name">
             <span className="sr-only">
               {SITE.name} — {SITE.jobTitle}
             </span>

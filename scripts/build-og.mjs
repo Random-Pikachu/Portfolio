@@ -86,8 +86,8 @@ html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#f3f0e8;
 .rule{position:absolute;left:64px;right:64px;top:56px;height:1px;background:#d6d2c8}
 .head{position:absolute;left:64px;right:64px;top:70px;display:flex;justify-content:space-between;font-family:PlexMono;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#6b6963}
 .head b{color:#161616;font-weight:400}
-.title{position:absolute;left:64px;top:150px;width:${c.wash ? 560 : 1000}px;font-family:Zodiak;font-size:${c.title.length > 26 ? 64 : 92}px;line-height:.98;letter-spacing:-.015em}
-.sub{position:absolute;left:64px;top:${c.title.length > 26 ? 380 : 360}px;width:${c.wash ? 520 : 760}px;font-size:24px;line-height:1.45;color:#4a4844}
+.title{position:absolute;left:64px;top:${c.wash ? 120 : 150}px;width:${c.wash ? 560 : 1000}px;font-family:Zodiak;font-size:${c.wash ? 80 : c.title.length > 26 ? 64 : 92}px;line-height:.98;letter-spacing:-.015em}
+.sub{position:absolute;left:64px;top:${c.wash ? 372 : c.title.length > 26 ? 380 : 360}px;width:${c.wash ? 500 : 760}px;font-size:${c.wash ? 20 : 24}px;line-height:1.45;color:#4a4844}
 .wash{position:absolute;right:64px;top:110px;width:480px;height:360px;object-fit:cover;object-position:60% 40%;border:1px solid #c4bfb3}
 .tb{position:absolute;right:64px;bottom:48px;display:grid;grid-template-columns:auto auto auto;border:1px solid #c4bfb3;background:#f3f0e8;font-family:PlexMono;font-size:13px;line-height:1.5;letter-spacing:.06em;color:#6b6963}
 .tb div{padding:10px 14px;border-right:1px solid #c4bfb3;white-space:nowrap}

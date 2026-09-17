@@ -12,6 +12,7 @@ export function Sheet({
   id,
   num,
   kind = 'Sheet',
+  headless = false,
   block,
   heading,
   caption,
@@ -22,6 +23,8 @@ export function Sheet({
   num: string;
   /** What the number counts: a sheet of the set, a note, a detail. */
   kind?: string;
+  /** The head is the section's h2, except on the cover, whose heading is the h1 in its content. */
+  headless?: boolean;
   block: string;
   heading: string;
   caption?: ReactNode;
@@ -35,19 +38,28 @@ export function Sheet({
   }, [id]);
 
   return (
-    <section ref={ref} id={id} className={`sheet-section ${className}`} aria-labelledby={`${id}-title`} data-sheet={num}>
+    <section ref={ref} id={id} className={`sheet-section ${className}`} aria-labelledby={headless ? `${id}-h1` : `${id}-title`} data-sheet={num}>
       <div className="sheet">
         <SheetRule />
         <div className="sheet-head">
-          <h2 id={`${id}-title`} tabIndex={-1} data-sheet-heading className="t-label sheet-head__title">
-            <span aria-hidden="true">
+          {headless ? (
+            <p id={`${id}-title`} className="t-label sheet-head__title" aria-hidden="true">
               <b>
                 {kind} {num}
               </b>{' '}
               · {block}
-            </span>
-            <span className="sr-only">{heading}</span>
-          </h2>
+            </p>
+          ) : (
+            <h2 id={`${id}-title`} tabIndex={-1} data-sheet-heading className="t-label sheet-head__title">
+              <span aria-hidden="true">
+                <b>
+                  {kind} {num}
+                </b>{' '}
+                · {block}
+              </span>
+              <span className="sr-only">{heading}</span>
+            </h2>
+          )}
           {caption ? <p className="t-label sheet-head__caption">{caption}</p> : null}
         </div>
       </div>

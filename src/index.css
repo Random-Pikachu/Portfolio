@@ -8,6 +8,8 @@
 @import "tailwindcss";
 @import "./sheet/sheet.css";
 @import "./sections/sections.css";
+@import "./pages/pages.css";
+@import "./pages/prose.css";
 
 @font-face {
   font-family: "Zodiak";

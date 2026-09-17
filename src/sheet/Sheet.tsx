@@ -11,6 +11,7 @@ import { SheetRule } from './SheetRule';
 export function Sheet({
   id,
   num,
+  kind = 'Sheet',
   block,
   heading,
   caption,
@@ -19,6 +20,8 @@ export function Sheet({
 }: {
   id: string;
   num: string;
+  /** What the number counts: a sheet of the set, a note, a detail. */
+  kind?: string;
   block: string;
   heading: string;
   caption?: ReactNode;
@@ -38,7 +41,10 @@ export function Sheet({
         <div className="sheet-head">
           <h2 id={`${id}-title`} tabIndex={-1} data-sheet-heading className="t-label sheet-head__title">
             <span aria-hidden="true">
-              <b>Sheet {num}</b> · {block}
+              <b>
+                {kind} {num}
+              </b>{' '}
+              · {block}
             </span>
             <span className="sr-only">{heading}</span>
           </h2>

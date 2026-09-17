@@ -201,8 +201,7 @@
      desktop (48px rail plus 40) and 64px from the right, 24px on phones.
      Ten columns with 24px gutters, four on phones. Legacy .wrap, .grid-12,
      .rail and .content sit on the same columns until the sections move. */
-  .sheet,
-  .wrap {
+  .sheet {
     width: 100%;
     max-width: var(--sheet-max);
     margin-inline: auto;
@@ -210,26 +209,10 @@
     padding-right: var(--margin-r);
   }
 
-  .grid-8,
-  .grid-12 {
+  .grid-8 {
     display: grid;
     grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
     column-gap: var(--gutter);
-  }
-
-  .rail-col,
-  .content {
-    grid-column: 1 / -1;
-  }
-
-  @media (min-width: 48rem) {
-    .rail-col {
-      grid-column: 1 / span 1;
-    }
-
-    .content {
-      grid-column: 2 / -1;
-    }
   }
 
   .hairline {
@@ -403,37 +386,6 @@
 
   .btn-accent:active {
     transform: translateY(1px);
-  }
-
-  /* The inline "photography" link in the About paragraph. */
-  .link-wavy {
-    color: var(--accent);
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 5px;
-    text-decoration-skip-ink: none;
-    transition: opacity 0.2s ease;
-  }
-
-  .link-wavy:hover {
-    opacity: 0.72;
-  }
-
-  /* ─── Timeline ───────────────────────────────────────────────────────── */
-  .node {
-    width: 9px;
-    height: 9px;
-    border: 1px solid var(--border-badge);
-    background: var(--bg-base);
-    transition: background 0.4s var(--ease-out), border-color 0.4s ease, transform 0.4s var(--ease-out);
-  }
-
-  .node[data-on="true"] {
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: scale(1.25);
   }
 
   /* Skeleton dots while the heatmap loads. */

@@ -2,12 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
 import { CalendarDays, Github, Linkedin, Mail } from 'lucide-react';
 import ContributionHeatmap from '../components/ContributionHeatmap';
-import { FadeUp, Reveal } from '../motion/primitives';
-import { STAGGER } from '../motion/tokens';
-import { SECTIONS, SITE } from '../data/site';
-import { SectionRail } from './SectionRail';
-
-const SECTION = SECTIONS[3];
+import { DRAWING_NO, SITE } from '../data/site';
+import { goTo } from '../sheet/scroll';
 
 const LINKS = [
   { icon: Mail, label: 'mail', handle: SITE.email, href: `mailto:${SITE.email}`, aria: `Email ${SITE.name}`, me: false },
@@ -27,7 +23,7 @@ function CopyEmail() {
     <button
       type="button"
       onClick={() => navigator.clipboard?.writeText(SITE.email).then(() => setCopied(true))}
-      className="t-meta text-text-faint transition-colors hover:text-text-base"
+      className="t-label issue__copy"
       aria-label="Copy email address"
     >
       <span aria-live="polite">{copied ? 'copied' : 'copy'}</span>
@@ -42,76 +38,92 @@ function LazyHeatmap() {
   return <div ref={ref}>{near ? <ContributionHeatmap /> : null}</div>;
 }
 
+/**
+ * Sheet 04, Issue. The line, the one filled control on the site with the
+ * issue notes beside it, three link cells that reveal their handles, the
+ * year's activity as square cells, and the footer with the drawing number.
+ */
 export function Contact() {
+  const year = new Date().getFullYear();
   return (
-    <div className="py-16 md:py-20">
-      <div className="wrap grid-12">
-        <SectionRail {...SECTION} id="contact" />
-
-        <div className="content">
-          <Reveal
-            as="p"
-            className="t-display text-text-base"
-            lines={[
-              "Let's build",
-              <>
-                something<span className="text-accent">.</span>
-              </>,
-            ]}
-          />
-          <FadeUp delay={0.15} className="mt-6">
-            <p className="t-body max-w-[44ch] text-text-muted">
-              Open to remote work and interesting projects. The quickest way to reach me is a
-              fifteen-minute call; the second quickest is mail.
-            </p>
-          </FadeUp>
-
-          <FadeUp delay={0.2} className="mt-10">
+    <div className="sheet issue">
+      <div className="grid-8">
+        <div className="issue__lead">
+          <p className="t-display-1 issue__line">
+            Let&apos;s build
+            <br />
+            something<span className="issue__stop">.</span>
+          </p>
+          <p className="t-body issue__para">
+            Open to remote work and interesting projects. The quickest way to reach me is a fifteen-minute call; the second
+            quickest is mail.
+          </p>
+          <dl className="issue__notes t-label">
+            <div>
+              <dt>Issued for</dt>
+              <dd>remote work</dd>
+            </div>
+            <div>
+              <dt>Qty</dt>
+              <dd>1</dd>
+            </div>
+            <div>
+              <dt>Lead time</dt>
+              <dd>15 min</dd>
+            </div>
+          </dl>
+          <p className="issue__cta">
             <a href={SITE.calendar} target="_blank" rel="noopener" className="btn-accent arrow-link">
               <CalendarDays className="h-4 w-4" aria-hidden="true" />
-              schedule a call
-              <span className="arrow" aria-hidden="true">↗</span>
+              Book a 15-minute call
+              <span className="arrow" aria-hidden="true">
+                ↗
+              </span>
             </a>
-          </FadeUp>
-
-          <address className="mt-16 grid not-italic sm:grid-cols-3">
-            {LINKS.map(({ icon: Icon, label, handle, href, aria, me }, i) => (
-              <FadeUp
-                key={label}
-                delay={0.1 + i * STAGGER}
-                className={`group border-t border-border-main py-5 sm:border-t ${
-                  i > 0 ? 'sm:border-l sm:pl-6' : ''
-                } ${i < LINKS.length - 1 ? 'sm:pr-6' : ''}`}
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel={me ? 'me noopener' : 'noopener'}
-                    aria-label={aria}
-                    className="arrow-link mono text-base text-text-base"
-                  >
-                    <Icon className="h-3.5 w-3.5 text-text-faint" aria-hidden="true" />
-                    {label}
-                    <span className="arrow" aria-hidden="true">↗</span>
-                  </a>
-                  {label === 'mail' ? <CopyEmail /> : null}
-                </div>
-                <p className="t-mono mt-1.5 truncate text-text-faint transition-all duration-500 ease-[var(--ease-out)] md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-within:translate-y-0 md:group-focus-within:opacity-100">
-                  {handle}
-                </p>
-              </FadeUp>
-            ))}
-          </address>
-
-          <FadeUp delay={0.1} className="mt-20 border-t border-border-main pt-8">
-            <h3 className="t-meta text-text-faint">activity</h3>
-            <div className="mt-5">
-              <LazyHeatmap />
-            </div>
-          </FadeUp>
+          </p>
         </div>
       </div>
+
+      <address className="issue__cells">
+        {LINKS.map(({ icon: Icon, label, handle, href, aria, me }) => (
+          <div key={label} className="issue__cell">
+            <div className="issue__cell-head">
+              <a href={href} target="_blank" rel={me ? 'me noopener' : 'noopener'} aria-label={aria} className="arrow-link mono issue__cell-link">
+                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                {label}
+                <span className="arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+              {label === 'mail' ? <CopyEmail /> : null}
+            </div>
+            <p className="t-data issue__handle">{handle}</p>
+          </div>
+        ))}
+      </address>
+
+      <div className="issue__activity">
+        <h3 className="t-label issue__activity-title">Activity · a long exposure of {year}</h3>
+        <LazyHeatmap />
+      </div>
+
+      <footer className="issue__footer t-data">
+        <p>© {year} {SITE.handle.toLowerCase()}</p>
+        <p className="issue__footer-no">[ pokédex entry No. {DRAWING_NO} ]</p>
+        <a
+          href="#cover"
+          onClick={(e) => {
+            e.preventDefault();
+            goTo('cover');
+          }}
+          className="arrow-link"
+        >
+          back to the cover
+          <span className="arrow" aria-hidden="true">
+            ↑
+          </span>
+        </a>
+      </footer>
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { About } from '../sections/About';
 import { Experience } from '../sections/Experience';
 import { Details } from '../sections/Details';
 import { Contact } from '../sections/Contact';
-import { Footer } from '../sections/Footer';
 import { Sheet } from '../sheet/Sheet';
 import { COVER, PLACE, SECTIONS } from '../data/site';
 
@@ -31,7 +30,6 @@ export default function SinglePage() {
       </Sheet>
       <Sheet id={CONTACT.id} num={CONTACT.num} block={CONTACT.block} heading={CONTACT.heading}>
         <Contact />
-        <Footer />
       </Sheet>
     </main>
   );

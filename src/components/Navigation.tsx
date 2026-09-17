@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { useMotionValueEvent, useScroll } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
 import { PAGES, SITE } from '../data/site';
 import { goTo } from '../sheet/scroll';
@@ -25,8 +24,11 @@ export default function Navigation({
   const [scrolled, setScrolled] = useState(false);
   const { menu } = useSheetState();
   const isHome = variant === 'home';
-  const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, 'change', (v) => setScrolled(v > 24));
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   /**
    * The current theme is never held in React state. Both icons are rendered and

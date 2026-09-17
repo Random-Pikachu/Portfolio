@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CalendarDays, Github, Linkedin, Mail } from 'lucide-react';
 import ContributionHeatmap from '../components/ContributionHeatmap';
 import { DRAWING_NO, SITE } from '../data/site';
 import { goTo } from '../sheet/scroll';
+import { useNear } from '../sheet/useScrollProgress';
 
 const LINKS = [
   { icon: Mail, label: 'mail', handle: SITE.email, href: `mailto:${SITE.email}`, aria: `Email ${SITE.name}`, me: false },
@@ -34,7 +34,9 @@ function CopyEmail() {
 /** The heatmap fetches only once it is near the viewport, never on page load. */
 function LazyHeatmap() {
   const ref = useRef<HTMLDivElement>(null);
-  const near = useInView(ref, { once: true, margin: '300px 0px' });
+  const [near, setNear] = useState(false);
+  const onNear = useCallback(() => setNear(true), []);
+  useNear(ref, 300, onNear);
   return <div ref={ref}>{near ? <ContributionHeatmap /> : null}</div>;
 }
 

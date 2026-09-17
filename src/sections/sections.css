@@ -693,6 +693,12 @@
 
 /* ─── Sheet 01 · General ───────────────────────────────────────────────── */
 @layer components {
+  /* Each word's ink is a calc of the paragraph's progress (--p, 0 to 1)
+     against the word's own start (--s); 0.08 of progress per word to rise. */
+  .words__w {
+    opacity: clamp(0.22, calc((var(--p) - var(--s)) / 0.08), 1);
+  }
+
   .general {
     padding-top: var(--sp-12);
     padding-bottom: var(--sp-24);

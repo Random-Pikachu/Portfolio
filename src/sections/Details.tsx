@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent, type MouseEvent, type PointerEvent } from 'react';
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ARCHIVE, PLATES, type Project } from '../data/site';
 import { WORK } from '../data/content.generated';
-import { registerPlateResolver, scrollByPixels, scrollToY, setPlateSnaps, syncHash } from '../sheet/scroll';
+import { reducedMotion, registerPlateResolver, scrollByPixels, scrollToY, setPlateSnaps, syncHash } from '../sheet/scroll';
 import { sheetStore, useSheetState } from '../sheet/store';
+import { useScrollProgress } from '../sheet/useScrollProgress';
 
 const N = PLATES.length;
 const STACK_QUERY = '(max-width: 47.99rem)';
@@ -109,21 +109,30 @@ function Plate({ p, i, active }: { p: Project; i: number; active: boolean }) {
 export function Details() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const trackRef = useRef<HTMLOListElement>(null);
+  const markerRef = useRef<HTMLSpanElement>(null);
   const [stacked, setStacked] = useState(false);
   const [frameW, setFrameW] = useState(0);
   const [current, setCurrent] = useState(0);
   const { sheet } = useSheetState();
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
-  const x = useTransform(scrollYProgress, (p) => (stacked ? 0 : -p * (N - 1) * frameW));
-  const markerLeft = useTransform(scrollYProgress, (p) => `${Math.min(1, Math.max(0, p)) * 100}%`);
-
-  useMotionValueEvent(scrollYProgress, 'change', (p) => {
-    if (stacked) return;
+  // Progress through the section drives the track and the marker directly,
+  // without a render; only the whole-plate index goes through React.
+  const layout = useRef({ stacked, frameW });
+  useEffect(() => {
+    layout.current = { stacked, frameW };
+    // Re-read once with the new geometry so the track lands where it should.
+    window.dispatchEvent(new Event('scroll'));
+  }, [stacked, frameW]);
+  const onProgress = useCallback((p: number) => {
+    const { stacked: s, frameW: w } = layout.current;
+    if (s) return;
+    if (trackRef.current) trackRef.current.style.transform = `translate3d(${(-p * (N - 1) * w).toFixed(2)}px, 0, 0)`;
+    if (markerRef.current) markerRef.current.style.left = `${(p * 100).toFixed(3)}%`;
     const i = Math.min(N - 1, Math.max(0, Math.round(p * (N - 1))));
     setCurrent((prev) => (prev === i ? prev : i));
-  });
+  }, []);
+  useScrollProgress(sectionRef, onProgress);
 
   // The store carries the active plate only while this sheet is the active
   // one, and the hash names the plate in the frame.
@@ -140,7 +149,7 @@ export function Details() {
     // overflow-hidden frame sideways to reveal the plate. The track's transform
     // is the only thing that may move it, so the frame's own scroll is pinned.
     if (frameRef.current) frameRef.current.scrollLeft = 0;
-    const stackedNow = window.matchMedia(STACK_QUERY).matches || !!reduce;
+    const stackedNow = window.matchMedia(STACK_QUERY).matches || reducedMotion();
     setStacked(stackedNow);
     setFrameW(frameRef.current?.clientWidth ?? 0);
     if (stackedNow) {
@@ -155,7 +164,7 @@ export function Details() {
       const i = PLATES.findIndex((p) => p.slug === slug);
       return i < 0 ? null : top + i * vh;
     });
-  }, [reduce]);
+  }, []);
 
   useEffect(() => {
     // Observing the document catches every layout change above the strip,
@@ -281,11 +290,11 @@ export function Details() {
               if (e.currentTarget.scrollLeft) e.currentTarget.scrollLeft = 0;
             }}
           >
-            <motion.ol className="details__track" style={{ x }} aria-label="Plates">
+            <ol ref={trackRef} className="details__track" aria-label="Plates">
               {PLATES.map((p, i) => (
                 <Plate key={p.slug} p={p} i={i} active={stacked || i === current} />
               ))}
-            </motion.ol>
+            </ol>
           </div>
           <div className="ruler" aria-hidden="true">
             <span className="ruler__line" />
@@ -294,7 +303,7 @@ export function Details() {
                 <i>{i + 1}</i>
               </span>
             ))}
-            <motion.span className="ruler__marker" style={{ left: markerLeft }} />
+            <span ref={markerRef} className="ruler__marker" />
             <span className="ruler__label t-label">{N} sheets</span>
             <span className="ruler__depth t-label">Depth 0 mm</span>
           </div>

@@ -136,6 +136,10 @@ export function Details() {
   const sectionTop = () => (sectionRef.current ? sectionRef.current.getBoundingClientRect().top + window.scrollY : 0);
 
   const measure = useCallback(() => {
+    // A fragment navigation to #project-<slug> makes the browser scroll this
+    // overflow-hidden frame sideways to reveal the plate. The track's transform
+    // is the only thing that may move it, so the frame's own scroll is pinned.
+    if (frameRef.current) frameRef.current.scrollLeft = 0;
     const stackedNow = window.matchMedia(STACK_QUERY).matches || !!reduce;
     setStacked(stackedNow);
     setFrameW(frameRef.current?.clientWidth ?? 0);
@@ -273,6 +277,9 @@ export function Details() {
             onPointerCancel={onPointerUp}
             onClickCapture={onClickCapture}
             onFocus={onFocus}
+            onScroll={(e) => {
+              if (e.currentTarget.scrollLeft) e.currentTarget.scrollLeft = 0;
+            }}
           >
             <motion.ol className="details__track" style={{ x }} aria-label="Plates">
               {PLATES.map((p, i) => (

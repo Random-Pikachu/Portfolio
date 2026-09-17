@@ -1,7 +1,9 @@
 /* Self-hosted variable fonts. Bundled by Vite, same-origin, one fewer
    third-party round trip in the critical path than the Google Fonts link. */
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/ibm-plex-sans";
+@import "@fontsource-variable/ibm-plex-sans/wght-italic.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 
 /* ─── Tokens ───────────────────────────────────────────────────────────────
@@ -25,8 +27,8 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
 
-  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }

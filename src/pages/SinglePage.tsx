@@ -1,7 +1,7 @@
 import { Cover } from '../sections/Cover';
 import { About } from '../sections/About';
 import { Experience } from '../sections/Experience';
-import { Work } from '../sections/Work';
+import { Details } from '../sections/Details';
 import { Contact } from '../sections/Contact';
 import { Footer } from '../sections/Footer';
 import { Sheet } from '../sheet/Sheet';
@@ -26,8 +26,8 @@ export default function SinglePage() {
       <Sheet id={EXPERIENCE.id} num={EXPERIENCE.num} block={EXPERIENCE.block} heading={EXPERIENCE.heading} caption="Jul 2025 → now">
         <Experience />
       </Sheet>
-      <Sheet id={PROJECTS.id} num={PROJECTS.num} block={PROJECTS.block} heading={PROJECTS.heading}>
-        <Work />
+      <Sheet id={PROJECTS.id} num={PROJECTS.num} block={PROJECTS.block} heading={PROJECTS.heading} caption="6 sheets · 2 not issued">
+        <Details />
       </Sheet>
       <Sheet id={CONTACT.id} num={CONTACT.num} block={CONTACT.block} heading={CONTACT.heading}>
         <Contact />

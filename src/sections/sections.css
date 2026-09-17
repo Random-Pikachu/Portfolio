@@ -272,3 +272,435 @@
     }
   }
 }
+
+/* ─── Sheet 03 · Details ───────────────────────────────────────────────────
+   The strip. Six viewports tall; a sticky frame one viewport tall; the track
+   moves sideways with vertical progress. Stacked under 48rem, with reduced
+   motion, or without scripting.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .details {
+    height: calc(var(--n) * 100svh);
+  }
+
+  .details__pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(var(--nav-h) + 12px);
+    padding-bottom: var(--sp-6);
+  }
+
+  .details__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0 12px;
+    color: var(--ink-3);
+  }
+
+  .details__counter b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .details__frame {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .details__frame.is-dragging {
+    cursor: grabbing;
+  }
+
+  .details__track {
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    will-change: transform;
+  }
+
+  .plate {
+    flex: 0 0 100%;
+    height: 100%;
+    padding: 0 16px 16px 0;
+  }
+
+  /* The print: a photograph lying on the sheet, hence the one shadow on the
+     site, hard and offset, no blur. */
+  .plate__print {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background: #0c0c0c;
+    color: #fff;
+    box-shadow: 16px 16px 0 var(--line-2);
+  }
+
+  .plate__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+    transform: scale(1.04);
+    transition: transform var(--dur-3) var(--ease-out);
+  }
+
+  .plate[data-active="true"] .plate__img {
+    transform: scale(1);
+  }
+
+  .plate__type {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: start center;
+    padding-top: 9%;
+  }
+
+  .plate__type span {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(255 255 255 / 0.3);
+    white-space: nowrap;
+  }
+
+  .plate__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(8 8 8 / 0.94) 0%, rgb(8 8 8 / 0.6) 36%, rgb(8 8 8 / 0) 66%);
+    pointer-events: none;
+  }
+
+  .plate__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: clamp(20px, 3vw, 40px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: var(--sp-6);
+    align-items: end;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity var(--dur-3) var(--ease-out) 80ms, transform var(--dur-3) var(--ease-out) 80ms;
+  }
+
+  .plate[data-active="true"] .plate__caption {
+    opacity: 1;
+    transform: none;
+  }
+
+  .plate__num {
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .plate__title {
+    margin: 8px 0 0;
+    color: #fff;
+  }
+
+  .plate__line {
+    margin: 12px 0 0;
+    max-width: 46ch;
+    color: rgb(255 255 255 / 0.84);
+  }
+
+  .plate__spec {
+    margin: 14px 0 0;
+    display: grid;
+    gap: 4px;
+    color: rgb(255 255 255 / 0.84);
+  }
+
+  .plate__spec div {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+  }
+
+  .plate__spec dt {
+    color: rgb(255 255 255 / 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: var(--text-label);
+    padding-top: 2px;
+  }
+
+  .plate__spec dd {
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  .plate__stack {
+    margin: 16px 0 0;
+    color: rgb(255 255 255 / 0.62);
+  }
+
+  .plate__links {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .plate__link {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    border: 1px solid rgb(255 255 255 / 0.42);
+    padding: 9px 14px;
+    transition: background-color var(--dur-2) ease, color var(--dur-2) ease;
+  }
+
+  .plate__link:hover,
+  .plate__link:focus-visible {
+    background: #fff;
+    color: #0a0a0a;
+    outline-color: #fff;
+  }
+
+  .plate__link--pri {
+    background: #fff;
+    color: #0a0a0a;
+    border-color: #fff;
+  }
+
+  .plate__link--pri:hover,
+  .plate__link--pri:focus-visible {
+    background: transparent;
+    color: #fff;
+  }
+
+  /* The ruler: a dimension line with one tick per plate and a marker that
+     travels with progress; the true label on the right, the impossible depth
+     beneath it. */
+  .ruler {
+    position: relative;
+    height: 44px;
+    margin: 18px 16px 0 0;
+    color: var(--ink-4);
+  }
+
+  .ruler__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 12px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .ruler__tick {
+    position: absolute;
+    top: 8px;
+    width: 1px;
+    height: 9px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+
+  .ruler__tick i {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 10.5px;
+    color: var(--ink-3);
+  }
+
+  .ruler__marker {
+    position: absolute;
+    top: 12px;
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    transform: translate(-50%, -50%);
+  }
+
+  .ruler__label,
+  .ruler__depth {
+    position: absolute;
+    right: 0;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  .ruler__label {
+    bottom: 100%;
+    margin-bottom: -6px;
+  }
+
+  .ruler__depth {
+    top: 22px;
+  }
+
+  /* Not issued. */
+  .archive {
+    list-style: none;
+    margin: var(--sp-8) 16px var(--sp-16) 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .archive__row {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) minmax(0, 2fr) auto;
+    gap: var(--sp-6);
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+
+  .archive__num {
+    color: var(--ink-3);
+  }
+
+  .archive__line {
+    color: var(--ink-3);
+  }
+
+  .archive__status {
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  /* ─── Stacked: phones, reduced motion, no scripting ─────────────────── */
+  .details--stack {
+    height: auto;
+  }
+
+  .details--stack .details__pin {
+    position: static;
+    height: auto;
+    padding-top: 0;
+  }
+
+  .details--stack .details__frame {
+    overflow: visible;
+    cursor: default;
+    user-select: auto;
+  }
+
+  .details--stack .details__track {
+    flex-direction: column;
+    gap: var(--sp-8);
+    transform: none !important;
+  }
+
+  .details--stack .plate {
+    flex-basis: auto;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    max-height: 40rem;
+  }
+
+  .details--stack .plate__img {
+    transform: none;
+  }
+
+  .details--stack .plate__caption {
+    opacity: 1;
+    transform: none;
+    grid-template-columns: 1fr;
+    row-gap: var(--sp-4);
+  }
+
+  .details--stack .plate__links {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .details--stack .ruler {
+    display: none;
+  }
+
+  @media (max-width: 47.99rem), (prefers-reduced-motion: reduce), (scripting: none) {
+    .details {
+      height: auto;
+    }
+
+    .details__pin {
+      position: static;
+      height: auto;
+      padding-top: 0;
+    }
+
+    .details__frame {
+      overflow: visible;
+      cursor: default;
+      user-select: auto;
+    }
+
+    .details__track {
+      flex-direction: column;
+      gap: var(--sp-8);
+      transform: none !important;
+    }
+
+    .plate {
+      flex-basis: auto;
+      height: auto;
+      aspect-ratio: 3 / 4;
+      max-height: 40rem;
+    }
+
+    .plate__img {
+      transform: none;
+    }
+
+    .plate__caption {
+      opacity: 1;
+      transform: none;
+      grid-template-columns: 1fr;
+      row-gap: var(--sp-4);
+    }
+
+    .plate__links {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .ruler {
+      display: none;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .plate {
+      padding-right: 10px;
+      padding-bottom: 10px;
+    }
+
+    .plate__print {
+      box-shadow: 10px 10px 0 var(--line-2);
+    }
+
+    .archive__row {
+      grid-template-columns: 32px 1fr auto;
+    }
+
+    .archive__line {
+      display: none;
+    }
+  }
+}

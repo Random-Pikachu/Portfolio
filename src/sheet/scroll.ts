@@ -97,6 +97,25 @@ export function setPlateSnaps(points: number[]) {
   plateRemovers = snap ? points.map((y) => snap!.add(y)) : [];
 }
 
+/**
+ * A plate lives inside a transformed track, so its own position on the page
+ * says nothing about where to scroll. Details registers the function that
+ * knows; goTo asks it for ids that start with "project-".
+ */
+let plateResolver: ((slug: string) => number | null) | null = null;
+export function registerPlateResolver(fn: ((slug: string) => number | null) | null) {
+  plateResolver = fn;
+}
+
+/** Sideways trackpad input inside the strip becomes page scroll, at once. */
+export function scrollByPixels(delta: number) {
+  if (!lenis) {
+    window.scrollBy(0, delta);
+    return;
+  }
+  lenis.scrollTo(lenis.scroll + delta, { immediate: true });
+}
+
 export function scrollToY(y: number, { instant = false } = {}) {
   if (!lenis) {
     window.scrollTo({ top: y, behavior: instant || reducedMotion() ? 'auto' : 'smooth' });
@@ -120,7 +139,8 @@ export function scrollToY(y: number, { instant = false } = {}) {
 export async function goTo(id: string, { instant = false } = {}) {
   const el = document.getElementById(id);
   if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY;
+  const resolved = id.startsWith('project-') ? plateResolver?.(id.slice('project-'.length)) : null;
+  const top = resolved ?? el.getBoundingClientRect().top + window.scrollY;
   await scrollToY(top, { instant });
   syncHash(`#${id}`);
   focusHeading(el);
@@ -134,7 +154,8 @@ export function syncHash(hash: string) {
 }
 
 export function focusHeading(el: HTMLElement) {
-  const heading = el.querySelector<HTMLElement>('[data-sheet-heading]') ?? el.querySelector<HTMLElement>('h1, h2, h3');
+  const heading =
+    el.querySelector<HTMLElement>('[data-sheet-heading], [data-plate-heading]') ?? el.querySelector<HTMLElement>('h1, h2, h3');
   heading?.focus({ preventScroll: true });
 }
 

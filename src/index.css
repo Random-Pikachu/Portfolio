@@ -6,6 +6,30 @@
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 
+/* Zodiak, the display face. Three faces, self-hosted from src/fonts/zodiak;
+   see the README there for the licence. */
+@font-face {
+  font-family: "Zodiak";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("./fonts/zodiak/zodiak-300.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Zodiak";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/zodiak/zodiak-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Zodiak";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/zodiak/zodiak-400-italic.woff2") format("woff2");
+}
+
 /* ─── Tokens ───────────────────────────────────────────────────────────────
    The site is ink: one grey ramp, one accent. Every text token below clears
    4.5:1 against its page in both modes; the accent is reserved for the active
@@ -29,6 +53,7 @@
 
   --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: "Zodiak", Georgia, "Times New Roman", serif;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }

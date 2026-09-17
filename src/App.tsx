@@ -1,6 +1,7 @@
 import Navigation from './components/Navigation';
 import SinglePage from './pages/SinglePage';
 import SmoothScroll from './components/SmoothScroll';
+import { GridLayer } from './sheet/GridLayer';
 
 /**
  * The whole app tree. Shared by the browser entry (src/main.tsx) and the
@@ -10,6 +11,7 @@ import SmoothScroll from './components/SmoothScroll';
 export default function App() {
   return (
     <SmoothScroll>
+      <GridLayer />
       <a
         href="#about"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-bg-base focus:text-accent focus:border focus:border-accent focus:px-4 focus:py-2 mono text-sm"

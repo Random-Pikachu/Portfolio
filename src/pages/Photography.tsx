@@ -9,7 +9,7 @@ export default function Photography() {
     : '';
 
   return (
-    <main id="main" className="bg-bg-base text-text-base font-mono min-h-screen">
+    <main id="main" className="text-text-base font-mono min-h-screen">
       <section className="px-6 pt-32 pb-16" aria-labelledby="photography-heading">
         <div className="max-w-[1200px] mx-auto">
           <p className="mono text-accent text-sm tracking-[0.2em] mb-2" aria-hidden="true">

@@ -235,6 +235,94 @@
     background: var(--line);
   }
 
+  /* ─── Grid layer and sheet rules ─────────────────────────────────────────
+     The columns are a fixed layer at z-index -1: under every block, above the
+     paper. Sections therefore carry no background of their own. */
+  .grid-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .grid-layer__sheet {
+    position: relative;
+    height: 100%;
+    max-width: var(--sheet-max);
+    margin-inline: auto;
+    padding-left: var(--margin-l);
+    padding-right: var(--margin-r);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  }
+
+  .grid-layer__sheet i,
+  .grid-layer__sheet::after {
+    display: block;
+    border-left: 1px solid var(--line);
+    opacity: 0.7;
+  }
+
+  .grid-layer__sheet::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: var(--margin-r);
+    width: 0;
+  }
+
+  .sheet-rule {
+    position: relative;
+    height: 1px;
+    background: var(--line);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  }
+
+  .sheet-rule i {
+    position: relative;
+    display: block;
+  }
+
+  .sheet-rule i::before,
+  .sheet-rule i:last-of-type::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 9px;
+    height: 9px;
+    background:
+      linear-gradient(var(--ink-4), var(--ink-4)) center / 100% 1px no-repeat,
+      linear-gradient(var(--ink-4), var(--ink-4)) center / 1px 100% no-repeat;
+  }
+
+  .sheet-rule i:last-of-type::after {
+    left: auto;
+    right: -5px;
+  }
+
+  @media (max-width: 47.99rem) {
+    .grid-layer__sheet i:nth-child(n + 5),
+    .sheet-rule i:nth-child(n + 5) {
+      display: none;
+    }
+
+    .sheet-rule i:nth-child(4)::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: auto;
+      right: -5px;
+      width: 9px;
+      height: 9px;
+      background:
+        linear-gradient(var(--ink-4), var(--ink-4)) center / 100% 1px no-repeat,
+        linear-gradient(var(--ink-4), var(--ink-4)) center / 1px 100% no-repeat;
+    }
+  }
+
   /* ─── Micro-interactions ─────────────────────────────────────────────── */
 
   /* The wordmark's caret. Hovering the wordmark holds it steady. */

@@ -51,12 +51,12 @@ export default function ContributionHeatmap() {
         // The shape of the chart, in faint dots, while it loads.
         return (
             <div className="w-full max-w-full overflow-hidden" aria-busy="true" aria-label="Loading contributions">
-                <div className="h-5 w-40 skeleton-dot rounded-sm bg-border-main" />
+                <div className="h-5 w-40 skeleton-dot bg-border-main" />
                 <div className="mt-6 grid grid-flow-col gap-[3px]" style={{ gridTemplateRows: 'repeat(7, 12px)' }}>
                     {Array.from({ length: 53 * 7 }, (_, i) => (
                         <span
                             key={i}
-                            className="skeleton-dot block h-[10px] w-[10px] rounded-full bg-border-main"
+                            className="skeleton-dot block h-[10px] w-[10px] bg-border-main"
                             style={{ animationDelay: `${(i % 53) * 20}ms` }}
                         />
                     ))}

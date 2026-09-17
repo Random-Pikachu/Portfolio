@@ -1,0 +1,117 @@
+/* ─── Tokens ───────────────────────────────────────────────────────────────
+   The site is a drawing set: ink on paper by day, ink on night by dark.
+   One ramp per mode: four ink steps, two line steps, one accent. Every text
+   token clears 4.5:1 against its ground; scripts/check-design.mjs measures
+   it at build time and fails on a regression. Nothing on the site has a
+   radius; the reset at the bottom of this file enforces it.
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+
+  --paper: #f3f0e8;
+  --paper-2: #ebe7dd;
+  --ink: #161616;
+  --ink-2: #4a4844;
+  --ink-3: #6b6963;
+  --ink-4: #8a877f; /* ticks, arrowheads, marks; never text */
+  --line: #d6d2c8;
+  --line-2: #c4bfb3;
+  --accent: #a04d00;
+  --accent-ink: #ffffff;
+
+  --heatmap-1: #cfcbc2;
+  --heatmap-2: #a09c92;
+  --heatmap-3: #6b6963;
+  --heatmap-4: #161616;
+
+  /* Legacy names, kept until every section is rebuilt on the new ones. */
+  --bg-base: var(--paper);
+  --bg-card: var(--paper-2);
+  --bg-card-hover: var(--paper-2);
+  --text-base: var(--ink);
+  --text-muted: var(--ink-2);
+  --text-light: var(--ink-2);
+  --text-faint: var(--ink-3);
+  --text-link: var(--ink-2);
+  --text-card-title: var(--ink);
+  --border-main: var(--line);
+  --border-inner: var(--line-2);
+  --border-badge: var(--line-2);
+
+  /* Type roles. Sizes in rem; the viewport term keeps display type on the
+     sheet at every width. */
+  --text-display-1: clamp(3.5rem, 7.6vw, 7rem);
+  --text-display-2: clamp(2.25rem, 4.2vw, 3.75rem);
+  --text-pull: clamp(1.5rem, 2.4vw, 2rem);
+  --text-h3: 1.5rem;
+  --text-body: 1.0625rem;
+  --text-small: 0.875rem;
+  --text-data: 0.78125rem;
+  --text-label: 0.6875rem;
+
+  /* Space. */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-24: 96px;
+  --sp-32: 128px;
+
+  /* Sheet and grid. */
+  --cols: 8;
+  --gutter: 24px;
+  --sheet-max: 1440px;
+  --rail: 48px;
+  --margin-l: 88px;
+  --margin-r: 64px;
+  --row: 96px;
+
+  /* Motion: two curves, four durations. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.87, 0, 0.13, 1);
+  --dur-1: 120ms;
+  --dur-2: 240ms;
+  --dur-3: 480ms;
+  --dur-4: 900ms;
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  --paper: #0a0a0a;
+  --paper-2: #121212;
+  --ink: #ededed;
+  --ink-2: #b4b4b4;
+  --ink-3: #8c8c8c;
+  --ink-4: #6e6e6e;
+  --line: #232323;
+  --line-2: #333333;
+  --accent: #f7d02c;
+  --accent-ink: #0a0a0a;
+
+  --heatmap-1: #2a2a2a;
+  --heatmap-2: #4d4d4d;
+  --heatmap-3: #8a8a8a;
+  --heatmap-4: #ededed;
+}
+
+@media (max-width: 47.99rem) {
+  :root {
+    --cols: 4;
+    --margin-l: 24px;
+    --margin-r: 24px;
+    --row: 64px;
+  }
+}
+
+/* Sharp corners everywhere: components, images, inputs, focus rings, the
+   scrollbar. The site has no radius and no exception. */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}

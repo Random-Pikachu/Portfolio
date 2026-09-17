@@ -29,7 +29,7 @@ function PhotoLink({ children }: { children: string }) {
       </a>
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute left-1/2 bottom-full z-10 mb-3 hidden w-36 -translate-x-1/2 overflow-hidden rounded-sm border border-border-main bg-bg-card p-1 shadow-[0_18px_40px_-16px_rgb(0_0_0/0.45)] transition-all duration-500 ease-[var(--ease-out)] md:block ${
+        className={`pointer-events-none absolute left-1/2 bottom-full z-10 mb-3 hidden w-36 -translate-x-1/2 overflow-hidden border border-border-main bg-bg-card p-1 shadow-[0_18px_40px_-16px_rgb(0_0_0/0.45)] transition-all duration-500 ease-[var(--ease-out)] md:block ${
           on ? 'translate-y-0 rotate-[-3deg] opacity-100' : 'translate-y-2 rotate-0 opacity-0'
         }`}
       >

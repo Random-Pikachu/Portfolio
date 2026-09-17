@@ -1,13 +1,12 @@
-/* Self-hosted variable fonts. Bundled by Vite, same-origin, one fewer
-   third-party round trip in the critical path than the Google Fonts link. */
+/* Self-hosted fonts, bundled by Vite. Plex is the body and data face; Zodiak
+   the display face (see src/fonts/zodiak/README.md). Tokens live in tokens.css. */
+@import "./tokens.css";
 @import "@fontsource-variable/ibm-plex-sans";
 @import "@fontsource-variable/ibm-plex-sans/wght-italic.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 
-/* Zodiak, the display face. Three faces, self-hosted from src/fonts/zodiak;
-   see the README there for the licence. */
 @font-face {
   font-family: "Zodiak";
   font-style: normal;
@@ -30,12 +29,20 @@
   src: url("./fonts/zodiak/zodiak-400-italic.woff2") format("woff2");
 }
 
-/* ─── Tokens ───────────────────────────────────────────────────────────────
-   The site is ink: one grey ramp, one accent. Every text token below clears
-   4.5:1 against its page in both modes; the accent is reserved for the active
-   state, the one call to action and focus rings.
-   ────────────────────────────────────────────────────────────────────────── */
+/* Tailwind reads the tokens through these; utilities like bg-paper, text-ink
+   and border-line map straight onto the ramp. */
 @theme {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+
   --color-bg-base: var(--bg-base);
   --color-bg-card: var(--bg-card);
   --color-bg-card-hover: var(--bg-card-hover);
@@ -48,68 +55,23 @@
   --color-border-main: var(--border-main);
   --color-border-inner: var(--border-inner);
   --color-border-badge: var(--border-badge);
-  --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
 
   --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-display: "Zodiak", Georgia, "Times New Roman", serif;
-
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
-  :root {
-    color-scheme: light;
-    --bg-base: #f6f4ef;
-    --bg-card: #ffffff;
-    --bg-card-hover: #fbfaf7;
-    --text-base: #141414;
-    --text-muted: #4a4844;
-    --text-light: #5f5d57;
-    --text-faint: #6b6963;
-    --text-link: #4a4844;
-    --text-card-title: #141414;
-    --border-main: #d9d6ce;
-    --border-inner: #cfcbc2;
-    --border-badge: #bfbbb1;
-    --accent: #b45309;
-    --accent-ink: #ffffff;
-    --heatmap-1: #cfcbc2;
-    --heatmap-2: #a09c92;
-    --heatmap-3: #6b6963;
-    --heatmap-4: #141414;
-  }
-
-  :root.dark {
-    color-scheme: dark;
-    --bg-base: #080808;
-    --bg-card: #101010;
-    --bg-card-hover: #141414;
-    --text-base: #ededed;
-    --text-muted: #a8a8a8;
-    --text-light: #8a8a8a;
-    --text-faint: #7a7a7a;
-    --text-link: #a8a8a8;
-    --text-card-title: #ededed;
-    --border-main: #222222;
-    --border-inner: #2a2a2a;
-    --border-badge: #333333;
-    --accent: #f7d02c;
-    --accent-ink: #080808;
-    --heatmap-1: #2a2a2a;
-    --heatmap-2: #4d4d4d;
-    --heatmap-3: #8a8a8a;
-    --heatmap-4: #ededed;
-  }
-
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-bg-base text-text-base;
+    background: var(--paper);
+    color: var(--ink);
     font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -121,16 +83,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg-base);
+    background: var(--paper);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--border-inner);
-    border-radius: 4px;
+    background: var(--line-2);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--border-badge);
+    background: var(--ink-4);
   }
 
   ::selection {
@@ -164,110 +125,114 @@
   }
 }
 
-/* ─── Type scale ───────────────────────────────────────────────────────────
-   Seven steps, each at least 1.3× the last, so every level is telling the
-   reader something different. Display is for the name alone.
+/* ─── Type roles ───────────────────────────────────────────────────────────
+   Eight roles. Zodiak never below 24px, Plex Mono never above 14px, italics
+   only in Zodiak, uppercase only in labels. The legacy class names alias
+   the roles until every section is rebuilt.
    ────────────────────────────────────────────────────────────────────────── */
 @layer components {
+  .t-display-1,
   .t-display {
-    font-family: var(--font-sans);
-    font-size: clamp(3.75rem, 10.5vw, 9.5rem);
-    font-weight: 700;
-    line-height: 0.92;
-    letter-spacing: -0.04em;
-  }
-
-  .t-title {
-    font-family: var(--font-sans);
-    font-size: clamp(2rem, 3.4vw, 2.75rem);
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-  }
-
-  .t-pull {
-    font-family: var(--font-sans);
-    font-size: clamp(1.375rem, 2.2vw, 1.875rem);
-    font-weight: 500;
-    line-height: 1.3;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-display-1);
+    line-height: 0.96;
     letter-spacing: -0.015em;
   }
 
+  .t-display-2,
+  .t-title,
   .t-card {
-    font-family: var(--font-sans);
-    font-size: clamp(1.5rem, 2.8vw, 2.5rem);
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.025em;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-display-2);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+  }
+
+  .t-pull {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-pull);
+    line-height: 1.2;
+  }
+
+  .t-h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-h3);
+    line-height: 1.15;
   }
 
   .t-body {
     font-family: var(--font-sans);
-    font-size: 1.0625rem;
-    line-height: 1.65;
-  }
-
-  .t-meta {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .t-mono {
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: var(--text-body);
     line-height: 1.6;
   }
 
-  /* ─── Grid ───────────────────────────────────────────────────────────────
-     12 columns in a 1280 container. Columns 1–2 are the rail (section index
-     and label); content starts at column 3 on every section, including the
-     hero, so the page has one left edge. */
+  .t-small {
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+
+  .t-data,
+  .t-mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-data);
+    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .t-label,
+  .t-meta {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--text-label);
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ─── Sheet and grid ─────────────────────────────────────────────────────
+     The sheet is the page: at most 1440 wide, 88px from the left edge on
+     desktop (48px rail plus 40) and 64px from the right, 24px on phones.
+     Eight columns with 24px gutters, four on phones. Legacy .wrap, .grid-12,
+     .rail and .content sit on the same columns until the sections move. */
+  .sheet,
   .wrap {
     width: 100%;
-    max-width: 80rem;
+    max-width: var(--sheet-max);
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-left: var(--margin-l);
+    padding-right: var(--margin-r);
   }
 
+  .grid-8,
   .grid-12 {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: 1.5rem;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--gutter);
   }
 
-  .rail {
-    grid-column: 1 / -1;
-  }
-
+  .rail,
   .content {
     grid-column: 1 / -1;
   }
 
   @media (min-width: 48rem) {
-    .grid-12 {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-    }
-
     .rail {
-      grid-column: 1 / span 2;
+      grid-column: 1 / span 1;
     }
 
     .content {
-      grid-column: 3 / span 10;
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .wrap {
-      padding-inline: 2.5rem;
+      grid-column: 2 / -1;
     }
   }
 
   .hairline {
     height: 1px;
-    background: var(--border-main);
+    background: var(--line);
   }
 
   /* ─── Micro-interactions ─────────────────────────────────────────────── */
@@ -357,7 +322,6 @@
     gap: 0.4em;
     padding: 0.45rem 0.8rem;
     border: 1px solid rgb(255 255 255 / 0.28);
-    border-radius: 999px;
     color: #fff;
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -423,7 +387,6 @@
     position: relative;
     flex: 0 0 var(--card-w);
     height: var(--card-h);
-    border-radius: 0.5rem;
     overflow: hidden;
     background: #0c0c0c;
     color: #fff;
@@ -448,7 +411,6 @@
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: inherit;
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
     pointer-events: none;
   }
@@ -582,7 +544,6 @@
   .node {
     width: 9px;
     height: 9px;
-    border-radius: 50%;
     border: 1px solid var(--border-badge);
     background: var(--bg-base);
     transition: background 0.4s var(--ease-out), border-color 0.4s ease, transform 0.4s var(--ease-out);
@@ -681,7 +642,6 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    border-radius: 4px;
     /* The placeholder lives in --lqip and is painted only by ::before. Setting it
        as this element's own background-image tiled the 20px image across the
        frame, because ::before owns the background-size. */
@@ -810,7 +770,6 @@
     flex-direction: column;
     background: #fff;
     padding: 10px 10px 0;
-    border-radius: 2px;
     box-shadow: 0 24px 70px -20px rgb(0 0 0 / 0.8);
     max-height: 88vh;
     overflow: hidden;
@@ -890,7 +849,6 @@
     width: 40px;
     height: 40px;
     border: 0;
-    border-radius: 50%;
     background: rgb(255 255 255 / 0.1);
     color: #fff;
     cursor: pointer;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Focu
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ARCHIVE, PLATES, type Project } from '../data/site';
 import { WORK } from '../data/content.generated';
-import { registerPlateResolver, scrollByPixels, scrollToY, setPlateSnaps } from '../sheet/scroll';
+import { registerPlateResolver, scrollByPixels, scrollToY, setPlateSnaps, syncHash } from '../sheet/scroll';
 import { sheetStore, useSheetState } from '../sheet/store';
 
 const N = PLATES.length;
@@ -125,9 +125,12 @@ export function Details() {
     setCurrent((prev) => (prev === i ? prev : i));
   });
 
-  // The store carries the active plate only while this sheet is the active one.
+  // The store carries the active plate only while this sheet is the active
+  // one, and the hash names the plate in the frame.
   useEffect(() => {
-    sheetStore.set({ plate: sheet === 'projects' && !stacked ? current : null });
+    const inStrip = sheet === 'projects' && !stacked;
+    sheetStore.set({ plate: inStrip ? current : null });
+    if (inStrip) syncHash(`#project-${PLATES[current].slug}`);
   }, [sheet, current, stacked]);
 
   const sectionTop = () => (sectionRef.current ? sectionRef.current.getBoundingClientRect().top + window.scrollY : 0);
@@ -255,9 +258,11 @@ export function Details() {
                 </>
               )}
             </p>
-            <p className="t-label details__hint" aria-hidden="true">
-              scroll · drag · ← →
-            </p>
+            {stacked ? null : (
+              <p className="t-label details__hint" aria-hidden="true">
+                scroll · drag · ← →
+              </p>
+            )}
           </div>
           <div
             ref={frameRef}
@@ -284,7 +289,7 @@ export function Details() {
             ))}
             <motion.span className="ruler__marker" style={{ left: markerLeft }} />
             <span className="ruler__label t-label">{N} sheets</span>
-            <span className="ruler__depth t-label">↕ 0 mm</span>
+            <span className="ruler__depth t-label">Depth 0 mm</span>
           </div>
         </div>
       </div>

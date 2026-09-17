@@ -435,7 +435,17 @@
     .title-block {
       position: static;
       width: auto;
+      max-width: none;
       margin: var(--sp-8) var(--margin-r) var(--sp-8) var(--margin-l);
+    }
+
+    .sheet-head {
+      flex-wrap: wrap;
+    }
+
+    .sheet-head__caption {
+      width: 100%;
+      text-align: left;
     }
 
     .tile,

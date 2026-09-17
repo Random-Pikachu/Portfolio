@@ -58,7 +58,9 @@ function ensureObserver() {
         if (e.isIntersecting) visible.add(id);
         else visible.delete(id);
       }
-      // The deepest sheet in the band wins, which matches reading order.
+      // The deepest sheet in the band wins, which matches reading order. If
+      // nothing crosses the band for a frame, the last answer stands.
+      if (visible.size === 0) return;
       let next = order[0] ?? 'cover';
       for (let i = order.length - 1; i >= 0; i--) {
         if (visible.has(order[i])) {

@@ -228,7 +228,7 @@ export const PROJECTS: Project[] = [
     github: 'https://github.com/Sypher845/code-rivals',
     live: 'https://code-rivals-six.vercel.app/',
     youtube: 'https://www.youtube.com/watch?v=mmFpLflQln4',
-    image: null,
+    image: 'code-rivals',
   },
   {
     index: '03',

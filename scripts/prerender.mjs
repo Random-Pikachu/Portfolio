@@ -16,6 +16,7 @@
  * Run by `npm run build` after `vite build` and `vite build --ssr`.
  */
 import { readFile, writeFile, rm, mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
@@ -43,6 +44,8 @@ const {
 const lastModified = new Date().toISOString();
 const lastModifiedDate = lastModified.slice(0, 10);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+/** The page's own social card from scripts/build-og.mjs when it exists, else the cover's. */
+const card = (key) => (existsSync(path.join(root, 'public', 'og', `${key}.png`)) ? `${site.origin}/og/${key}.png` : site.ogImage);
 
 /** The head block for pages that share a shell. */
 const head = ({ title, description, canonical, type = 'website', image = site.ogImage, published }) => `
@@ -89,6 +92,7 @@ const PAGES = [
       title: `Notes — ${site.name}`,
       description: `Notes by ${site.name} on software, systems and the things built along the way.`,
       canonical: `${site.origin}/blog`,
+      image: card('notes'),
     }),
   },
   ...notes.map((n) => ({
@@ -104,6 +108,7 @@ const PAGES = [
       canonical: `${site.origin}/blog/${n.slug}`,
       type: 'article',
       published: n.date,
+      image: card(`note-${n.slug}`),
     }),
   })),
   ...publishedWork.map((w) => ({
@@ -118,7 +123,7 @@ const PAGES = [
       description: w.summary,
       canonical: `${site.origin}/work/${w.slug}`,
       type: 'article',
-      image: w.image ? `${site.origin}/work/${w.image}-1600.webp` : site.ogImage,
+      image: card(`work-${w.slug}`),
     }),
   })),
 ];

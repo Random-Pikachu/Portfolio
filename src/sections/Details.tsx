@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent, type MouseEvent, type PointerEvent } from 'react';
 import { ARCHIVE, PLATES, type Project } from '../data/site';
 import { WORK } from '../data/content.generated';
-import { reducedMotion, registerPlateResolver, scrollByPixels, scrollToY, setPlateSnaps, syncHash } from '../sheet/scroll';
+import { reducedMotion, scrollByPixels, scrollToY, setPlateSnaps, syncHash } from '../sheet/scroll';
 import { sheetStore, useSheetState } from '../sheet/store';
 import { useScrollProgress } from '../sheet/useScrollProgress';
 
@@ -154,16 +154,11 @@ export function Details() {
     setFrameW(frameRef.current?.clientWidth ?? 0);
     if (stackedNow) {
       setPlateSnaps([]);
-      registerPlateResolver(null);
       return;
     }
     const top = sectionTop();
     const vh = window.innerHeight;
     setPlateSnaps(Array.from({ length: N }, (_, i) => top + i * vh));
-    registerPlateResolver((slug) => {
-      const i = PLATES.findIndex((p) => p.slug === slug);
-      return i < 0 ? null : top + i * vh;
-    });
   }, []);
 
   useEffect(() => {
@@ -174,7 +169,6 @@ export function Details() {
     if (frameRef.current) ro.observe(frameRef.current);
     return () => {
       ro.disconnect();
-      registerPlateResolver(null);
       setPlateSnaps([]);
     };
   }, [measure]);

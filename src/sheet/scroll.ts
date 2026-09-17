@@ -102,12 +102,19 @@ export function setPlateSnaps(points: number[]) {
 
 /**
  * A plate lives inside a transformed track, so its own position on the page
- * says nothing about where to scroll. Details registers the function that
- * knows; goTo asks it for ids that start with "project-".
+ * says nothing about where to scroll. The strip is six viewports tall with
+ * one plate per viewport, so plate i sits at the strip's top plus i
+ * viewports. Read from the DOM at call time, so it never depends on what
+ * has mounted yet. Null when the plates are stacked and flow normally.
  */
-let plateResolver: ((slug: string) => number | null) | null = null;
-export function registerPlateResolver(fn: ((slug: string) => number | null) | null) {
-  plateResolver = fn;
+function platePosition(el: HTMLElement): number | null {
+  const strip = el.closest<HTMLElement>('.details');
+  if (!strip || strip.classList.contains('details--stack')) return null;
+  if (window.matchMedia('(max-width: 47.99rem)').matches || reducedMotion()) return null;
+  const plates = Array.from(strip.querySelectorAll<HTMLElement>('.plate'));
+  const i = plates.indexOf(el);
+  if (i < 0) return null;
+  return strip.getBoundingClientRect().top + window.scrollY + i * window.innerHeight;
 }
 
 /** Sideways trackpad input inside the strip becomes page scroll, at once. */
@@ -142,8 +149,7 @@ export function scrollToY(y: number, { instant = false } = {}) {
 export async function goTo(id: string, { instant = false } = {}) {
   const el = document.getElementById(id);
   if (!el) return;
-  const resolved = id.startsWith('project-') ? plateResolver?.(id.slice('project-'.length)) : null;
-  const top = resolved ?? el.getBoundingClientRect().top + window.scrollY;
+  const top = (el.classList.contains('plate') ? platePosition(el) : null) ?? el.getBoundingClientRect().top + window.scrollY;
   await scrollToY(top, { instant });
   syncHash(`#${id}`);
   focusHeading(el);

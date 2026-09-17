@@ -40,7 +40,7 @@ const str = (v) => (typeof v === 'string' ? v.trim() : '');
 const list = (v) => (Array.isArray(v) ? v.map(str).filter(Boolean) : []);
 const dateStr = (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : str(v));
 
-/** A monochrome TextMate theme: ink weights, not hues. Colours are placeholders the CSS maps to tokens. */
+/** A monochrome TextMate theme: ink weights, not hues. The greys are placeholders swapped for tokens after rendering. */
 const inkTheme = (name) => ({
   name,
   type: name === 'night' ? 'dark' : 'light',
@@ -82,13 +82,17 @@ const processor = unified()
   .use(remarkGfm)
   .use(remarkRehype)
   .use(rehypeSlug)
-  .use(rehypeShiki, { themes: { light: inkTheme('paper'), dark: inkTheme('night') }, defaultColor: false })
+  .use(rehypeShiki, { theme: inkTheme('ink') })
   .use(collectHeadings)
   .use(rehypeStringify);
 
+/** The theme's placeholder greys become the site's tokens, so code follows the mode. */
+const TOKENS = { '#111111': 'var(--ink)', '#222222': 'var(--ink)', '#444444': 'var(--ink-2)', '#666666': 'var(--ink-3)', '#777777': 'var(--ink-4)' };
+const tokenise = (html) => html.replace(/#(111111|222222|444444|666666|777777)/g, (m) => TOKENS[m]).replace(/background-color:#00000000;?/g, '');
+
 async function compile(markdown) {
   const file = await processor.process(markdown);
-  const html = String(file);
+  const html = tokenise(String(file));
   const words = markdown.split(/\s+/).filter(Boolean).length;
   return { html, headings: file.data.headings ?? [], words };
 }

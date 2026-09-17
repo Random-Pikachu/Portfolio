@@ -1,13 +1,18 @@
 import { useEffect, type RefObject } from 'react';
 
 /**
- * Progress of a tall element through the viewport: 0 when its top reaches
- * the top of the viewport, 1 when its bottom reaches the bottom. Reported
- * on every scroll and resize, throttled to a frame, to a callback that
- * writes styles directly, so nothing re-renders per frame. Lenis scrolls the
- * window natively, so the window's own scroll event is the right source.
+ * Progress of an element through the viewport, 0 to 1, reported on every
+ * scroll and resize, throttled to a frame, to a callback that writes styles
+ * directly, so nothing re-renders per frame. Lenis scrolls the window
+ * natively, so the window's own scroll event is the right source.
+ *
+ *   'section'  a tall element: 0 when its top reaches the top of the
+ *              viewport, 1 when its bottom reaches the bottom.
+ *   'enter'    a short element: 0 when its top enters at 90% of the
+ *              viewport, 1 when its bottom passes 45%, about where a
+ *              reader's eye rests.
  */
-export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: (p: number) => void) {
+export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: (p: number) => void, mode: 'section' | 'enter' = 'section') {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -15,9 +20,15 @@ export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: 
     const read = () => {
       raf = 0;
       const rect = el.getBoundingClientRect();
-      const range = rect.height - window.innerHeight;
-      const p = range <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / range));
-      onChange(p);
+      const vh = window.innerHeight;
+      let p: number;
+      if (mode === 'enter') {
+        p = (vh * 0.9 - rect.top) / (vh * 0.45 + rect.height);
+      } else {
+        const range = rect.height - vh;
+        p = range <= 0 ? 0 : -rect.top / range;
+      }
+      onChange(Math.min(1, Math.max(0, p)));
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(read);
@@ -30,7 +41,7 @@ export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: 
       window.removeEventListener('resize', schedule);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [ref, onChange]);
+  }, [ref, onChange, mode]);
 }
 
 /** True once the element has come within `margin` pixels of the viewport; stays true. */

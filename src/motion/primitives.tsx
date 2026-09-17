@@ -15,10 +15,9 @@ export function Words({ text, className = '' }: { text: string; className?: stri
   const [solid] = useState(() => reducedMotion());
   const words = text.split(' ');
   const onChange = useCallback((p: number) => {
-    // Full ink arrives before the paragraph's centre passes the viewport's.
-    ref.current?.style.setProperty('--p', String(Math.min(1, p * 1.6)));
+    ref.current?.style.setProperty('--p', p.toFixed(3));
   }, []);
-  useScrollProgress(ref, onChange);
+  useScrollProgress(ref, onChange, 'enter');
   if (solid)
     return (
       <p ref={ref} className={className}>

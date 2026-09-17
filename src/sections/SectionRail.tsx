@@ -18,7 +18,7 @@ export function SectionRail({
   id: string;
 }) {
   return (
-    <div className="rail mb-10 md:mb-0">
+    <div className="rail-col mb-10 md:mb-0">
       <FadeUp className="md:sticky md:top-24">
         <p className="t-meta text-text-faint" aria-hidden="true">{`[ ${num} ]`}</p>
         <h2 id={`${id}-heading`} className="mono mt-1 text-sm tracking-[0.08em] text-text-base">

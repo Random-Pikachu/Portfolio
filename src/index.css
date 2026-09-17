@@ -216,13 +216,13 @@
     column-gap: var(--gutter);
   }
 
-  .rail,
+  .rail-col,
   .content {
     grid-column: 1 / -1;
   }
 
   @media (min-width: 48rem) {
-    .rail {
+    .rail-col {
       grid-column: 1 / span 1;
     }
 

@@ -12,7 +12,8 @@
     "prerender": "vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "photos": "node scripts/build-photos.mjs",
     "work": "node scripts/build-work.mjs",
-    "check": "node scripts/check-design.mjs"
+    "check": "node scripts/check-design.mjs",
+    "wash": "node scripts/build-wash.mjs"
   },
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.3.0",

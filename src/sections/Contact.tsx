@@ -44,7 +44,7 @@ function LazyHeatmap() {
 
 export function Contact() {
   return (
-    <section id="contact" aria-labelledby="contact-heading" className="py-24 md:py-32">
+    <div className="py-16 md:py-20">
       <div className="wrap grid-12">
         <SectionRail {...SECTION} id="contact" />
 
@@ -112,6 +112,6 @@ export function Contact() {
           </FadeUp>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

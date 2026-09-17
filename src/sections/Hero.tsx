@@ -74,7 +74,7 @@ function Pikachu() {
 export function Hero() {
   const { display } = useScramble('/sangam · portfolio · 2026', 300);
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   // The name drifts up at half speed and is gone by the time About arrives.
   const y = useTransform(scrollY, [0, 600], [0, reduce ? 0 : -120]);
@@ -82,12 +82,7 @@ export function Hero() {
   const hint = useTransform(scrollY, [0, 80], [1, 0]);
 
   return (
-    <section
-      ref={ref}
-      id="hero"
-      aria-label="Introduction"
-      className="relative flex min-h-[100svh] flex-col justify-between pt-28 pb-8 md:pt-32"
-    >
+    <div ref={ref} className="relative flex min-h-[calc(100svh-6rem)] flex-col justify-between pt-8 pb-8">
       <motion.div style={{ y, opacity }} className="wrap grid-12 flex-1 items-center">
         <div className="content relative">
           <motion.p
@@ -171,6 +166,6 @@ export function Hero() {
           </dl>
         </motion.div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -40,13 +40,41 @@ export const SITE = {
   },
 } as const;
 
-/** Ordered list of in-page sections. Drives nav, anchors and the sitemap. */
+/**
+ * Ordered list of in-page sections. Drives nav, anchors and the sitemap. Each
+ * section is a sheet of the drawing set; `block` is what its title block reads.
+ */
 export const SECTIONS = [
-  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '01' },
-  { id: 'experience', label: 'experience', heading: 'Work experience', num: '02' },
-  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '03' },
-  { id: 'contact', label: 'contact', heading: 'Contact', num: '04' },
+  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '01', block: 'General' },
+  { id: 'experience', label: 'experience', heading: 'Work experience', num: '02', block: 'Schedule' },
+  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '03', block: 'Details' },
+  { id: 'contact', label: 'contact', heading: 'Contact', num: '04', block: 'Issue' },
 ] as const;
+
+/** Sheet 00, the cover. Not a nav section; it is the top of the page. */
+export const COVER = { id: 'cover', label: 'cover', heading: 'Sangam Pratap Singh', num: '00', block: 'Cover' } as const;
+
+/** Every sheet of the home page, cover first. */
+export const SHEETS = [COVER, ...SECTIONS] as const;
+
+/** The pages outside the home set, as the rail and the index list them. */
+export const PAGES = [
+  { id: 'notes', label: 'notes', heading: 'Notes', href: '/blog', block: 'Notes' },
+  { id: 'survey', label: 'survey', heading: 'Photography', href: '/photography', block: 'Survey' },
+] as const;
+
+/** Where the drawings are made. Drives the title block and the clock. */
+export const PLACE = {
+  city: 'Gwalior',
+  lat: 26.22,
+  lon: 78.18,
+  coords: '26°13′ N 78°10′ E',
+  timeZone: 'Asia/Kolkata',
+  zoneLabel: 'IST',
+} as const;
+
+/** The drawing number on every sheet. */
+export const DRAWING_NO = '025';
 
 /** The toolbox, grouped so a reader can scan it in three glances. */
 export const TOOLBOX = [
@@ -159,6 +187,8 @@ export const EXPERIENCES: Experience[] = [
 
 export interface Project {
   index: string;
+  /** URL-safe name: the plate anchor is #project-<slug>, the detail sheet /work/<slug>. */
+  slug: string;
   title: string;
   /** One line for the banner caption; the paragraph is for crawlers and the stacked view. */
   summary: string;
@@ -169,11 +199,14 @@ export interface Project {
   youtube: string;
   /** Basename under public/work, or null for a project with no screenshot yet. */
   image: string | null;
+  /** Listed after the strip as "not issued" rather than given a plate. */
+  archived?: true;
 }
 
 export const PROJECTS: Project[] = [
   {
     index: '01',
+    slug: 'ephemeris',
     title: 'Ephemeris',
     summary: 'A daily planner, habit tracker and journal that asks for thirty seconds an evening.',
     description:
@@ -186,6 +219,7 @@ export const PROJECTS: Project[] = [
   },
   {
     index: '02',
+    slug: 'coderivals',
     title: 'CodeRivals',
     summary: 'Real-time 1v1 coding duels with power cards that change the round.',
     description:
@@ -198,6 +232,7 @@ export const PROJECTS: Project[] = [
   },
   {
     index: '03',
+    slug: 'astra',
     title: 'Astra',
     summary: 'A desktop scanner that finds vulnerable dependencies and drafts the fix.',
     description:
@@ -210,6 +245,7 @@ export const PROJECTS: Project[] = [
   },
   {
     index: '04',
+    slug: 'devtrackr',
     title: 'DevTrackr',
     summary: 'One heatmap for GitHub, LeetCode and Codeforces, with a daily digest.',
     description:
@@ -222,6 +258,7 @@ export const PROJECTS: Project[] = [
   },
   {
     index: '05',
+    slug: 'gitstory',
     title: 'GitStory',
     summary: 'Talk to a repository and get timelines, diffs and risk maps back.',
     description:
@@ -234,6 +271,7 @@ export const PROJECTS: Project[] = [
   },
   {
     index: '06',
+    slug: 'code-sync',
     title: 'Code-Sync',
     summary: 'Google Docs for code: shared cursors, one room, run it with Judge0.',
     description:
@@ -246,6 +284,7 @@ export const PROJECTS: Project[] = [
   },
   {
     index: '07',
+    slug: 'securepdf',
     title: 'SecurePDF',
     summary: 'PDFs locked to one machine, with a clock, and no way to print or copy.',
     description:
@@ -255,9 +294,11 @@ export const PROJECTS: Project[] = [
     live: 'https://secure-pdf-five.vercel.app/',
     youtube: '',
     image: 'securepdf',
+    archived: true,
   },
   {
     index: '08',
+    slug: 'sorting-visualizer',
     title: 'Sorting Visualizer',
     summary: 'Watch merge sort and quick sort race, bar by bar.',
     description:
@@ -267,8 +308,14 @@ export const PROJECTS: Project[] = [
     live: 'https://random-pikachu.github.io/Sorting-Visualizer-v2/',
     youtube: '',
     image: 'sorting-visualizer',
+    archived: true,
   },
 ];
+
+/** The six plates of the Details sheet, in order. */
+export const PLATES = PROJECTS.filter((p) => !p.archived);
+/** Projects listed after the strip as not issued. */
+export const ARCHIVE = PROJECTS.filter((p) => p.archived);
 
 /** Everything the Person entity claims expertise in, deduped across sections. */
 export const KNOWS_ABOUT = [

@@ -41,7 +41,7 @@ function PhotoLink({ children }: { children: string }) {
 
 export function About() {
   return (
-    <section id="about" aria-labelledby="about-heading" className="py-24 md:py-32">
+    <div className="py-16 md:py-20">
       <div className="wrap grid-12">
         <SectionRail {...SECTION} id="about" />
 
@@ -108,6 +108,6 @@ export function About() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

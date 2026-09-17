@@ -88,7 +88,7 @@ export function buildStructuredData(lastModified: string) {
       position: i + 1,
       item: {
         '@type': 'SoftwareSourceCode',
-        '@id': `${ORIGIN}/#project-${p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+        '@id': `${ORIGIN}/#project-${p.slug}`,
         name: p.title,
         headline: p.title,
         description: p.description,

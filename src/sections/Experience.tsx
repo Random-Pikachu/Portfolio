@@ -97,7 +97,7 @@ function Row({ exp, index, last }: { exp: Entry; index: number; last: boolean })
 
 export function Experience() {
   return (
-    <section id="experience" aria-labelledby="experience-heading" className="py-24 md:py-32">
+    <div className="py-16 md:py-20">
       <div className="wrap grid-12">
         <SectionRail {...SECTION} id="experience" />
         <div className="content border-t border-border-main">
@@ -106,6 +106,6 @@ export function Experience() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

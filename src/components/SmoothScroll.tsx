@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import ReactLenis from 'lenis/react';
+import ReactLenis, { useLenis } from 'lenis/react';
+import { attachLenis, detachLenis, goTo } from '../sheet/scroll';
 
 /**
  * Lenis in `root` mode renders its children directly (no wrapper element), so
@@ -32,7 +33,32 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         wheelMultiplier: 1,
       }}
     >
+      <ScrollBridge />
       {children}
     </ReactLenis>
   );
+}
+
+/**
+ * Hands the Lenis instance to the scroll layer, honours a hash on first load
+ * and on back/forward. Renders nothing.
+ */
+function ScrollBridge() {
+  const lenis = useLenis();
+  useEffect(() => {
+    if (!lenis) return;
+    attachLenis(lenis);
+    const hash = location.hash.slice(1);
+    if (hash) goTo(hash, { instant: true });
+    const onPop = () => {
+      const h = location.hash.slice(1);
+      if (h) goTo(h);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      detachLenis();
+    };
+  }, [lenis]);
+  return null;
 }

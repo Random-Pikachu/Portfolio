@@ -27,7 +27,7 @@ function Card({
     const rel = (centre + v - window.innerWidth / 2) / window.innerWidth;
     return `${(-rel * 5).toFixed(2)}%`;
   });
-  const slug = p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const slug = p.slug;
 
   return (
     <article
@@ -93,7 +93,7 @@ function Card({
  * the row must travel and drives the transform.
  */
 export function Work() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const [dist, setDist] = useState(0);
@@ -162,13 +162,7 @@ export function Work() {
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      aria-labelledby="projects-heading"
-      className="work"
-      style={{ '--n': N } as CSSProperties}
-    >
+    <div ref={sectionRef} className="work" style={{ '--n': N } as CSSProperties}>
       <div className="work-pin">
         <div className="wrap grid-12 mb-8 items-end">
           <SectionRail {...SECTION} id="projects" />
@@ -201,6 +195,6 @@ export function Work() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

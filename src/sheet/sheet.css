@@ -3,11 +3,10 @@
    here is chrome shared by every page; the sections style only their content.
    ────────────────────────────────────────────────────────────────────────── */
 @layer components {
-  /* Sheet sections: one viewport tall at least, the rule at the top under the
-     top bar, then the head row. */
+  /* Sheet sections: as tall as their content, the rule at the top under the
+     top bar, then the head row. Only the cover claims a full viewport. */
   .sheet-section {
     position: relative;
-    min-height: 100svh;
     padding-top: calc(var(--nav-h) + 12px);
     scroll-margin-top: 0;
   }

@@ -99,13 +99,13 @@ export function Experience() {
         })}
       </ol>
 
-      <div className="schedule__detail grid-8">
+      <div key={selected} className="schedule__detail grid-8">
         <div className="schedule__detail-head">
           <p className="t-label schedule__detail-period">
             <b>{current.company}</b> · {current.period}
             {!current.endDate ? ' · still rising' : null}
           </p>
-          <h3 className="t-h3 schedule__detail-role">
+          <h3 className="t-display-2 schedule__detail-role">
             {current.companyUrl ? (
               <a href={current.companyUrl} target="_blank" rel="noopener" className="underline-draw">
                 {current.role}

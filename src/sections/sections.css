@@ -274,91 +274,148 @@
 }
 
 /* ─── Sheet 03 · Details ───────────────────────────────────────────────────
-   The strip. Six viewports tall; a sticky frame one viewport tall; the track
-   moves sideways with vertical progress. Stacked under 48rem, with reduced
-   motion, or without scripting.
+   The six details lie side by side on a strip the reader slides sideways —
+   a true horizontal scroll: drag, wheel-δX, arrow keys or the buttons in
+   the head row. Snapping is proximity only; the vertical scroll is never
+   touched. The ruler under the strip reads off progress.
    ────────────────────────────────────────────────────────────────────────── */
 @layer components {
   .details {
-    height: calc(var(--n) * 100svh);
-  }
-
-  .details__pin {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    display: flex;
-    flex-direction: column;
-    padding-top: calc(var(--nav-h) + 12px);
-    padding-bottom: var(--sp-6);
+    margin: var(--sp-8) 0;
   }
 
   .details__head {
     display: flex;
-    justify-content: space-between;
     align-items: baseline;
-    padding: 6px 0 12px;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+
+  .details__counter {
     color: var(--ink-3);
   }
 
   .details__counter b {
+    font-weight: inherit;
     color: var(--ink);
-    font-weight: 500;
   }
 
-  .details__frame {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    cursor: grab;
-    touch-action: pan-y;
-    user-select: none;
-  }
-
-  .details__frame.is-dragging {
-    cursor: grabbing;
-  }
-
-  .details__track {
+  .details__nav {
     display: flex;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .details__hint {
+    color: var(--ink-4);
+    margin-right: 6px;
+  }
+
+  .details__step {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1;
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--line-2);
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color var(--dur-2) ease, color var(--dur-2) ease, border-color var(--dur-2) ease;
+  }
+
+  .details__step:hover,
+  .details__step:focus-visible {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    outline-color: var(--ink);
+  }
+
+  .details__step:disabled {
+    color: var(--ink-4);
+    cursor: default;
+    background: none;
+    border-color: var(--line);
+  }
+
+  /* The strip itself. Overflow is real; the native scrollbar is hidden and
+    the ruler below takes its place. Snap is proximity — it settles on a
+    plate when the reader stops near one, never pulls them anywhere. */
+  .details__strip {
     list-style: none;
-    will-change: transform;
+    position: relative;
+    display: flex;
+    gap: var(--sp-8);
+    margin: var(--sp-6) 0 0;
+    padding: 0 24px 28px 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .details__strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .details__strip.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+
+  .details__strip:focus-visible {
+    outline: 1px solid var(--ink-3);
+    outline-offset: 4px;
   }
 
   .plate {
-    flex: 0 0 100%;
-    height: 100%;
-    padding: 0 16px 16px 0;
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
+    column-gap: var(--gutter);
+    align-items: center;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity var(--dur-4) var(--ease-out), transform var(--dur-4) var(--ease-out);
+  }
+
+  .plate.is-in {
+    opacity: 1;
+    transform: none;
   }
 
   /* The print: a photograph lying on the sheet, hence the one shadow on the
      site, hard and offset, no blur. */
   .plate__print {
     position: relative;
-    height: 100%;
+    margin: 0;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     background: #0c0c0c;
-    color: #fff;
     box-shadow: 16px 16px 0 var(--line-2);
   }
 
+
   .plate__img {
-    position: absolute;
-    inset: 0;
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 30%;
-    transform: scale(1.04);
-    transition: transform var(--dur-3) var(--ease-out);
+    transform: scale(1.05);
+    transition: transform var(--dur-4) var(--ease-out) 60ms;
   }
 
-  .plate[data-active="true"] .plate__img {
+  .plate.is-in .plate__img {
     transform: scale(1);
+  }
+
+  .plate__print:hover .plate__img {
+    transform: scale(1.025);
   }
 
   .plate__type {
@@ -377,52 +434,91 @@
     white-space: nowrap;
   }
 
-  .plate__shade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgb(8 8 8 / 0.94) 0%, rgb(8 8 8 / 0.6) 36%, rgb(8 8 8 / 0) 66%);
-    pointer-events: none;
+  .plate__caption {
+    min-width: 0;
   }
 
-  .plate__caption {
+  /* The ruler: the strip's scrollbar redrawn as an instrument. One tick per
+    plate; the heavy tick is the frame's position on the strip. */
+  .ruler {
+    position: relative;
+    height: 34px;
+    margin-top: var(--sp-2);
+    padding-right: 24px;
+  }
+
+  .ruler__line {
     position: absolute;
     left: 0;
-    right: 0;
-    bottom: 0;
-    padding: clamp(20px, 3vw, 40px);
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: var(--sp-4);
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity var(--dur-3) var(--ease-out) 80ms, transform var(--dur-3) var(--ease-out) 80ms;
+    right: 24px;
+    top: 9px;
+    border-top: 1px solid var(--line);
   }
 
-  .plate[data-active="true"] .plate__caption {
-    opacity: 1;
-    transform: none;
+  .ruler__tick {
+    position: absolute;
+    top: 4px;
+    width: 0;
+    height: 10px;
+    border-left: 1px solid var(--line);
+  }
+
+  .ruler__tick i {
+    position: absolute;
+    top: 11px;
+    left: -3px;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--ink-4);
+  }
+
+  .ruler__marker {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 14px;
+    border-left: 2px solid var(--accent);
+  }
+
+  .ruler__label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    color: var(--ink-3);
+  }
+
+  .ruler__depth {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateY(-100%);
+    color: var(--ink-4);
   }
 
   .plate__num {
-    color: rgb(255 255 255 / 0.7);
+    color: var(--ink-3);
   }
 
   .plate__title {
-    margin: 8px 0 0;
-    color: #fff;
+    margin: 10px 0 0;
+    color: var(--ink);
   }
 
   .plate__line {
-    margin: 12px 0 0;
-    max-width: 46ch;
-    color: rgb(255 255 255 / 0.84);
+    margin: 14px 0 0;
+    max-width: 38ch;
+    color: var(--ink-2);
   }
 
   .plate__spec {
-    margin: 14px 0 0;
+    margin: 16px 0 0;
+    padding-top: 12px;
     display: grid;
     gap: 4px;
-    color: rgb(255 255 255 / 0.84);
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
   }
 
   .plate__spec div {
@@ -432,7 +528,7 @@
   }
 
   .plate__spec dt {
-    color: rgb(255 255 255 / 0.6);
+    color: var(--ink-3);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-size: var(--text-label);
@@ -446,11 +542,11 @@
 
   .plate__stack {
     margin: 16px 0 0;
-    color: rgb(255 255 255 / 0.62);
+    color: var(--ink-3);
   }
 
   .plate__links {
-    margin: 0;
+    margin: 20px 0 0;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -462,100 +558,36 @@
     font-size: var(--text-label);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #fff;
-    border: 1px solid rgb(255 255 255 / 0.42);
+    color: var(--ink);
+    border: 1px solid var(--line-2);
     padding: 9px 14px;
-    transition: background-color var(--dur-2) ease, color var(--dur-2) ease;
+    transition: background-color var(--dur-2) ease, color var(--dur-2) ease, border-color var(--dur-2) ease;
   }
 
   .plate__link:hover,
   .plate__link:focus-visible {
-    background: #fff;
-    color: #0a0a0a;
-    outline-color: #fff;
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    outline-color: var(--ink);
   }
 
   .plate__link--pri {
-    background: #fff;
-    color: #0a0a0a;
-    border-color: #fff;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
   }
 
   .plate__link--pri:hover,
   .plate__link--pri:focus-visible {
     background: transparent;
-    color: #fff;
-  }
-
-  /* The ruler: a dimension line with one tick per plate and a marker that
-     travels with progress; the true label on the right, the impossible depth
-     beneath it. */
-  .ruler {
-    position: relative;
-    height: 44px;
-    margin: 18px 16px 0 0;
-    color: var(--ink-4);
-  }
-
-  .ruler__line {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 12px;
-    height: 1px;
-    background: currentColor;
-  }
-
-  .ruler__tick {
-    position: absolute;
-    top: 8px;
-    width: 1px;
-    height: 9px;
-    background: currentColor;
-    transform: translateX(-50%);
-  }
-
-  .ruler__tick i {
-    position: absolute;
-    top: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-mono);
-    font-style: normal;
-    font-size: 10.5px;
-    color: var(--ink-3);
-  }
-
-  .ruler__marker {
-    position: absolute;
-    top: 12px;
-    width: 7px;
-    height: 7px;
-    background: var(--accent);
-    transform: translate(-50%, -50%);
-  }
-
-  .ruler__label,
-  .ruler__depth {
-    position: absolute;
-    right: 0;
-    color: var(--ink-3);
-    font-weight: 400;
-  }
-
-  .ruler__label {
-    bottom: 100%;
-    margin-bottom: -6px;
-  }
-
-  .ruler__depth {
-    top: 22px;
+    color: var(--accent);
   }
 
   /* Not issued. */
   .archive {
     list-style: none;
-    margin: var(--sp-8) 16px var(--sp-16) 0;
+    margin: var(--sp-8) 0 var(--sp-16);
     padding: 0;
     border-top: 1px solid var(--line);
   }
@@ -583,102 +615,30 @@
     font-weight: 400;
   }
 
-  /* ─── Stacked: phones, reduced motion, no scripting ─────────────────── */
-  .details--stack {
-    height: auto;
-  }
-
-  .details--stack .details__pin {
-    position: static;
-    height: auto;
-    padding-top: 0;
-  }
-
-  .details--stack .details__frame {
-    overflow: visible;
-    cursor: default;
-    user-select: auto;
-  }
-
-  .details--stack .details__track {
-    flex-direction: column;
-    gap: var(--sp-8);
-    transform: none !important;
-  }
-
-  .details--stack .plate {
-    flex-basis: auto;
-    height: auto;
-    aspect-ratio: 3 / 4;
-    max-height: 40rem;
-  }
-
-  .details--stack .plate__img {
-    transform: none;
-  }
-
-  .details--stack .plate__caption {
-    opacity: 1;
-    transform: none;
-  }
-
-  .details--stack .ruler {
-    display: none;
-  }
-
-  @media (max-width: 47.99rem), (prefers-reduced-motion: reduce), (scripting: none) {
-    .details {
-      height: auto;
-    }
-
-    .details__pin {
-      position: static;
-      height: auto;
-      padding-top: 0;
-    }
-
-    .details__frame {
-      overflow: visible;
-      cursor: default;
-      user-select: auto;
-    }
-
-    .details__track {
-      flex-direction: column;
-      gap: var(--sp-8);
-      transform: none !important;
-    }
-
+  @media (max-width: 63.99rem) {
     .plate {
-      flex-basis: auto;
-      height: auto;
-      aspect-ratio: 3 / 4;
-      max-height: 40rem;
-    }
-
-    .plate__img {
-      transform: none;
-    }
-
-    .plate__caption {
-      opacity: 1;
-      transform: none;
-    }
-
-    .ruler,
-    .details__hint {
-      display: none;
+      flex-basis: 88%;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     }
   }
 
   @media (max-width: 47.99rem) {
+    .details__hint {
+      display: none;
+    }
+
     .plate {
-      padding-right: 10px;
-      padding-bottom: 10px;
+      flex-basis: 92%;
+      display: block;
     }
 
     .plate__print {
       box-shadow: 10px 10px 0 var(--line-2);
+    }
+
+    .plate__caption {
+      margin-top: var(--sp-8);
+      padding-left: 2px;
     }
 
     .archive__row {
@@ -687,6 +647,20 @@
 
     .archive__line {
       display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce), (scripting: none) {
+    .plate {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .plate__img,
+    .plate__print:hover .plate__img {
+      transform: none;
+      transition: none;
     }
   }
 }
@@ -701,7 +675,7 @@
 
   .general {
     padding-top: var(--sp-12);
-    padding-bottom: var(--sp-24);
+    padding-bottom: var(--sp-16);
   }
 
   .general__grid {
@@ -810,7 +784,7 @@
   /* ─── Sheet 02 · Schedule ───────────────────────────────────────────── */
   .schedule {
     padding-top: var(--sp-12);
-    padding-bottom: var(--sp-24);
+    padding-bottom: var(--sp-16);
   }
 
   .schedule__axis {
@@ -957,7 +931,10 @@
 
   .schedule__detail {
     margin-top: var(--sp-8);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--line-2);
     row-gap: var(--sp-6);
+    animation: ink-in var(--dur-3) var(--ease-out) both;
   }
 
   .schedule__detail-head {
@@ -978,6 +955,8 @@
   .schedule__detail-role {
     margin: var(--sp-3) 0 0;
     color: var(--ink);
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    line-height: 1.1;
   }
 
   .schedule__detail-stack {
@@ -987,7 +966,7 @@
   }
 
   .schedule__points {
-    grid-column: 5 / span 6;
+    grid-column: 5 / -1;
     list-style: none;
     margin: 0;
     padding: 0;

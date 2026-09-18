@@ -1,7 +1,10 @@
+import { useCallback, useRef } from 'react';
 import { SITE } from '../data/site';
 import { DimensionLine } from '../sheet/DimensionLine';
 import { MoonGlyph } from '../sheet/MoonGlyph';
 import { useMoon } from '../sheet/useMoon';
+import { useScrollProgress } from '../sheet/useScrollProgress';
+import { reducedMotion } from '../sheet/scroll';
 
 /**
  * Sheet 00. The name and one line on the left five columns, the call
@@ -11,6 +14,14 @@ import { useMoon } from '../sheet/useMoon';
  */
 export function Cover() {
   const moon = useMoon();
+  // The wash hangs a little loose in its frame: it drifts a few percent
+  // against the scroll, the one slow motion on the cover.
+  const washRef = useRef<HTMLElement>(null);
+  const onDrift = useCallback((p: number) => {
+    const img = washRef.current?.querySelector<HTMLElement>('img');
+    if (img) img.style.translate = `0 ${((p - 0.5) * -7).toFixed(2)}%`;
+  }, []);
+  useScrollProgress(washRef, reducedMotion() ? () => {} : onDrift, 'enter');
   return (
     <div className="sheet cover">
       <div className="grid-8 cover__grid">
@@ -43,7 +54,7 @@ export function Cover() {
           </p>
         </div>
 
-        <figure className="cover__wash wash">
+        <figure ref={washRef} className="cover__wash wash">
           <picture>
             <source media="(max-width: 47.99rem)" srcSet="/wash/cover-phone.webp" width={720} height={900} />
             <img

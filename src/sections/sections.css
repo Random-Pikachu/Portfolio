@@ -273,26 +273,33 @@
   }
 }
 
-/* ─── Sheet 03 · Details ───────────────────────────────────────────────────
-   The six details lie side by side on a strip the reader slides sideways —
-   a true horizontal scroll: drag, wheel-δX, arrow keys or the buttons in
-   the head row. Snapping is proximity only; the vertical scroll is never
-   touched. The ruler under the strip reads off progress.
-   ────────────────────────────────────────────────────────────────────────── */
+/* ─── Sheet 03 · Details ────────────────────────────────────────────────── */
 @layer components {
   .details {
     margin: var(--sp-8) 0;
   }
 
+  .details__pin {
+    top: calc(var(--nav-h) + var(--sp-4));
+    padding-bottom: var(--sp-4);
+  }
+
+  .details[data-pinned="true"] .details__pin {
+    position: sticky;
+  }
+
   .details__head {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: var(--sp-4);
+    min-height: 40px;
   }
 
   .details__counter {
+    margin: 0;
     color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
   }
 
   .details__counter b {
@@ -319,6 +326,8 @@
     background: none;
     border: 1px solid var(--line-2);
     padding: 8px 12px;
+    min-width: 40px;
+    min-height: 40px;
     cursor: pointer;
     transition: background-color var(--dur-2) ease, color var(--dur-2) ease, border-color var(--dur-2) ease;
   }
@@ -338,54 +347,44 @@
     border-color: var(--line);
   }
 
-  /* The strip itself. Overflow is real; the native scrollbar is hidden and
-    the ruler below takes its place. Snap is proximity — it settles on a
-    plate when the reader stops near one, never pulls them anywhere. */
-  .details__strip {
-    list-style: none;
-    position: relative;
-    display: flex;
-    gap: var(--sp-8);
-    margin: var(--sp-6) 0 0;
-    padding: 0 24px 28px 4px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
-    cursor: grab;
-    -webkit-overflow-scrolling: touch;
+  .details__frame {
+    margin-top: var(--sp-6);
   }
 
-  .details__strip::-webkit-scrollbar {
+  .details__track {
+    list-style: none;
+    position: relative;
+    display: grid;
+    gap: var(--sp-16);
+    margin: 0;
+    padding: 0;
+  }
+
+  .details[data-pinned="true"] .details__frame {
+    overflow: hidden;
+    overflow: clip;
+  }
+
+  .details[data-pinned="true"] .details__track {
+    display: flex;
+    gap: var(--sp-12);
+    padding-bottom: var(--sp-6);
+  }
+
+  .details:not([data-pinned="true"]) .details__nav,
+  .details:not([data-pinned="true"]) .details__position,
+  .details:not([data-pinned="true"]) .ruler {
     display: none;
   }
 
-  .details__strip.is-dragging {
-    cursor: grabbing;
-    scroll-snap-type: none;
-    scroll-behavior: auto;
-  }
-
-  .details__strip:focus-visible {
-    outline: 1px solid var(--ink-3);
-    outline-offset: 4px;
-  }
-
   .plate {
-    flex: 0 0 82%;
-    scroll-snap-align: start;
+    flex: 0 0 calc(100% - var(--sp-24));
+    min-width: 0;
     display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
-    column-gap: var(--gutter);
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    column-gap: var(--sp-12);
     align-items: center;
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity var(--dur-4) var(--ease-out), transform var(--dur-4) var(--ease-out);
-  }
-
-  .plate.is-in {
-    opacity: 1;
-    transform: none;
+    scroll-margin-top: calc(var(--nav-h) + var(--sp-6));
   }
 
   /* The print: a photograph lying on the sheet, hence the one shadow on the
@@ -399,6 +398,10 @@
     box-shadow: 16px 16px 0 var(--line-2);
   }
 
+  .details[data-pinned="true"] .plate__print {
+    width: 100%;
+    max-width: calc((100svh - 240px) * 4 / 3);
+  }
 
   .plate__img {
     display: block;
@@ -406,16 +409,6 @@
     height: 100%;
     object-fit: cover;
     object-position: 50% 30%;
-    transform: scale(1.05);
-    transition: transform var(--dur-4) var(--ease-out) 60ms;
-  }
-
-  .plate.is-in .plate__img {
-    transform: scale(1);
-  }
-
-  .plate__print:hover .plate__img {
-    transform: scale(1.025);
   }
 
   .plate__type {
@@ -438,19 +431,17 @@
     min-width: 0;
   }
 
-  /* The ruler: the strip's scrollbar redrawn as an instrument. One tick per
-    plate; the heavy tick is the frame's position on the strip. */
   .ruler {
     position: relative;
     height: 34px;
     margin-top: var(--sp-2);
-    padding-right: 24px;
+    margin-right: 4px;
   }
 
   .ruler__line {
     position: absolute;
     left: 0;
-    right: 24px;
+    right: 0;
     top: 9px;
     border-top: 1px solid var(--line);
   }
@@ -481,29 +472,15 @@
     border-left: 2px solid var(--accent);
   }
 
-  .ruler__label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateY(-100%);
-    color: var(--ink-3);
-  }
-
-  .ruler__depth {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translateY(-100%);
-    color: var(--ink-4);
-  }
-
   .plate__num {
+    margin: 0;
     color: var(--ink-3);
   }
 
   .plate__title {
     margin: 10px 0 0;
     color: var(--ink);
+    overflow-wrap: anywhere;
   }
 
   .plate__line {
@@ -550,7 +527,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    gap: 10px;
+    gap: var(--sp-3);
   }
 
   .plate__link {
@@ -573,15 +550,15 @@
   }
 
   .plate__link--pri {
-    background: var(--accent);
-    color: var(--accent-ink);
-    border-color: var(--accent);
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
   }
 
   .plate__link--pri:hover,
   .plate__link--pri:focus-visible {
     background: transparent;
-    color: var(--accent);
+    color: var(--ink);
   }
 
   /* Not issued. */
@@ -617,8 +594,8 @@
 
   @media (max-width: 63.99rem) {
     .plate {
-      flex-basis: 88%;
-      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--sp-8);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 
@@ -628,7 +605,6 @@
     }
 
     .plate {
-      flex-basis: 92%;
       display: block;
     }
 
@@ -647,20 +623,6 @@
 
     .archive__line {
       display: none;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce), (scripting: none) {
-    .plate {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-
-    .plate__img,
-    .plate__print:hover .plate__img {
-      transform: none;
-      transition: none;
     }
   }
 }

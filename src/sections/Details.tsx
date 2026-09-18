@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState, type FocusEvent, type MouseEvent, type PointerEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { ARCHIVE, PLATES, type Project } from '../data/site';
 import { WORK } from '../data/content.generated';
-import { reducedMotion, syncHash } from '../sheet/scroll';
+import { goTo, syncHash } from '../sheet/scroll';
 import { sheetStore, useSheetState } from '../sheet/store';
 
 const N = PLATES.length;
@@ -87,208 +87,175 @@ function Plate({ p, i }: { p: Project; i: number }) {
   );
 }
 
-/**
- * Sheet 03. The six details lie side by side on one strip the reader slides
- * sideways — a real horizontal scroll, with drag, arrow keys and the two
- * buttons in the head row. Snapping is proximity only: the strip settles on
- * a plate when the reader stops near one and never drags them anywhere.
- * The ruler under the strip reads off progress; the rail names the plate
- * crossing the frame.
- */
 export function Details() {
-  const stripRef = useRef<HTMLOListElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLOListElement>(null);
   const markerRef = useRef<HTMLSpanElement>(null);
   const [current, setCurrent] = useState(0);
   const { sheet } = useSheetState();
 
-  /** Slide to plate i inside the strip. */
-  const show = useCallback((i: number, instant = false) => {
-    const strip = stripRef.current;
-    const plate = strip?.children[i] as HTMLElement | undefined;
-    if (!strip || !plate) return;
-    strip.scrollTo({ left: plate.offsetLeft - strip.offsetLeft, behavior: instant || reducedMotion() ? 'auto' : 'smooth' });
+  const show = useCallback((i: number) => {
+    void goTo(`project-${PLATES[i].slug}`);
   }, []);
 
-  // Scroll position drives the counter, the ruler marker and the store —
-  // read on every scroll event, no render per frame except the index.
-  useEffect(() => {
-    const strip = stripRef.current;
-    if (!strip) return;
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const pin = pinRef.current;
+    const track = trackRef.current;
+    if (!section || !pin || !track) return;
+    const plates = Array.from(track.querySelectorAll<HTMLElement>('.plate'));
+    const narrow = window.matchMedia('(max-width: 47.99rem)');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let offsets: number[] = [];
+    let distance = 0;
+    let inset = 0;
     let raf = 0;
+
     const read = () => {
       raf = 0;
-      const max = strip.scrollWidth - strip.clientWidth;
-      const p = max <= 0 ? 0 : strip.scrollLeft / max;
-      if (markerRef.current) markerRef.current.style.left = `${(p * 100).toFixed(3)}%`;
-      const step = max / (N - 1) || 1;
-      const i = Math.min(N - 1, Math.max(0, Math.round(strip.scrollLeft / step)));
+      let i = 0;
+      if (section.dataset.pinned === 'true') {
+        const x = Math.min(distance, Math.max(0, inset - section.getBoundingClientRect().top));
+        track.style.transform = `translate3d(${-x}px, 0, 0)`;
+        if (markerRef.current) markerRef.current.style.left = `${distance ? x / distance * 100 : 0}%`;
+        i = offsets.reduce((nearest, offset, index) => (
+          Math.abs(offset - x) < Math.abs(offsets[nearest] - x) ? index : nearest
+        ), 0);
+      } else {
+        const line = window.innerHeight * 0.45;
+        plates.forEach((plate, index) => {
+          if (plate.getBoundingClientRect().top <= line) i = index;
+        });
+      }
       setCurrent((prev) => (prev === i ? prev : i));
     };
+
+    const measure = () => {
+      section.dataset.pinned = String(!narrow.matches && !motion.matches && N > 1);
+      section.style.height = '';
+      track.style.transform = '';
+      inset = parseFloat(getComputedStyle(pin).top) || 0;
+      if (section.dataset.pinned === 'true' && pin.offsetHeight + inset + 24 > window.innerHeight) {
+        section.dataset.pinned = 'false';
+      }
+      if (section.dataset.pinned === 'true') {
+        offsets = plates.map((plate) => plate.offsetLeft);
+        distance = offsets.at(-1) ?? 0;
+        section.style.height = `${pin.offsetHeight + distance}px`;
+      }
+      read();
+    };
+
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(read);
     };
-    read();
-    strip.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(pin);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', measure);
+    narrow.addEventListener('change', measure);
+    motion.addEventListener('change', measure);
     return () => {
-      strip.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
+      observer.disconnect();
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', measure);
+      narrow.removeEventListener('change', measure);
+      motion.removeEventListener('change', measure);
       if (raf) cancelAnimationFrame(raf);
+      delete section.dataset.pinned;
+      section.style.height = '';
+      track.style.transform = '';
     };
   }, []);
 
-  // Reveal: each plate comes to ink once, when it first enters the viewport.
-  useEffect(() => {
-    const root = stripRef.current;
-    if (!root) return;
-    const plates = Array.from(root.querySelectorAll<HTMLElement>('.plate'));
-    if (typeof IntersectionObserver === 'undefined' || reducedMotion()) {
-      plates.forEach((el) => el.classList.add('is-in'));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          e.target.classList.add('is-in');
-          io.unobserve(e.target);
-        }
-      },
-      { root: root, rootMargin: '0px -8% 0px 0px', threshold: 0 }
-    );
-    plates.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
-  // The store carries the active plate only while this sheet is the active
-  // one, and the hash names the plate in view.
   useEffect(() => {
     const inSheet = sheet === 'projects';
     sheetStore.set({ plate: inSheet ? current : null });
     if (inSheet) syncHash(`#project-${PLATES[current].slug}`);
   }, [sheet, current]);
 
-  // Arrow keys, Home and End, while this sheet is in view.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (sheetStore.get().sheet !== 'projects') return;
-      const t = e.target as HTMLElement | null;
-      if (t && ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName)) return;
-      let i: number | null = null;
-      if (e.key === 'ArrowRight') i = Math.min(N - 1, current + 1);
-      else if (e.key === 'ArrowLeft') i = Math.max(0, current - 1);
-      else if (e.key === 'Home') i = 0;
-      else if (e.key === 'End') i = N - 1;
-      if (i === null) return;
-      e.preventDefault();
-      show(i);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [current, show]);
-
-  // Drag: pointer travel moves the strip one-to-one. A drag suppresses the
-  // click that would otherwise follow it.
-  const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null);
-  const suppressClick = useRef(false);
-  const onPointerDown = (e: PointerEvent<HTMLOListElement>) => {
-    if (e.button !== 0) return;
-    drag.current = { x: e.clientX, left: e.currentTarget.scrollLeft, moved: false };
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-  const onPointerMove = (e: PointerEvent<HTMLOListElement>) => {
-    if (!drag.current) return;
-    const dx = e.clientX - drag.current.x;
-    if (Math.abs(dx) > 4) {
-      drag.current.moved = true;
-      e.currentTarget.classList.add('is-dragging');
-    }
-    e.currentTarget.scrollLeft = drag.current.left - dx;
-  };
-  const onPointerUp = (e: PointerEvent<HTMLOListElement>) => {
-    if (!drag.current) return;
-    e.currentTarget.classList.remove('is-dragging');
-    if (drag.current.moved) {
-      suppressClick.current = true;
-      setTimeout(() => (suppressClick.current = false), 0);
-    }
-    drag.current = null;
-  };
-  const onClickCapture = (e: MouseEvent<HTMLOListElement>) => {
-    if (suppressClick.current) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (sectionRef.current?.dataset.pinned !== 'true' || e.altKey || e.ctrlKey || e.metaKey) return;
+    let i: number | null = null;
+    if (e.key === 'ArrowRight') i = Math.min(N - 1, current + 1);
+    else if (e.key === 'ArrowLeft') i = Math.max(0, current - 1);
+    else if (e.key === 'Home') i = 0;
+    else if (e.key === 'End') i = N - 1;
+    if (i === null) return;
+    e.preventDefault();
+    show(i);
   };
 
-  // Tabbing into a plate off the frame brings it in.
-  const onFocus = (e: FocusEvent<HTMLOListElement>) => {
-    const li = (e.target as HTMLElement).closest<HTMLElement>('.plate');
-    if (!li) return;
-    const i = PLATES.findIndex((p) => `project-${p.slug}` === li.id);
-    if (i >= 0 && i !== current) show(i);
+  const onFocus = (e: FocusEvent<HTMLDivElement>) => {
+    if (sectionRef.current?.dataset.pinned !== 'true') return;
+    const plate = (e.target as HTMLElement).closest<HTMLElement>('.plate');
+    const frame = e.currentTarget.getBoundingClientRect();
+    const target = e.target.getBoundingClientRect();
+    if (plate && (target.left < frame.left || target.right > frame.right)) {
+      void goTo(plate.id, { instant: true, focus: false });
+    }
   };
 
   return (
     <div className="sheet">
-      <div className="details">
-        <div className="details__head">
-          <p className="t-label details__counter" aria-live="polite">
-            Detail <b>{current + 1}</b> of {N}
-          </p>
-          <div className="details__nav">
-            <p className="t-label details__hint" aria-hidden="true">
-              drag · scroll · ← →
+      <div ref={sectionRef} className="details" data-scroll-scene>
+        <div ref={pinRef} className="details__pin" data-scroll-pin onKeyDown={onKeyDown}>
+          <div className="details__head">
+            <p className="t-label details__counter">
+              Selected work
+              <span className="details__position"> / <b>{String(current + 1).padStart(2, '0')}</b></span>
+              {' / '}{String(N).padStart(2, '0')}
             </p>
-            <button
-              type="button"
-              className="details__step"
-              onClick={() => show(Math.max(0, current - 1))}
-              disabled={current === 0}
-              aria-label="Previous detail"
-            >
-              ←
-            </button>
-            <button
-              type="button"
-              className="details__step"
-              onClick={() => show(Math.min(N - 1, current + 1))}
-              disabled={current === N - 1}
-              aria-label="Next detail"
-            >
-              →
-            </button>
+            <div className="details__nav">
+              <p className="t-label details__hint" aria-hidden="true">
+                Scroll down to explore <span aria-hidden="true">↓</span>
+              </p>
+              <button
+                type="button"
+                className="details__step"
+                onClick={() => show(Math.max(0, current - 1))}
+                disabled={current === 0}
+                aria-label="Previous detail"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                className="details__step"
+                onClick={() => show(Math.min(N - 1, current + 1))}
+                disabled={current === N - 1}
+                aria-label="Next detail"
+              >
+                →
+              </button>
+            </div>
           </div>
-        </div>
 
-        <ol
-          ref={stripRef}
-          className="details__strip"
-          data-hscroll
-          aria-label="Project details"
-          tabIndex={0}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onClickCapture={onClickCapture}
-          onFocus={onFocus}
-        >
-          {PLATES.map((p, i) => (
-            <Plate key={p.slug} p={p} i={i} />
-          ))}
-        </ol>
+          <div
+            className="details__frame"
+            onFocus={onFocus}
+            onScroll={(e) => {
+              if (e.currentTarget.scrollLeft) e.currentTarget.scrollLeft = 0;
+            }}
+          >
+            <ol ref={trackRef} className="details__track" aria-label="Project details">
+              {PLATES.map((p, i) => (
+                <Plate key={p.slug} p={p} i={i} />
+              ))}
+            </ol>
+          </div>
 
-        <div className="ruler" aria-hidden="true">
-          <span className="ruler__line" />
-          {PLATES.map((p, i) => (
-            <span key={p.slug} className="ruler__tick" style={{ left: `${(i / (N - 1)) * 100}%` }}>
-              <i>{i + 1}</i>
-            </span>
-          ))}
-          <span ref={markerRef} className="ruler__marker" />
-          <span className="ruler__label t-label">{N} details</span>
-          <span className="ruler__depth t-label">Depth 0 mm</span>
+          <div className="ruler" aria-hidden="true">
+            <span className="ruler__line" />
+            {PLATES.map((p, i) => (
+              <span key={p.slug} className="ruler__tick" style={{ left: `${(i / (N - 1)) * 100}%` }}>
+                <i>{i + 1}</i>
+              </span>
+            ))}
+            <span ref={markerRef} className="ruler__marker" />
+          </div>
         </div>
       </div>
 

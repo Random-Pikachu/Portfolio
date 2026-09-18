@@ -6,8 +6,8 @@ import { sheetStore } from './store';
  * IntersectionObserver. Everything that moves the page goes through here so
  * the hash, the rail, the title block and keyboard focus always agree.
  *
- * There is no snapping: the reader owns the scroll position, always. Sheets
- * flow in normal document order and every stop is the reader's own.
+ * There is no snapping. The project scene maps native vertical travel onto
+ * a horizontal track; every stop is the reader's own.
  */
 let lenis: Lenis | null = null;
 let observer: IntersectionObserver | null = null;
@@ -93,24 +93,18 @@ export function scrollToY(y: number, { instant = false } = {}) {
  * Scroll to a sheet or plate by id, then set the hash without a history
  * entry and move keyboard focus to the sheet's heading.
  */
-export async function goTo(id: string, { instant = false } = {}) {
+export async function goTo(id: string, { instant = false, focus = true } = {}) {
   const el = document.getElementById(id);
   if (!el) return;
-  // A plate lives on the horizontal strip: bring its sheet into frame, then
-  // slide the strip to the plate.
-  const strip = el.closest<HTMLElement>('[data-hscroll]');
-  const target = strip?.closest('section') ?? el;
-  const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-  const top = target.getBoundingClientRect().top + window.scrollY - margin;
+  const scene = el.closest<HTMLElement>('[data-scroll-scene][data-pinned="true"]');
+  const pin = scene?.querySelector<HTMLElement>('[data-scroll-pin]');
+  const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+  const top = scene && pin
+    ? scene.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(pin).top) || 0) + el.offsetLeft
+    : el.getBoundingClientRect().top + window.scrollY - margin;
   await scrollToY(top, { instant });
-  if (strip) {
-    strip.scrollTo({
-      left: (el as HTMLElement).offsetLeft - strip.offsetLeft,
-      behavior: instant || reducedMotion() ? 'auto' : 'smooth',
-    });
-  }
   syncHash(`#${id}`);
-  focusHeading(el);
+  if (focus) focusHeading(el);
 }
 
 export function syncHash(hash: string) {

@@ -128,6 +128,7 @@
   }
 
   .cover__grid {
+    position: relative;
     align-items: center;
     row-gap: var(--sp-8);
   }
@@ -135,6 +136,7 @@
   .cover__text {
     grid-column: 1 / span 5;
     position: relative;
+    z-index: 2;
     padding-right: var(--sp-6);
   }
 
@@ -171,16 +173,37 @@
     grid-column: 6 / span 5;
   }
 
-  /* The wash: ink on paper. In night mode it is a paper sheet on the night
-     ground, with the sheet's own edge drawn. */
+  /* The plate: a night sky, tipped onto the sheet with its edge drawn, and
+     by day a second edge two pixels off it, a mounted print. */
   .wash {
     position: relative;
     margin: 0;
-    border: 1px solid transparent;
+    border: 1px solid var(--line-2);
+    background: #0f1222;
   }
 
-  .dark .wash {
-    border-color: var(--line-2);
+  :root:not(.dark) .wash {
+    box-shadow: 3px 3px 0 var(--paper), 4px 4px 0 var(--line-2);
+  }
+
+  /* The whale starts on the plate and crosses to the name as the chart
+     scrolls away; --wp is its progress, written by the cover. Between the
+     plate (below) and the text (above). */
+  .cover__whale {
+    position: absolute;
+    left: 62%;
+    top: 28%;
+    width: 22vw;
+    max-width: 320px;
+    z-index: 1;
+    pointer-events: none;
+    transform: translate3d(calc(var(--wp, 0) * -56vw), calc(var(--wp, 0) * 10vh), 0);
+    will-change: transform;
+  }
+
+  .cover__wash {
+    position: relative;
+    z-index: 0;
   }
 
   .wash img {
@@ -205,24 +228,22 @@
     }
   }
 
-  /* Everything drawn on the wash is ink on paper in both modes: the sheet
-     does not change colour when the room does. */
+  /* Everything drawn on the plate is paper on the night in both modes: the
+     plate does not change colour when the room does. */
   .wash__moon {
     position: absolute;
-    left: 78%;
-    top: 12%;
     width: 44px;
     height: 44px;
-    color: #161616;
+    color: #e9e3d3;
     animation: ink-in var(--dur-3) var(--ease-out) 700ms both;
   }
 
   .wash .dim {
-    color: #8a877f;
+    color: #8a8d9e;
   }
 
   .wash .dim__label {
-    color: #6b6963;
+    color: #b9bcc9;
   }
 
   .wash__moon .moon circle {
@@ -257,6 +278,14 @@
     .cover__dim-cols {
       display: none;
     }
+
+    /* On a phone the whale stays on the plate, up in its sky. */
+    .cover__whale {
+      left: 52%;
+      top: 4%;
+      width: 40vw;
+      transform: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -269,6 +298,11 @@
     .dim--draw .dim__tick,
     .dim--draw .dim__label {
       animation: none;
+    }
+
+    /* The whale rests where it ends, behind the name. */
+    .cover__whale {
+      --wp: 1;
     }
   }
 }

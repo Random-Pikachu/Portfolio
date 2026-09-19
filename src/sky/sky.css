@@ -127,3 +127,38 @@
     }
   }
 }
+
+/* ─── The whale ────────────────────────────────────────────────────────────
+   An ink drawing: the card's paper inside the line. Hatching is thinner
+   than the outline, as on any plate. */
+@layer components {
+  .whale {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .whale__ink {
+    fill: var(--paper-card);
+    stroke: var(--ink);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+
+  .whale__line {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+  }
+
+  .whale__hatch {
+    stroke-width: 0.7;
+    opacity: 0.8;
+  }
+
+  .whale__eye {
+    fill: var(--ink);
+  }
+}

@@ -11,8 +11,11 @@ import { useEffect, type RefObject } from 'react';
  *   'enter'    a short element: 0 when its top enters at 90% of the
  *              viewport, 1 when its bottom passes 45%, about where a
  *              reader's eye rests.
+ *   'leave'    an element that starts at the top of the page: 0 while its
+ *              top is at or below the top of the viewport, 1 once its bottom
+ *              has left.
  */
-export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: (p: number) => void, mode: 'section' | 'enter' = 'section') {
+export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: (p: number) => void, mode: 'section' | 'enter' | 'leave' = 'section') {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -24,6 +27,8 @@ export function useScrollProgress(ref: RefObject<HTMLElement | null>, onChange: 
       let p: number;
       if (mode === 'enter') {
         p = (vh * 0.9 - rect.top) / (vh * 0.45 + rect.height);
+      } else if (mode === 'leave') {
+        p = -rect.top / rect.height;
       } else {
         const range = rect.height - vh;
         p = range <= 0 ? 0 : -rect.top / range;

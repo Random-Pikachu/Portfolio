@@ -135,6 +135,11 @@ for (const page of PAGES) {
   if (!appHtml || appHtml.length < page.minBytes) {
     throw new Error(`Prerender of ${page.label} produced suspiciously little markup (${appHtml.length} bytes, expected >= ${page.minBytes}) — aborting.`);
   }
+  // The home page carries the chart and never the scene: the sky is in the
+  // static HTML, the canvas only ever exists in a browser after hydration.
+  if (page.label === '/' && (!appHtml.includes('class="sky"') || appHtml.includes('<canvas'))) {
+    throw new Error('Prerender of / must contain the sky chart and no canvas — aborting.');
+  }
   let html = shells.get(page.shell);
   if (!html.includes('<div id="root"></div>')) throw new Error(`Could not find the empty #root container in dist/${page.shell}.`);
   html = html.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);

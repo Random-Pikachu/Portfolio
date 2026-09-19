@@ -106,11 +106,12 @@
     } catch (_) { }
   </script>
 
-  <!-- The prerendered markup carries Framer Motion's initial opacity:0. Without
-       JS those elements would never animate in, so force them visible. -->
+  <!-- Without JS nothing animates in: the pull line's words are inked, the
+       scene never mounts and the chart stands alone. -->
   <noscript>
     <style>
-      .reveal {
+      .reveal,
+      .words__w {
         opacity: 1 !important;
         transform: none !important;
       }

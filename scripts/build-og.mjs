@@ -1,7 +1,7 @@
 /**
  * Social cards, 1200×630, one per page: the sheet's title block over the
  * paper with the ten faint columns, the page's title in Zodiak, and on the
- * cover the wash. Rendered with the local Chrome through the DevTools
+ * cover the frontispiece plate. Rendered with the local Chrome through the DevTools
  * protocol, so this runs on a machine that has Chrome, not on Vercel; the
  * PNGs are committed like the banners.
  *
@@ -74,7 +74,7 @@ const fonts = {
   sans: font(join(ROOT, 'node_modules', '@fontsource-variable', 'ibm-plex-sans', 'files', 'ibm-plex-sans-latin-wght-normal.woff2')),
   mono: font(join(ROOT, 'node_modules', '@fontsource', 'ibm-plex-mono', 'files', 'ibm-plex-mono-latin-400-normal.woff2')),
 };
-const wash = font(join(ROOT, 'public', 'wash', 'cover-960.webp'));
+const wash = font(join(ROOT, 'public', 'art', '00-frontispiece-960.webp'));
 
 const html = (c) => `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Zodiak;src:url("${fonts.zodiak}") format("woff2")}

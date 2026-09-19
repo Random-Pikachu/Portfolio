@@ -99,7 +99,7 @@ export function Experience() {
         })}
       </ol>
 
-      <div key={selected} className="schedule__detail grid-8">
+      <div key={selected} className="schedule__detail grid-8 sheet-card">
         <div className="schedule__detail-head">
           <p className="t-label schedule__detail-period">
             <b>{current.company}</b> · {current.period}

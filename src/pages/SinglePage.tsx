@@ -19,6 +19,7 @@ export default function SinglePage() {
       <Sheet id={COVER.id} num={COVER.num} block={COVER.block} heading={COVER.heading} caption={COVER.caption} headless>
         <Cover />
       </Sheet>
+      <div className="transit" aria-hidden="true" data-transit="cover-about" />
       <Sheet id={ABOUT.id} num={ABOUT.num} block={ABOUT.block} heading={ABOUT.heading} caption={ABOUT.caption}>
         <About />
       </Sheet>

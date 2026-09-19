@@ -36,7 +36,7 @@ function Plate({ p, i }: { p: Project; i: number }) {
           </div>
         )}
       </figure>
-      <div className="plate__caption">
+      <div className="plate__caption sheet-card">
         <p className="t-label plate__num" aria-hidden="true">
           Plate {i + 1} / {N}
         </p>

@@ -6,6 +6,7 @@
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
+@import "./sky/sky.css";
 @import "./sheet/sheet.css";
 @import "./sections/sections.css";
 @import "./pages/pages.css";
@@ -203,9 +204,42 @@
     background: var(--line);
   }
 
+  /* ─── Cards ──────────────────────────────────────────────────────────────
+     A block that needs paper under it: by day the paper itself, by night a
+     sheet lying on the void, with its edge drawn and the same grain as the
+     cover. The only ground a block may carry; never a backdrop-filter. */
+  .sheet-card {
+    position: relative;
+    background: color-mix(in srgb, var(--paper-card) 94%, transparent);
+    border: 1px solid var(--line);
+  }
+
+  .dark .sheet-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: url("/wash/grain-256.webp") repeat;
+    background-size: 256px 256px;
+    opacity: 0.06;
+    mix-blend-mode: screen;
+  }
+
+  /* Empty sky between two charts, where the moon has room to travel. */
+  .transit {
+    height: 60vh;
+  }
+
+  @media (max-width: 47.99rem), (prefers-reduced-motion: reduce) {
+    .transit {
+      height: 0;
+    }
+  }
+
   /* ─── Grid layer and sheet rules ─────────────────────────────────────────
      Ten faint columns on a fixed layer at z-index -1: under every block, above
-     the paper. Sections therefore carry no background of their own. */
+     the sky (z-index -2, sky/sky.css). Sections carry no background of their
+     own; a block that needs paper under it is a .sheet-card. */
   .grid-layer {
     position: fixed;
     inset: 0;

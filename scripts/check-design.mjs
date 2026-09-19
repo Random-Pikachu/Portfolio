@@ -4,7 +4,7 @@
  *   1. No radius anywhere in the sources: no `rounded-*` utility except
  *      rounded-none, no `border-radius` other than the global reset.
  *   2. Every text token in src/tokens.css clears WCAG 2 AA (4.5:1) against
- *      its ground, in both modes.
+ *      both grounds, the paper and the card, in both modes.
  *
  * Exit code 1 on any failure, so `npm run build` stops.
  */
@@ -60,7 +60,9 @@ const ratio = (a, b) => {
 };
 const TEXT = ['ink', 'ink-2', 'ink-3', 'accent'];
 for (const [mode, vars] of [['paper', block(':root')], ['night', block(':root.dark')]]) {
-  const rows = TEXT.map((t) => [t, vars[t], ratio(vars[t], vars.paper)]).concat([['accent-ink on accent', vars['accent-ink'], ratio(vars['accent-ink'], vars.accent)]]);
+  const rows = TEXT.map((t) => [t, vars[t], ratio(vars[t], vars.paper)])
+    .concat(TEXT.map((t) => [`${t} on paper-card`, vars[t], ratio(vars[t], vars['paper-card'])]))
+    .concat([['accent-ink on accent', vars['accent-ink'], ratio(vars['accent-ink'], vars.accent)]]);
   for (const [name, hex, r] of rows) {
     const ok = r >= 4.5;
     if (!ok) failures++;

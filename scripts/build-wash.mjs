@@ -83,5 +83,12 @@ magick(t('cover.png'), '-resize', '960x', '-strip', '-define', 'webp:method=6', 
 magick(t('cover.png'), '-crop', '1000x1250+560+0', '+repage', '-resize', '720x', '-strip', '-define', 'webp:method=6', '-quality', '66', join(OUT, 'cover-phone.webp'));
 magick(t('cover.png'), '-resize', '800x', join(tmp, 'preview.png'));
 console.log(`wrote public/wash/cover-1600.webp, cover-960.webp, cover-phone.webp (preview at ${join(tmp, 'preview.png')})`);
+
+// The grain alone, as a tile: the same seeded noise the wash is grained with,
+// so the sky layer and the paper cards carry the same paper as the cover.
+// Mid-grey on average, so it is neutral under multiply/screen at low opacity.
+magick('-size', '256x256', 'xc:gray50', '-seed', SEED, '-attenuate', '0.9', '+noise', 'Gaussian', '-colorspace', 'gray', '-blur', '0x0.5',
+  '-level', '30%,70%', '-strip', '-define', 'webp:method=6', '-quality', '40', join(OUT, 'grain-256.webp'));
+console.log('wrote public/wash/grain-256.webp');
 if (process.env.KEEP_TMP !== '1') rmSync(tmp, { recursive: true, force: true });
 else console.log(`kept ${tmp}`);

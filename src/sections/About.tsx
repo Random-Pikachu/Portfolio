@@ -40,7 +40,7 @@ export function About() {
           </p>
 
           <div className="general__tables">
-            <div className="spec">
+            <div className="spec sheet-card">
               <h3 className="t-label spec__title">Currently</h3>
               <dl className="spec__rows">
                 {NOW.map((n) => (
@@ -59,7 +59,7 @@ export function About() {
                 ))}
               </dl>
             </div>
-            <div className="spec">
+            <div className="spec sheet-card">
               <h3 className="t-label spec__title">Instruments</h3>
               <dl className="spec__rows">
                 {TOOLBOX.map((g) => (

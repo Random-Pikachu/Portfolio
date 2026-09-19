@@ -86,7 +86,7 @@ export function Contact() {
         </div>
       </div>
 
-      <address className="issue__cells">
+      <address className="issue__cells sheet-card">
         {LINKS.map(({ icon: Icon, label, handle, href, aria, me }) => (
           <div key={label} className="issue__cell">
             <div className="issue__cell-head">

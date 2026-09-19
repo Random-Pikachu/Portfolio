@@ -4,17 +4,17 @@ import { goTo, lockScroll } from './scroll';
 import { sheetStore, useSheetState } from './store';
 
 const LINES: Record<string, string> = {
-  cover: 'Who this is, and the sky over the desk.',
-  about: 'The engineer, currently, and the instruments.',
-  experience: 'Three roles on a time axis; one still rising.',
+  cover: 'Who this is, and the sky over the station.',
+  about: 'The observer, currently, and the instruments.',
+  experience: 'Three transits on a time axis; one still rising.',
   projects: 'Six plates, one in the frame at a time.',
-  contact: 'Issued for remote work. Quantity one.',
+  contact: 'A signal, issued for remote work. Quantity one.',
   notes: 'Writing, in Markdown, with code.',
   survey: 'Twenty-seven frames from a Nothing Phone (1).',
 };
 
 /**
- * The full-screen index: every sheet and page as a tile. A modal dialog:
+ * The full-screen index: every chart and page as a tile. A modal dialog:
  * focus is trapped, Escape closes, focus returns to the button that opened
  * it, and Lenis is stopped while it is open. Rendered only when open, so the
  * prerendered HTML carries none of it.
@@ -66,10 +66,10 @@ export function TileIndex({ variant = 'home' }: { variant?: 'home' | 'sub' }) {
   };
 
   return (
-    <div id="tile-index" className="tile-index" role="dialog" aria-modal="true" aria-label="Sheet index" ref={ref}>
+    <div id="tile-index" className="tile-index" role="dialog" aria-modal="true" aria-label="Chart index" ref={ref}>
       <div className="sheet tile-index__inner">
         <div className="tile-index__head">
-          <p className="t-label">Index of sheets</p>
+          <p className="t-label">Index of charts</p>
           <button type="button" className="tile-index__close t-label" onClick={close}>
             Close <span aria-hidden="true">×</span>
           </button>
@@ -78,7 +78,7 @@ export function TileIndex({ variant = 'home' }: { variant?: 'home' | 'sub' }) {
           {SHEETS.map((s) => (
             <li key={s.id} className="tile">
               <a href={isHome ? `#${s.id}` : `/#${s.id}`} onClick={jump(s.id)}>
-                <span className="t-label">Sheet {s.num}</span>
+                <span className="t-label">Chart {s.num}</span>
                 <span className="tile__title t-display-2">{s.block}</span>
                 <span className="t-data tile__line">{LINES[s.id]}</span>
               </a>

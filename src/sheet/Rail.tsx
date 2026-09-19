@@ -19,8 +19,8 @@ function useMinute() {
 }
 
 /**
- * The persistent index down the left edge: every sheet, the plates while the
- * Details sheet is in view, the two pages, the moon and the time, and the
+ * The persistent index down the left edge: every chart, the plates while the
+ * Constellations chart is in view, the two pages, the moon and the time, and the
  * button that opens the tile index. A hairline of progress runs down its
  * left edge. Numbers only at rest; labels appear when the rail is hovered or
  * holds focus. Hidden under 48rem, where the tile index does its job.
@@ -38,7 +38,7 @@ export function Rail({ variant = 'home' }: { variant?: 'home' | 'sub' }) {
   };
 
   return (
-    <nav className="rail" aria-label="Sheet index">
+    <nav className="rail" aria-label="Chart index">
       <span className="rail__progress" aria-hidden="true" style={{ transform: `scaleY(${progress})` }} />
       <ol className="rail__list">
         {SHEETS.map((s) => {
@@ -88,7 +88,7 @@ export function Rail({ variant = 'home' }: { variant?: 'home' | 'sub' }) {
         type="button"
         className="rail__menu"
         onClick={() => sheetStore.set({ menu: true })}
-        aria-label="Open the sheet index"
+        aria-label="Open the chart index"
         aria-expanded={menu}
         aria-controls="tile-index"
       >

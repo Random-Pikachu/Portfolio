@@ -41,7 +41,7 @@ function LazyHeatmap() {
 }
 
 /**
- * Sheet 04, Issue. The line, the one filled control on the site with the
+ * Chart 04, Transmission. The line, the one filled control on the site with the
  * issue notes beside it, three link cells that reveal their handles, the
  * year's activity as square cells, and the footer with the drawing number.
  */
@@ -70,7 +70,7 @@ export function Contact() {
               <dd>1</dd>
             </div>
             <div>
-              <dt>Lead time</dt>
+              <dt>Light-time</dt>
               <dd>15 min</dd>
             </div>
           </dl>

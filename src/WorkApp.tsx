@@ -24,7 +24,7 @@ export default function WorkApp({ path }: { path: string }) {
       <Navigation variant="sub" />
       <Rail variant="sub" />
       <Detail slug={slug} />
-      <TitleBlock page={{ sheet: i >= 0 ? `Detail ${i + 1}/${PLATES.length}` : 'Detail', block: 'Details' }} />
+      <TitleBlock page={{ sheet: i >= 0 ? `Plate ${i + 1}/${PLATES.length}` : 'Plate', block: 'Constellations' }} />
       <TileIndex variant="sub" />
     </SmoothScroll>
   );

@@ -15,7 +15,7 @@ const N = PLATES.length;
 function Plate({ p, i }: { p: Project; i: number }) {
   const meta = WORK[p.slug];
   return (
-    <li id={`project-${p.slug}`} className="plate" aria-label={`Detail ${i + 1} of ${N}, ${p.title}`}>
+    <li id={`project-${p.slug}`} className="plate" aria-label={`Plate ${i + 1} of ${N}, ${p.title}`}>
       <figure className="plate__print">
         {p.image ? (
           <img
@@ -38,7 +38,7 @@ function Plate({ p, i }: { p: Project; i: number }) {
       </figure>
       <div className="plate__caption">
         <p className="t-label plate__num" aria-hidden="true">
-          Detail {i + 1} / {N}
+          Plate {i + 1} / {N}
         </p>
         <h3 id={`project-${p.slug}-title`} tabIndex={-1} data-plate-heading className="t-display-2 plate__title">
           {p.title}
@@ -217,7 +217,7 @@ export function Details() {
                 className="details__step"
                 onClick={() => show(Math.max(0, current - 1))}
                 disabled={current === 0}
-                aria-label="Previous detail"
+                aria-label="Previous plate"
               >
                 ←
               </button>
@@ -226,7 +226,7 @@ export function Details() {
                 className="details__step"
                 onClick={() => show(Math.min(N - 1, current + 1))}
                 disabled={current === N - 1}
-                aria-label="Next detail"
+                aria-label="Next plate"
               >
                 →
               </button>
@@ -240,7 +240,7 @@ export function Details() {
               if (e.currentTarget.scrollLeft) e.currentTarget.scrollLeft = 0;
             }}
           >
-            <ol ref={trackRef} className="details__track" aria-label="Project details">
+            <ol ref={trackRef} className="details__track" aria-label="Project plates">
               {PLATES.map((p, i) => (
                 <Plate key={p.slug} p={p} i={i} />
               ))}
@@ -259,7 +259,7 @@ export function Details() {
         </div>
       </div>
 
-      <ol className="archive t-data" aria-label="Not issued">
+      <ol className="archive t-data" aria-label="Not charted">
         {ARCHIVE.map((p, i) => (
           <li key={p.slug} className="archive__row">
             <span className="archive__num">{N + i + 1}</span>
@@ -267,7 +267,7 @@ export function Details() {
               {p.title}
             </a>
             <span className="archive__line">{p.summary}</span>
-            <span className="archive__status t-label">Not issued</span>
+            <span className="archive__status t-label">Not charted</span>
           </li>
         ))}
       </ol>

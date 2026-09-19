@@ -125,7 +125,7 @@ export default function Navigation({
             type="button"
             className="topbar__index"
             onClick={() => sheetStore.set({ menu: true })}
-            aria-label="Open the sheet index"
+            aria-label="Open the chart index"
             aria-expanded={menu}
             aria-controls="tile-index"
           >

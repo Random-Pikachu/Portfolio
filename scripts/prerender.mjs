@@ -234,7 +234,7 @@ ${site.bio}
 
 ## Page sections
 ${sections.map((s) => `- [${s.heading}](${site.origin}/#${s.id})`).join('\n')}
-${publishedWork.length ? `\n## Detail sheets\n${publishedWork.map((w) => `- [${w.title}](${site.origin}/work/${w.slug}): ${w.summary}`).join('\n')}\n` : ''}${
+${publishedWork.length ? `\n## Plates\n${publishedWork.map((w) => `- [${w.title}](${site.origin}/work/${w.slug}): ${w.summary}`).join('\n')}\n` : ''}${
   notes.length ? `\n## Notes\n${notes.map((n) => `- [${n.title}](${site.origin}/blog/${n.slug}) (${n.date})${n.summary ? `: ${n.summary}` : ''}`).join('\n')}\n` : ''
 }
 Last updated: ${lastModifiedDate}

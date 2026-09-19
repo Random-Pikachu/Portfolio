@@ -16,7 +16,7 @@ const FIG = {
 };
 
 /**
- * Sheet 01, General. The pull line comes to ink word by word as the sheet
+ * Chart 01, Observer. The pull line comes to ink word by word as the sheet
  * scrolls in; under it the measure it was set to, the paragraph, and the two
  * small tables. Fig. 1 on the right with its impossible diameter.
  */

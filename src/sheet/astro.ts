@@ -8,8 +8,40 @@ const D2R = Math.PI / 180;
 const norm = (a: number) => ((a % 360) + 360) % 360;
 const sin = (deg: number) => Math.sin(deg * D2R);
 
-function julianDay(date: Date) {
+export function julianDay(date: Date) {
   return date.getTime() / 86400000 + 2440587.5;
+}
+
+/**
+ * Local sidereal time in hours (0 to 24) at longitude `lon` (degrees east):
+ * the right ascension of the zenith. Greenwich mean sidereal time from the
+ * usual polynomial in Julian centuries, then the longitude in hours.
+ */
+export function siderealTime(date: Date, lon: number) {
+  const T = (julianDay(date) - 2451545.0) / 36525;
+  const gmst = norm(280.46061837 + 360.98564736629 * (julianDay(date) - 2451545.0) + 0.000387933 * T * T);
+  return (norm(gmst + lon) / 15 + 24) % 24;
+}
+
+/** "22h 07m" from hours. */
+export function hoursMinutes(h: number) {
+  const hh = Math.floor(h);
+  const mm = Math.floor((h - hh) * 60);
+  return `${String(hh).padStart(2, '0')}h ${String(mm).padStart(2, '0')}m`;
+}
+
+/** "+26°13′" from degrees. */
+export function degMin(d: number) {
+  const sign = d < 0 ? '−' : '+';
+  const a = Math.abs(d);
+  const dd = Math.floor(a);
+  const mm = Math.round((a - dd) * 60);
+  return `${sign}${dd}°${String(mm).padStart(2, '0')}′`;
+}
+
+/** The epoch as astronomers write it: J2026.7, the year and its decimal. */
+export function julianEpoch(date: Date) {
+  return `J${(2000 + (julianDay(date) - 2451545.0) / 365.25).toFixed(1)}`;
 }
 
 /** Apparent ecliptic longitude of the sun, degrees. */

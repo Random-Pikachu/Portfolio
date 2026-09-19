@@ -18,7 +18,7 @@ const endOf = (ym: string) => {
 const FEATURED_AT = Date.UTC(2026, 1, 7);
 
 /**
- * Sheet 02, Schedule. Each role is a dimension on a time axis: it starts,
+ * Chart 02, Transits. Each role is a dimension on a time axis: it starts,
  * it is measured in months, it ends with a tick. The current role has no
  * end tick; its line leaves the sheet through the right margin with an
  * arrowhead. Choosing a row shows that role below. The KDE feature is the

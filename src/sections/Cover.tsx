@@ -7,7 +7,7 @@ import { useScrollProgress } from '../sheet/useScrollProgress';
 import { reducedMotion } from '../sheet/scroll';
 
 /**
- * Sheet 00. The name and one line on the left five columns, the call
+ * Chart 00, the frontispiece. The name and one line on the left five columns, the call
  * button with its quantity, and on the right five columns the wash, with
  * the moon at its real phase and one dimension that measures the
  * distance from the moon to the ridge. Scale: not to scale.

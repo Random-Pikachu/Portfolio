@@ -142,7 +142,7 @@ void main() {
       float line = smoothstep(1.3, 0.0, abs(dist));
       float drawn = step(ang, uRings.w);
       float dash = mix(step(0.45, fract(ang * rx / 9.0)), 1.0, uNight);
-      mark(acc, mix(uInk3, uStar, uNight), line * drawn * dash * mix(0.5, 0.32, uNight));
+      mark(acc, mix(uInk3, uStar, uNight), line * drawn * dash * mix(0.42, 0.26, uNight));
     }
   }
 

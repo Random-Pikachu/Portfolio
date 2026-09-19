@@ -148,7 +148,7 @@ export function buildKeys(m: Marks): Key[] {
   key(Math.max(projects.y + projects.h - vh, projects.y), { camX: -0.18, camY: 0.22 });
 
   // The transmission: looking back toward the horizon; the moon returns, low and left.
-  const horizon = { x: m.sheets.contact ? contact.x + 64 : 88, y: contact.y + vh * 0.85 };
+  const horizon = { x: 128, y: contact.y + vh * 0.78 };
   key(contact.y - vh * 0.7, { camY: 0.12, zoom: 0.94, haze: 0.4, fog: 0.3, beam: 0, moonX: horizon.x, moonY: horizon.y, moonR: 0 });
   key(contact.y - vh * 0.2, { camY: 0.04, zoom: 0.9, haze: 0.28, fog: 0.55, beam: 1, moonR: 18 });
   key(Math.max(m.maxScroll, contact.y), { camY: 0, fog: 0.65 });

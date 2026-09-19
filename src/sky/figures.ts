@@ -64,7 +64,25 @@ export const CETUS_FIGURE: Figure = {
   ],
 };
 
-export const FIGURES: Figure[] = [CETUS_FIGURE];
+/**
+ * Not in the IAU's eighty-eight. Nine stars over the transmission: two ears,
+ * a face, a tail like lightning. Unlabelled on the chart; its catalogue entry
+ * is in the footer of the last chart, and its label appears while that
+ * chart is the one being read.
+ */
+const P = (x: number, y: number): [number, number] => [1180 + Math.round(x * 0.95), 640 + Math.round(y * 0.95)];
+export const FIGURE_025: Figure = {
+  id: '025',
+  name: 'Constellation 025',
+  label: '025',
+  stars: [P(6, 0), P(46, 44), P(110, 44), P(150, 2), P(148, 96), P(80, 124), P(28, 92), P(196, 118), P(176, 150)],
+  lines: [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 1],
+    [4, 7], [7, 8],
+  ],
+};
+
+export const FIGURES: Figure[] = [CETUS_FIGURE, FIGURE_025];
 
 /** SVG path data for a figure's lines. */
 export function figurePath(f: Figure) {

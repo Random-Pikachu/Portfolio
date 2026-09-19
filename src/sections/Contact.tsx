@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CalendarDays, Github, Linkedin, Mail } from 'lucide-react';
+import { Art } from '../components/Art';
 import ContributionHeatmap from '../components/ContributionHeatmap';
+import { ART } from '../data/art';
 import { DRAWING_NO, SITE } from '../data/site';
 import { goTo } from '../sheet/scroll';
 import { useNear } from '../sheet/useScrollProgress';
+import { Stamp } from '../sky/Stamp';
+
+const LAMP = ART.lighthouse.anchors.lamp;
 
 const LINKS = [
   { icon: Mail, label: 'mail', handle: SITE.email, href: `mailto:${SITE.email}`, aria: `Email ${SITE.name}`, me: false },
@@ -41,9 +46,11 @@ function LazyHeatmap() {
 }
 
 /**
- * Chart 04, Transmission. The line, the one filled control on the site with the
- * issue notes beside it, three link cells that reveal their handles, the
- * year's activity as square cells, and the footer with the drawing number.
+ * Chart 04, Transmission. The line, the one filled control on the site with
+ * the issue notes beside it and the seal of tonight's moon, the lighthouse
+ * on the right whose beam rests on the button, three link cells that reveal
+ * their handles, the year's activity as square cells, and the footer with
+ * the atlas number.
  */
 export function Contact() {
   const year = new Date().getFullYear();
@@ -75,7 +82,7 @@ export function Contact() {
             </div>
           </dl>
           <p className="issue__cta">
-            <a href={SITE.calendar} target="_blank" rel="noopener" className="btn-accent arrow-link">
+            <a href={SITE.calendar} target="_blank" rel="noopener" className="btn-accent arrow-link" data-anchor="call">
               <CalendarDays className="h-4 w-4" aria-hidden="true" />
               Book a 15-minute call
               <span className="arrow" aria-hidden="true">
@@ -83,7 +90,14 @@ export function Contact() {
               </span>
             </a>
           </p>
+          <Stamp className="issue__stamp" />
         </div>
+
+        <figure className="issue__plate wash">
+          <Art name="lighthouse" sizes="(max-width: 47.99rem) 100vw, 28vw" alt="" />
+          <span className="issue__lamp" data-anchor="lamp" aria-hidden="true" style={{ left: `${LAMP[0] * 100}%`, top: `${LAMP[1] * 100}%` }} />
+          <figcaption className="sr-only">A lamp lit at night over dark foliage, one of my photographs, standing in for a lighthouse.</figcaption>
+        </figure>
       </div>
 
       <address className="issue__cells sheet-card">
@@ -105,7 +119,7 @@ export function Contact() {
       </address>
 
       <div className="issue__activity">
-        <h3 className="t-label issue__activity-title">Activity · a long exposure of {year}</h3>
+        <h3 className="t-label issue__activity-title">Activity · a long exposure of {year} · 365 frames · f/1.9</h3>
         <LazyHeatmap />
       </div>
 

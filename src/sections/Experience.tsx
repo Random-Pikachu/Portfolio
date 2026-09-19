@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { EXPERIENCES } from '../data/site';
+import { DimensionLine } from '../sheet/DimensionLine';
 
 /** The axis starts with the first role; it ends at now, which is the right edge. */
 const T0 = Date.UTC(2025, 6, 1);
@@ -99,6 +100,10 @@ export function Experience() {
           );
         })}
       </ol>
+
+      <div className="schedule__orbit" aria-hidden="true">
+        <DimensionLine label={`1 orbit · ${Math.round((end - T0) / MONTH)} mo`} />
+      </div>
 
       <div key={selected} className="schedule__detail grid-8 sheet-card">
         <div className="schedule__detail-head">

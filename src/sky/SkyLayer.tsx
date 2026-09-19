@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { sheetStore } from '../sheet/store';
 import { useMoon } from '../sheet/useMoon';
 import { FIELD, FIGURES, figurePath, figureStars } from './figures';
 import { Moon } from './Moon';
@@ -30,6 +31,17 @@ export function SkyLayer() {
   const host = useRef<HTMLDivElement>(null);
   const moonRef = useRef<HTMLDivElement>(null);
   const phase = useMoon();
+
+  // Which chart is being read, for the marks that only speak on one of them.
+  useEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    const sync = () => {
+      el.dataset.chart = sheetStore.get().sheet;
+    };
+    sync();
+    return sheetStore.subscribe(sync);
+  }, []);
 
   useEffect(() => {
     const el = host.current;
@@ -78,6 +90,11 @@ export function SkyLayer() {
               <g key={f.id} className="sky__figure" data-figure={f.id}>
                 <path className="sky__figure-stars" d={figureStars(f)} />
                 <path className="sky__figure-lines" d={figurePath(f)} pathLength={1} />
+                {f.label ? (
+                  <text className="sky__figure-label" x={f.stars[0][0] + 12} y={f.stars[0][1] - 12}>
+                    {f.label}
+                  </text>
+                ) : null}
               </g>
             ))}
           </g>

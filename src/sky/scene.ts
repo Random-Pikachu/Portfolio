@@ -93,6 +93,10 @@ export function mount(host: HTMLElement, opts: MountOptions): SceneController {
   let lastFrame = performance.now();
   let lastY = window.scrollY;
   let twinkle = 0;
+  // The beam leans toward the pointer, a little, and settles back.
+  let lean = 0;
+  let leanTarget = 0;
+  const pointer = { x: -1, y: -1 };
   let width = 0;
   let height = 0;
   let disposed = false;
@@ -166,7 +170,7 @@ export function mount(host: HTMLElement, opts: MountOptions): SceneController {
     gl.uniform1f(loc.uHaze, s[CH.haze]);
     gl.uniform1f(loc.uFog, s[CH.fog]);
     gl.uniform4f(loc.uRings, rings[0] - window.scrollX, rings[1] - window.scrollY, rings[2], s[CH.rings]);
-    gl.uniform4f(loc.uBeam, beam[0] - window.scrollX, beam[1] - window.scrollY, beam[2], s[CH.beam]);
+    gl.uniform4f(loc.uBeam, beam[0] - window.scrollX, beam[1] - window.scrollY, beam[2] + lean, s[CH.beam]);
     gl.uniform1f(loc.uTwinkle, twinkle);
     gl.uniform1i(loc.uOctaves, quality.octaves);
   };
@@ -225,7 +229,19 @@ export function mount(host: HTMLElement, opts: MountOptions): SceneController {
     twinkle = Math.min(1, Math.max(twinkle * Math.exp(-dt / 320), velocity * 1.4));
     if (twinkle < 0.01) twinkle = 0;
     journey.tick();
-    const live = theme.night > 0.5 && twinkle > 0 && quality.interval >= 0;
+    if (journey.state[CH.beam] > 0.01 && pointer.x >= 0) {
+      const dx = pointer.x - (beam[0] - window.scrollX);
+      const dy = pointer.y - (beam[1] - window.scrollY);
+      let d = Math.atan2(dy, dx) - beam[2];
+      d = Math.atan2(Math.sin(d), Math.cos(d));
+      leanTarget = Math.max(-0.35, Math.min(0.35, d));
+    } else leanTarget = 0;
+    const leaning = Math.abs(leanTarget - lean) > 0.002;
+    if (leaning) {
+      lean += (leanTarget - lean) * (1 - Math.exp(-dt / 240));
+      dirty = true;
+    }
+    const live = (theme.night > 0.5 && twinkle > 0 && quality.interval >= 0) || leaning;
     if (dirty || live) {
       if (quality.interval <= 0 || now - lastDraw >= quality.interval) {
         draw();
@@ -245,6 +261,12 @@ export function mount(host: HTMLElement, opts: MountOptions): SceneController {
     start();
   };
   window.addEventListener('scroll', onScroll, { passive: true });
+  const onPointer = (e: PointerEvent) => {
+    pointer.x = e.clientX;
+    pointer.y = e.clientY;
+    if (journey.state[CH.beam] > 0.01) start();
+  };
+  if (matchMedia('(hover: hover)').matches) window.addEventListener('pointermove', onPointer, { passive: true });
 
   // The theme: flip the uniforms and draw at once, inside the same task as
   // the class change, so the view transition's new snapshot has the new sky.
@@ -300,6 +322,7 @@ export function mount(host: HTMLElement, opts: MountOptions): SceneController {
     disposed = true;
     pause();
     window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('pointermove', onPointer);
     document.removeEventListener('visibilitychange', onVisibility);
     canvas.removeEventListener('webglcontextlost', onLost);
     canvas.removeEventListener('webglcontextrestored', onRestored);

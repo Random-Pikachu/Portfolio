@@ -93,6 +93,27 @@
     }
   }
 
+  /* A figure's label, in the chart's own hand: Cetus always, 025 only while
+     the transmission is being read. */
+  .sky__figure-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    fill: var(--ink-3);
+    opacity: 0.7;
+    transition: opacity var(--dur-3) var(--ease-out);
+  }
+
+  /* 025 is not on the chart until the transmission is being read. */
+  .sky__figure[data-figure="025"] {
+    opacity: 0;
+    transition: opacity var(--dur-4) var(--ease-out);
+  }
+
+  .sky[data-chart="contact"] .sky__figure[data-figure="025"] {
+    opacity: 1;
+  }
+
   .sky__scene {
     position: absolute;
     inset: 0;
@@ -246,5 +267,110 @@
 
   .wash__moon.is-taken {
     opacity: 0;
+  }
+}
+
+/* ─── A plate's constellation ──────────────────────────────────────────────
+   Small, in the corner of the annotation. The lines draw once when the
+   plate is in the frame; the names appear while it is hovered or focused. */
+@layer components {
+  .figure {
+    display: block;
+    overflow: visible;
+    color: var(--ink-3);
+  }
+
+  .figure__lines {
+    fill: none;
+    stroke: var(--chart-line);
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--dur-4) var(--ease-out);
+  }
+
+  .figure.is-drawn .figure__lines {
+    stroke-dashoffset: 0;
+  }
+
+  .figure__stars {
+    fill: none;
+    stroke: var(--star);
+    stroke-width: 2.6px;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .figure__name {
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.06em;
+    fill: var(--ink-2);
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  .plate:hover .figure__name,
+  .plate:focus-within .figure__name {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .figure__lines {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+  }
+}
+
+/* ─── The seal ─────────────────────────────────────────────────────────────
+   Ink, a little crooked, and a shade uneven, the way a stamp lands. */
+@layer components {
+  .stamp {
+    position: relative;
+    display: inline-block;
+    width: 96px;
+    height: 96px;
+    color: var(--ink-3);
+    transform: rotate(-8deg);
+    animation: ink-in var(--dur-3) var(--ease-out) both;
+  }
+
+  .stamp__ring {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    mask-image: url("/wash/grain-256.webp");
+    mask-size: 96px 96px;
+    -webkit-mask-image: url("/wash/grain-256.webp");
+    -webkit-mask-size: 96px 96px;
+  }
+
+  .stamp__text {
+    font-family: var(--font-mono);
+    font-size: 8.6px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    fill: currentColor;
+  }
+
+  .stamp__moon {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .stamp__moon .moon circle {
+    stroke-width: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stamp {
+      animation: none;
+    }
   }
 }

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
+import { Art } from '../components/Art';
 import { ARCHIVE, PLATES, type Project } from '../data/site';
 import { WORK } from '../data/content.generated';
 import { goTo, syncHash } from '../sheet/scroll';
 import { sheetStore, useSheetState } from '../sheet/store';
+import { Constellation } from '../sky/Constellation';
 
 const N = PLATES.length;
 
@@ -37,6 +39,7 @@ function Plate({ p, i }: { p: Project; i: number }) {
         )}
       </figure>
       <div className="plate__caption sheet-card">
+        <Constellation seed={p.slug} names={p.stack} className="plate__figure" />
         <p className="t-label plate__num" aria-hidden="true">
           Plate {i + 1} / {N}
         </p>
@@ -91,6 +94,7 @@ export function Details() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
+  const skyRef = useRef<HTMLDivElement>(null);
   const markerRef = useRef<HTMLSpanElement>(null);
   const [current, setCurrent] = useState(0);
   const { sheet } = useSheetState();
@@ -118,6 +122,8 @@ export function Details() {
       if (section.dataset.pinned === 'true') {
         const x = Math.min(distance, Math.max(0, inset - section.getBoundingClientRect().top));
         track.style.transform = `translate3d(${-x}px, 0, 0)`;
+        // The firmament behind the plates moves at half their speed: a depth behind a depth.
+        if (skyRef.current) skyRef.current.style.transform = `translate3d(${(-x * 0.5).toFixed(1)}px, 0, 0)`;
         if (markerRef.current) markerRef.current.style.left = `${distance ? x / distance * 100 : 0}%`;
         i = offsets.reduce((nearest, offset, index) => (
           Math.abs(offset - x) < Math.abs(offsets[nearest] - x) ? index : nearest
@@ -135,6 +141,7 @@ export function Details() {
       section.dataset.pinned = String(!narrow.matches && !motion.matches && N > 1);
       section.style.height = '';
       track.style.transform = '';
+      if (skyRef.current) skyRef.current.style.transform = '';
       inset = parseFloat(getComputedStyle(pin).top) || 0;
       if (section.dataset.pinned === 'true' && pin.offsetHeight + inset + 24 > window.innerHeight) {
         section.dataset.pinned = 'false';
@@ -202,6 +209,9 @@ export function Details() {
     <div className="sheet">
       <div ref={sectionRef} className="details" data-scroll-scene>
         <div ref={pinRef} className="details__pin" data-scroll-pin onKeyDown={onKeyDown}>
+          <div ref={skyRef} className="details__sky" aria-hidden="true">
+            <Art name="firmament" sizes="400vw" alt="" />
+          </div>
           <div className="details__head">
             <p className="t-label details__counter">
               Selected work
@@ -249,6 +259,8 @@ export function Details() {
 
           <div className="ruler" aria-hidden="true">
             <span className="ruler__line" />
+            <span className="ruler__ra ruler__ra--a">α 0h</span>
+            <span className="ruler__ra ruler__ra--b">{N - 1}h</span>
             {PLATES.map((p, i) => (
               <span key={p.slug} className="ruler__tick" style={{ left: `${(i / (N - 1)) * 100}%` }}>
                 <i>{i + 1}</i>

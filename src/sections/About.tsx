@@ -86,6 +86,7 @@ export function About() {
               decoding="async"
             />
             <DimensionLine label="Ø 1 night" vertical className="fig__dim" />
+            <span className="fig__opening" data-anchor="fig-moon" aria-hidden="true" />
           </div>
           <figcaption className="t-label fig__cap">{FIG.caption}</figcaption>
         </figure>

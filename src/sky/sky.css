@@ -93,7 +93,7 @@
     }
   }
 
-  .sky canvas {
+  .sky__scene {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -102,8 +102,22 @@
     transition: opacity var(--dur-4) var(--ease-out);
   }
 
-  .sky[data-mode="gl"] canvas {
+  .sky[data-mode="gl"] .sky__scene {
     opacity: 1;
+  }
+
+  .sky__debug {
+    position: fixed;
+    left: 60px;
+    bottom: 12px;
+    z-index: 70;
+    margin: 0;
+    padding: 6px 8px;
+    font: 11px/1.4 var(--font-mono);
+    color: var(--ink);
+    background: var(--paper-card);
+    border: 1px solid var(--line-2);
+    pointer-events: none;
   }
 
   /* The paper. Multiplied onto the day's chart, screened onto the night. */
@@ -122,7 +136,7 @@
       stroke-dashoffset: 0;
     }
 
-    .sky canvas {
+    .sky__scene {
       transition: none;
     }
   }
@@ -160,5 +174,77 @@
 
   .whale__eye {
     fill: var(--ink);
+  }
+}
+
+/* ─── The moon that travels ────────────────────────────────────────────────
+   Fixed above the page and under the chrome. The journey sets its size and
+   position; nothing else moves it. Cream in both modes: the moon does not
+   change colour when the room does. */
+@layer components {
+  .sky-moon {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 40;
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+    opacity: 0;
+    color: var(--moon-ink);
+    will-change: transform, width, height;
+  }
+
+  .sky-moon.is-on {
+    opacity: 1;
+  }
+
+  .sky-moon__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .sky-moon__lit {
+    fill: var(--moon);
+  }
+
+  .sky-moon__dark {
+    fill: var(--paper);
+  }
+
+  .sky-moon__dark-hatch {
+    opacity: 0;
+  }
+
+  :root:not(.dark) .sky-moon__dark-hatch {
+    opacity: 0.35;
+  }
+
+  .sky-moon__maria {
+    opacity: 0.55;
+  }
+
+  .sky-moon__rim {
+    stroke: var(--moon-ink);
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.8;
+  }
+
+  .dark .sky-moon__rim {
+    stroke: var(--moon);
+    stroke-width: 1px;
+    opacity: 0.55;
+  }
+
+  /* On the plate, the glyph gives way once the moon is taken. */
+  .wash__moon {
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  .wash__moon.is-taken {
+    opacity: 0;
   }
 }

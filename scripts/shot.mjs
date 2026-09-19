@@ -3,7 +3,10 @@
  *
  *   node scripts/shot.mjs <url> <out.png> [--width 1280] [--height 800] [--dark]
  *        [--reduce] [--scroll <px>|<#hash>] [--wait <ms>] [--dpr 1] [--full]
- *        [--no-gl]
+ *        [--no-gl] [--eval <js>] [--after <ms>]
+ *
+ * --eval runs a script in the page after the load wait, and --after is how
+ * long to wait after it before the capture (default 400 ms).
  *
  * Runs on a machine with Chrome, never on Vercel. WebGL is rendered in
  * software (SwiftShader) so the sky's scene appears in the capture.
@@ -98,6 +101,11 @@ if (scroll) {
     : `window.scrollTo({ top: ${Number(scroll)}, behavior: 'instant' })`;
   await send('Runtime.evaluate', { expression: expr });
   await sleep(Math.max(900, wait / 2));
+}
+const js = opt('eval', null);
+if (js) {
+  await send('Runtime.evaluate', { expression: js, awaitPromise: true });
+  await sleep(Number(opt('after', 400)));
 }
 const shot = flag('full') ? { format: 'png', captureBeyondViewport: true } : { format: 'png' };
 if (flag('full')) {

@@ -74,7 +74,7 @@ export function Cover() {
 
         <figure ref={plateRef} className="cover__wash wash">
           <Art name="frontispiece" eager sizes="(max-width: 47.99rem) 100vw, 46vw" alt="" />
-          <span className="wash__moon" data-anchor="moon" aria-hidden="true" style={{ left: `${MOON[0] * 100}%`, top: `${MOON[1] * 100}%` }}>
+          <span className="wash__moon" data-anchor="cover-moon" aria-hidden="true" style={{ left: `${MOON[0] * 100}%`, top: `${MOON[1] * 100}%` }}>
             <MoonGlyph phase={moon} size={44} />
           </span>
           <DimensionLine label="384 400 km" vertical className="wash__dim" draw />

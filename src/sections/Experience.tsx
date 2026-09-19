@@ -48,7 +48,7 @@ export function Experience() {
             {m.label}
           </span>
         ))}
-        <span className="schedule__now t-label">now</span>
+        <span className="schedule__now t-label" data-anchor="now">now</span>
       </div>
 
       <ol className="schedule__rows" aria-label="Roles">
@@ -67,6 +67,7 @@ export function Experience() {
               <div className="schedule__track">
                 <span
                   className={`dim schedule__bar ${open ? 'dim--open' : ''}`}
+                  data-anchor={`orbit-${i}`}
                   style={{ left: x(start), width: open ? `calc(100% - ${x(start)} + var(--margin-r))` : `calc(${x(finish!)} - ${x(start)})` }}
                   role="img"
                   aria-label={open ? `${e.company}, ${monthsLong} months so far, present` : `${e.company}, ${monthsLong} months`}

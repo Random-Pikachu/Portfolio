@@ -763,6 +763,17 @@
     object-fit: cover;
   }
 
+  /* The opening in the photograph, where the moon lands: measured, not drawn. */
+  .fig__opening {
+    position: absolute;
+    left: 48.5%;
+    top: 52%;
+    width: 43%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
   .fig__dim {
     position: absolute;
     left: 100%;

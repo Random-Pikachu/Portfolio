@@ -26,6 +26,8 @@
   --paper-card: #f3f0e8;
   --grain-blend: multiply;
   --grain-alpha: 0.07;
+  --moon: #e9e3d3; /* the moon's own cream, both modes; never text */
+  --moon-ink: #161616;
 
   --heatmap-1: #cfcbc2;
   --heatmap-2: #a09c92;
@@ -94,6 +96,8 @@
   --paper-card: #101118;
   --grain-blend: screen;
   --grain-alpha: 0.05;
+  --moon: #e9e3d3;
+  --moon-ink: #2a2d3f;
 
   --heatmap-1: #2a2a2a;
   --heatmap-2: #4d4d4d;

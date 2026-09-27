@@ -1,73 +1,80 @@
-/* Self-hosted fonts, bundled by Vite. Plex is the body and data face; Zodiak
-   the display face (see src/fonts/zodiak/README.md). Tokens live in tokens.css. */
+/* Self-hosted fonts, bundled by Vite: Fraunces (display, with its optical
+   size axis), Space Grotesk (body and UI), JetBrains Mono (annotations).
+   Tokens live in tokens.css. */
 @import "./tokens.css";
-@import "@fontsource-variable/ibm-plex-sans";
-@import "@fontsource-variable/ibm-plex-sans/wght-italic.css";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource-variable/fraunces/opsz.css";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
 @import "tailwindcss";
-@import "./sky/sky.css";
-@import "./sheet/sheet.css";
+@import "./night/night.css";
+@import "./shell/shell.css";
 @import "./sections/sections.css";
 @import "./pages/pages.css";
 @import "./pages/prose.css";
+@import "./og/og.css";
 
-@font-face {
-  font-family: "Zodiak";
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url("./fonts/zodiak/zodiak-300.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Zodiak";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./fonts/zodiak/zodiak-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Zodiak";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./fonts/zodiak/zodiak-400-italic.woff2") format("woff2");
-}
-
-/* Tailwind reads the tokens through these; utilities like bg-paper, text-ink
-   and border-line map straight onto the ramp. */
+/* Tailwind reads the tokens through these; utilities like bg-night,
+   text-starlight and border-line map straight onto the ramp. The font
+   families come from tokens.css, which is unlayered and so wins. */
 @theme {
-  --color-paper: var(--paper);
-  --color-paper-2: var(--paper-2);
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-3: var(--ink-3);
-  --color-ink-4: var(--ink-4);
+  --color-night: var(--night);
+  --color-pine: var(--pine);
+  --color-pine-2: var(--pine-2);
+  --color-starlight: var(--starlight);
+  --color-sage: var(--sage);
+  --color-sage-2: var(--sage-2);
   --color-line: var(--line);
   --color-line-2: var(--line-2);
-  --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
+  --color-ember: var(--ember);
+  --color-ember-ink: var(--ember-ink);
+}
 
-  --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-display: "Zodiak", Georgia, "Times New Roman", serif;
+/* The grain tile: fractal noise as white specks of varying strength,
+   rasterised once by the browser and repeated. Never animated. */
+:root {
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.7 -0.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --noise-size: 220px;
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    background: var(--night);
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    font-size: var(--text-body);
-    line-height: 1.6;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background: var(--night);
+    color: var(--starlight);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: var(--starlight);
+    color: var(--night);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--starlight);
+    outline-offset: 3px;
+  }
+
+  /* Anchored sections land below the bar, not under it, with room for a
+     reveal's 24px rise. */
+  [id] {
+    scroll-margin-top: calc(var(--nav-h) + var(--sp-8));
   }
 
   ::-webkit-scrollbar {
@@ -75,7 +82,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--paper);
+    background: var(--night);
   }
 
   ::-webkit-scrollbar-thumb {
@@ -83,343 +90,212 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--ink-4);
-  }
-
-  ::selection {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    background: var(--sage-2);
   }
 
   .mono {
     font-family: var(--font-mono);
   }
+}
 
-  /* View transitions logic */
-  ::view-transition-group(root) {
-    animation-duration: 0.7s;
-    animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
+/* ─── Motion ───────────────────────────────────────────────────────────────
+   The reveals: fade and a 24px rise, once, when an element first comes into
+   view (src/motion/Motion.tsx). Only with JavaScript, which adds the `js`
+   class before first paint; never under reduced motion. Between pages, a
+   quick fade and nothing else.
+   ────────────────────────────────────────────────────────────────────────── */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-4) var(--ease-out),
+    transform var(--dur-4) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
   }
 
-  ::view-transition-new(root),
-  ::view-transition-old(root) {
-    animation: none;
-    mix-blend-mode: normal;
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
   }
+}
 
-  .dark::view-transition-old(root) {
-    z-index: 100;
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
 /* ─── Type roles ───────────────────────────────────────────────────────────
-   Eight roles. Zodiak never below 24px, Plex Mono never above 14px, italics
-   only in Zodiak, uppercase only in labels.
+   Three families, each with one job. Fraunces only at display sizes, tight;
+   Space Grotesk for everything readable; JetBrains Mono for labels, dates
+   and captions, never for a sentence.
    ────────────────────────────────────────────────────────────────────────── */
 @layer components {
-  .t-display-1 {
+  .t-hero {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: var(--text-display-1);
-    line-height: 0.96;
-    letter-spacing: -0.015em;
+    font-weight: 360;
+    font-size: var(--text-hero);
+    line-height: 0.98;
+    letter-spacing: -0.022em;
+    font-optical-sizing: auto;
   }
 
-  .t-display-2 {
+  .t-title {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: var(--text-display-2);
-    line-height: 1.02;
-    letter-spacing: -0.01em;
-  }
-
-  .t-pull {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: var(--text-pull);
-    line-height: 1.2;
+    font-weight: 380;
+    font-size: var(--text-title);
+    line-height: 1.04;
+    letter-spacing: -0.016em;
+    font-optical-sizing: auto;
   }
 
   .t-h3 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 420;
     font-size: var(--text-h3);
     line-height: 1.15;
+    letter-spacing: -0.008em;
+  }
+
+  .t-lead {
+    font-family: var(--font-sans);
+    font-size: var(--text-lead);
+    line-height: 1.5;
   }
 
   .t-body {
     font-family: var(--font-sans);
     font-size: var(--text-body);
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   .t-small {
     font-family: var(--font-sans);
     font-size: var(--text-small);
-    line-height: 1.5;
-  }
-
-  .t-data {
-    font-family: var(--font-mono);
-    font-size: var(--text-data);
-    line-height: 1.6;
-    font-variant-numeric: tabular-nums;
+    line-height: 1.55;
   }
 
   .t-label {
     font-family: var(--font-mono);
     font-weight: 500;
     font-size: var(--text-label);
-    line-height: 1.4;
-    letter-spacing: 0.14em;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* ─── Sheet and grid ─────────────────────────────────────────────────────
-     The sheet is the page: at most 1440 wide, 88px from the left edge on
-     desktop (48px rail plus 40) and 64px from the right, 24px on phones.
-     Ten columns with 24px gutters, four on phones. Legacy .wrap, .grid-12,
-     .rail and .content sit on the same columns until the sections move. */
-  .sheet {
-    width: 100%;
-    max-width: var(--sheet-max);
-    margin-inline: auto;
-    padding-left: var(--margin-l);
-    padding-right: var(--margin-r);
-  }
-
-  .grid-8 {
-    display: grid;
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-    column-gap: var(--gutter);
-  }
-
-  .hairline {
-    height: 1px;
-    background: var(--line);
-  }
-
-  /* ─── Cards ──────────────────────────────────────────────────────────────
-     A block that needs paper under it: by day the paper itself, by night a
-     sheet lying on the void, with its edge drawn and the same grain as the
-     cover. The only ground a block may carry; never a backdrop-filter. */
-  .sheet-card {
-    position: relative;
-    background: color-mix(in srgb, var(--paper-card) 94%, transparent);
-    border: 1px solid var(--line);
-  }
-
-  .dark .sheet-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: url("/wash/grain-256.webp") repeat;
-    background-size: 256px 256px;
-    opacity: 0.06;
-    mix-blend-mode: screen;
-  }
-
-  /* Empty sky between two charts, where the moon has room to travel. */
-  .transit {
-    height: 60vh;
-  }
-
-  @media (max-width: 47.99rem), (prefers-reduced-motion: reduce) {
-    .transit {
-      height: 0;
-    }
-  }
-
-  /* ─── Grid layer and sheet rules ─────────────────────────────────────────
-     Ten faint columns on a fixed layer at z-index -1: under every block, above
-     the sky (z-index -2, sky/sky.css). Sections carry no background of their
-     own; a block that needs paper under it is a .sheet-card. */
-  .grid-layer {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .grid-layer__sheet {
-    position: relative;
-    height: 100%;
-    max-width: var(--sheet-max);
-    margin-inline: auto;
-    padding-left: var(--margin-l);
-    padding-right: var(--margin-r);
-    display: grid;
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  }
-
-  .grid-layer__sheet i,
-  .grid-layer__sheet::after {
-    display: block;
-    border-left: 1px solid var(--line);
-    opacity: 0.4;
-  }
-
-  .grid-layer__sheet::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: var(--margin-r);
-    width: 0;
-  }
-
-  .sheet-rule {
-    position: relative;
-    height: 1px;
-    background: var(--line);
-    display: grid;
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  }
-
-  .sheet-rule i {
-    position: relative;
-    display: block;
-  }
-
-  .sheet-rule i::before,
-  .sheet-rule i:last-of-type::after {
-    content: "";
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    width: 9px;
-    height: 9px;
-    background:
-      linear-gradient(var(--ink-4), var(--ink-4)) center / 100% 1px no-repeat,
-      linear-gradient(var(--ink-4), var(--ink-4)) center / 1px 100% no-repeat;
-  }
-
-  .sheet-rule i:last-of-type::after {
-    left: auto;
-    right: -5px;
-  }
-
-  @media (max-width: 47.99rem) {
-    .grid-layer__sheet i:nth-child(n + 5),
-    .sheet-rule i:nth-child(n + 5) {
-      display: none;
-    }
-
-    .sheet-rule i:nth-child(4)::after {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: auto;
-      right: -5px;
-      width: 9px;
-      height: 9px;
-      background:
-        linear-gradient(var(--ink-4), var(--ink-4)) center / 100% 1px no-repeat,
-        linear-gradient(var(--ink-4), var(--ink-4)) center / 1px 100% no-repeat;
-    }
-  }
-
-  /* ─── Micro-interactions ─────────────────────────────────────────────── */
-
-  /* The wordmark's caret. Hovering the wordmark holds it steady. */
-  .caret {
-    display: inline-block;
-    width: 0.55em;
-    height: 1.05em;
-    margin-left: 0.15em;
-    vertical-align: -0.15em;
-    background: var(--accent);
-    animation: caret-blink 1.1s steps(1, end) infinite;
-  }
-
-  a:hover > .caret,
-  a:focus-visible > .caret {
-    animation-play-state: paused;
-    opacity: 1;
-  }
-
-  @keyframes caret-blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  /* A link whose arrow nudges on hover: the affordance is the movement. */
-  .arrow-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35em;
-    transition: color 0.2s ease;
-  }
-
-  .arrow-link .arrow {
-    display: inline-block;
-    transition: transform 0.3s var(--ease-out);
-  }
-
-  .arrow-link:hover .arrow,
-  .arrow-link:focus-visible .arrow {
-    transform: translate(2px, -2px);
-  }
-
-  /* An underline that is drawn in, left to right, rather than switched on. */
-  .underline-draw {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
-    background-position: 0 100%;
-    transition: background-size 0.4s var(--ease-out);
-  }
-
-  .underline-draw:hover,
-  .underline-draw:focus-visible {
-    background-size: 100% 1px;
-  }
-
-  /* The one filled control on the page. */
-  .btn-accent {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 0.8rem 1.25rem;
+  .t-micro {
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    letter-spacing: 0.06em;
-    background: var(--accent);
-    color: var(--accent-ink);
-    border: 1px solid var(--accent);
-    transition: transform 0.2s var(--ease-out), opacity 0.2s ease;
+    font-weight: 400;
+    font-size: var(--text-micro);
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
   }
 
-  .btn-accent:hover {
-    opacity: 0.92;
+  /* ─── Frame and grid ─────────────────────────────────────────────────────
+     The frame is the measure: at most 1320 wide, a fluid gutter at each
+     edge. Ten columns on it from 48rem, four below. */
+  .frame {
+    width: 100%;
+    max-width: calc(var(--frame-max) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
   }
 
-  .btn-accent:active {
-    transform: translateY(1px);
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--col-gap);
   }
 
-  /* Skeleton dots while the heatmap loads. */
-  @keyframes shimmer {
-    50% {
-      opacity: 0.35;
+  /* A link inside running text: always underlined, so it never depends on
+     hover to be found; the line brightens on hover and focus. */
+  .link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: var(--line-2);
+  }
+
+  .link:hover,
+  .link:focus-visible {
+    text-decoration-color: currentColor;
+  }
+
+  /* ─── Buttons ────────────────────────────────────────────────────────────
+     Two kinds. Ember is the call and nothing else; quiet is every other
+     action. The arrow nudges on hover where hover exists; the tap needs no
+     hint. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 50px;
+    padding: 0 22px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .btn svg {
+    flex: none;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .btn--ember {
+    color: var(--ember-ink);
+    background: var(--ember);
+    border-color: var(--ember);
+  }
+
+  .btn--ember:hover,
+  .btn--ember:focus-visible {
+    opacity: 0.9;
+  }
+
+  .btn--quiet {
+    color: var(--starlight);
+    background: rgb(10 14 12 / 0.35);
+    border-color: var(--line-2);
+  }
+
+  .btn--quiet:hover,
+  .btn--quiet:focus-visible {
+    border-color: var(--starlight);
+  }
+
+  @media (hover: hover) {
+    .btn--ember:hover svg {
+      transform: translate(2px, -2px);
     }
-  }
 
-  .skeleton-dot {
-    animation: shimmer 1.6s ease-in-out infinite;
+    .btn--quiet:hover svg {
+      transform: translateY(2px);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .caret,
-    .skeleton-dot {
-      animation: none;
+    .btn svg {
+      transition: none;
     }
   }
 }
@@ -483,7 +359,7 @@
   }
 
   .photo-open:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--ember);
     outline-offset: 3px;
   }
 
@@ -527,7 +403,7 @@
       transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Colour on hover — but only where hover actually exists. Without the
+  /* Colour on hover, but only where hover actually exists. Without the
      hover:none branch every touch visitor gets a permanently monochrome
      gallery with no way to reveal the colour. */
   @media (hover: hover) {
@@ -551,7 +427,7 @@
   }
 
   /* Scroll reveal. Deliberately CSS rather than Framer Motion so the gallery
-     bundle carries no animation library — same easing as FadeUp on the home
+     bundle carries no animation library. Same easing as the reveals on the home
      page so the two pages feel identical. */
   .ph-reveal {
     opacity: 0;
@@ -582,8 +458,8 @@
 }
 
 /* ─── Lightbox ─────────────────────────────────────────────────────────────
-   Deliberately not theme-aware: the plate is a white camera print on a dark
-   scrim in both themes, which is the whole point of the Leica reference.
+   The plate is a white camera print on a dark scrim, which is the whole
+   point of the Leica reference.
    ────────────────────────────────────────────────────────────────────────── */
 @layer components {
   .photo-modal {
@@ -710,7 +586,7 @@
 
   .photo-modal-close:focus-visible,
   .photo-modal-nav:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--ember);
     outline-offset: 2px;
   }
 
@@ -731,7 +607,7 @@
   @media (max-width: 720px) {
     .photo-modal { padding: 2vh 3vw; }
     .photo-modal-close { top: 10px; right: 10px; width: 34px; height: 34px; }
-    /* No room beside the plate on a phone — tuck the arrows underneath. */
+    /* No room beside the plate on a phone: tuck the arrows underneath. */
     .photo-modal-nav { top: auto; bottom: -52px; transform: none; }
     .photo-modal-nav.left { left: 50%; margin-left: -52px; }
     .photo-modal-nav.right { right: 50%; margin-right: -52px; }

@@ -1,0 +1,86 @@
+/* ─── The social card ──────────────────────────────────────────────────────
+   A fixed 1200 by 630 frame for scripts/build-og.mjs. Sizes are in pixels
+   on purpose: the card is a picture, not a page.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .og {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    color: var(--starlight);
+    background: var(--night);
+  }
+
+  .og__art {
+    position: absolute;
+    inset: 0;
+  }
+
+  .og__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(6 9 8 / 0.72) 0%, rgb(6 9 8 / 0.4) 45%, transparent 68%);
+  }
+
+  .og__copy {
+    position: absolute;
+    top: 96px;
+    left: 80px;
+    width: 640px;
+  }
+
+  .og__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  .og__title {
+    margin: 28px 0 0;
+    font-family: var(--font-display);
+    font-weight: 360;
+    font-size: 88px;
+    line-height: 0.98;
+    letter-spacing: -0.022em;
+    font-optical-sizing: auto;
+    text-wrap: balance;
+  }
+
+  .og__sub {
+    max-width: 30ch;
+    margin: 32px 0 0;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--sage);
+  }
+
+  .og__sign {
+    position: absolute;
+    bottom: 56px;
+    left: 80px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .og__url {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--sage-2);
+  }
+
+  .og__url::before {
+    content: "·";
+    margin-right: 16px;
+  }
+}

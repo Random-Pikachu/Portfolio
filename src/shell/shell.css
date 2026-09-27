@@ -1,0 +1,348 @@
+/* ─── The shell: skip link, grain, the bar, the menu, the footer ───────────
+   Everything that moves here moves by opacity or transform. Every hover has
+   a focus twin, and nothing is reachable by hover alone.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .skip-link {
+    position: fixed;
+    top: 12px;
+    left: 16px;
+    z-index: var(--z-skip);
+    padding: 10px 14px;
+    background: var(--night);
+    color: var(--ember);
+    border: 1px solid var(--ember);
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    transform: none;
+  }
+
+  /* Film grain over the whole site. Static: grain that moves reads as cheap. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-grain);
+    pointer-events: none;
+    background-image: var(--noise);
+    background-size: var(--noise-size);
+    opacity: var(--grain-alpha);
+  }
+
+  /* ─── The bar ──────────────────────────────────────────────────────────── */
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-nav);
+  }
+
+  /* The night behind the bar fades in by opacity once the page moves. */
+  .nav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--night);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  .nav[data-scrolled]::before {
+    opacity: 1;
+  }
+
+  .nav__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    height: var(--nav-h);
+  }
+
+  .nav__home {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    margin-right: auto;
+    color: var(--starlight);
+  }
+
+  .nav__name {
+    font-size: var(--text-small);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .nav__links {
+    display: none;
+  }
+
+  .nav__links ul,
+  .nav__panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__links ul {
+    display: flex;
+    gap: 28px;
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--text-small);
+    color: var(--sage);
+  }
+
+  /* The underline is drawn in, left to right. */
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-3) var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link:focus-visible,
+  .nav__link[aria-current] {
+    color: var(--starlight);
+  }
+
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after,
+  .nav__link[aria-current]::after {
+    transform: scaleX(1);
+  }
+
+  /* The call: a quiet outline over the hero, ember once lit. */
+  .nav__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--starlight);
+    border: 1px solid var(--line-2);
+  }
+
+  .nav__cta:hover,
+  .nav__cta:focus-visible {
+    border-color: var(--starlight);
+  }
+
+  .nav__cta[data-lit] {
+    color: var(--ember-ink);
+    background: var(--ember);
+    border-color: var(--ember);
+  }
+
+  .nav__cta[data-lit]:hover,
+  .nav__cta[data-lit]:focus-visible {
+    opacity: 0.9;
+  }
+
+  /* On a phone's home page, once lit, the call belongs to the bar at the foot. */
+  @media (max-width: 47.99rem) {
+    .nav[data-home] .nav__cta[data-lit] {
+      display: none;
+    }
+  }
+
+  .nav__toggle {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    padding: 0;
+    color: var(--starlight);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* ─── The menu, below 64rem ────────────────────────────────────────────── */
+  .nav__panel {
+    position: fixed;
+    inset: var(--nav-h) 0 0;
+    overflow-y: auto;
+    background: var(--night);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      visibility 0s linear var(--dur-2);
+  }
+
+  .nav[data-open] .nav__panel {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  .nav__panel ul {
+    padding-block: var(--sp-6) var(--sp-12);
+  }
+
+  .nav__panel li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav__panel-link {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    font-size: 1.625rem;
+    color: var(--starlight);
+  }
+
+  .nav__panel-link[aria-current]::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    margin-left: 14px;
+    background: var(--starlight);
+  }
+
+  :root.menu-open {
+    overflow: hidden;
+  }
+
+  @media (max-width: 29.99rem) {
+    .nav__name {
+      display: none;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .nav__bar {
+      gap: var(--sp-8);
+    }
+
+    .nav__links {
+      display: block;
+    }
+
+    .nav__toggle,
+    .nav__panel {
+      display: none;
+    }
+  }
+
+  /* Reduced motion: every state above arrives at once, in its final form. */
+  @media (prefers-reduced-motion: reduce) {
+    .nav::before,
+    .nav__link::after,
+    .nav__panel,
+    .nav[data-open] .nav__panel {
+      transition: none;
+    }
+  }
+
+  /* ─── The footer ───────────────────────────────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: var(--sp-6);
+    padding-block: var(--sp-12) var(--sp-8);
+  }
+
+  .footer__sign {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    font-weight: 500;
+    color: var(--starlight);
+  }
+
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--text-small);
+    color: var(--sage);
+  }
+
+  .footer__link:hover,
+  .footer__link:focus-visible {
+    color: var(--starlight);
+  }
+
+  .footer__line {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--sp-2) var(--sp-4);
+    margin: 0;
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--line);
+    color: var(--sage-2);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__inner {
+      grid-template-columns: auto 1fr;
+      align-items: center;
+    }
+
+    .footer__links {
+      justify-self: end;
+    }
+
+    .footer__line {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ─── The head of a page outside the home page ─────────────────────────── */
+  .page-head {
+    padding-top: calc(var(--nav-h) + var(--sp-16));
+    padding-bottom: var(--sp-8);
+  }
+
+  .page-head__label,
+  .page-head__caption {
+    margin: 0;
+    color: var(--sage-2);
+  }
+
+  .page-head__title {
+    max-width: 18ch;
+    margin: var(--sp-4) 0 0;
+    color: var(--starlight);
+  }
+
+  .page-head__caption {
+    margin-top: var(--sp-4);
+  }
+}

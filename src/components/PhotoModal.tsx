@@ -3,7 +3,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Photo } from '../data/photos';
 import { SITE } from '../data/site';
 
-/** "2026-07-21 18:21:17" -> "21 JUL 2026". Empty in, empty out — the caller
+/** "2026-07-21 18:21:17" -> "21 JUL 2026". Empty in, empty out: the caller
     passes only a verified EXIF capture timestamp. */
 function formatDate(shotAt: string) {
   if (!shotAt) return '';
@@ -80,7 +80,7 @@ export default function PhotoModal({
 
   const date = formatDate(photo.shotAt);
   const time = formatTime(photo.shotAt);
-  // Only the parts this photo actually has — 3 of 27 files carry no camera EXIF.
+  // Only the parts this photo actually has: 3 of 27 files carry no camera EXIF.
   const settings = [photo.focal, photo.aperture, photo.shutter, photo.iso].filter(Boolean);
 
   return (
@@ -125,7 +125,7 @@ export default function PhotoModal({
           </>
         )}
 
-        {/* The print: photo above, camera plate below — always full colour. */}
+        {/* The print: photo above, camera plate below, always full colour. */}
         <figure className="photo-plate">
           <img
             key={photo.slug}

@@ -1,145 +1,105 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { CalendarDays, Github, Linkedin, Mail } from 'lucide-react';
-import { Art } from '../components/Art';
-import ContributionHeatmap from '../components/ContributionHeatmap';
-import { ART } from '../data/art';
-import { DRAWING_NO, SITE } from '../data/site';
-import { goTo } from '../sheet/scroll';
-import { useNear } from '../sheet/useScrollProgress';
-import { Stamp } from '../sky/Stamp';
+import { useEffect, useState } from 'react';
+import { ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react';
+import { SITE } from '../data/site';
 
-const LAMP = ART.lighthouse.anchors.lamp;
+/**
+ * The photograph beside the call, one of the gallery's frames: a lamp over
+ * leaves with the moon behind them. The caption is only what the file's EXIF
+ * says; the grade is an edge falling into the night and nothing more.
+ */
+const PHOTO = {
+  slug: 'img-20240815-203837346',
+  width: 1600,
+  height: 2001,
+  alt: 'A street lamp lit at night over dark green leaves, with the moon small behind them.',
+  caption: '15 Aug 2024 · 20:38 · f/1.9 · 1/20 s · 24 mm · Nothing Phone (1)',
+};
 
-const LINKS = [
-  { icon: Mail, label: 'mail', handle: SITE.email, href: `mailto:${SITE.email}`, aria: `Email ${SITE.name}`, me: false },
-  { icon: Linkedin, label: 'linkedin', handle: '/in/sangam21', href: SITE.profiles.linkedin, aria: `${SITE.name} on LinkedIn`, me: true },
-  { icon: Github, label: 'github', handle: '@Random-Pikachu', href: SITE.profiles.github, aria: `${SITE.name} on GitHub`, me: true },
-];
+const CELLS = [
+  { icon: Mail, label: 'Email', handle: SITE.email, href: `mailto:${SITE.email}`, me: false },
+  { icon: Linkedin, label: 'LinkedIn', handle: '/in/sangam21', href: SITE.profiles.linkedin, me: true },
+  { icon: Github, label: 'GitHub', handle: '@Random-Pikachu', href: SITE.profiles.github, me: true },
+] as const;
 
 /** Copies the address and says so, once, for a moment. */
 function CopyEmail() {
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (!copied) return;
-    const id = setTimeout(() => setCopied(false), 1400);
+    const id = setTimeout(() => setCopied(false), 1600);
     return () => clearTimeout(id);
   }, [copied]);
   return (
     <button
       type="button"
+      className="t-micro contact__copy"
       onClick={() => navigator.clipboard?.writeText(SITE.email).then(() => setCopied(true))}
-      className="t-label issue__copy"
       aria-label="Copy email address"
     >
-      <span aria-live="polite">{copied ? 'copied' : 'copy'}</span>
+      <span aria-live="polite">{copied ? 'Copied' : 'Copy'}</span>
     </button>
   );
 }
 
-/** The heatmap fetches only once it is near the viewport, never on page load. */
-function LazyHeatmap() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [near, setNear] = useState(false);
-  const onNear = useCallback(() => setNear(true), []);
-  useNear(ref, 300, onNear);
-  return <div ref={ref}>{near ? <ContributionHeatmap /> : null}</div>;
-}
-
 /**
- * Chart 04, Transmission. The line, the one filled control on the site with
- * the issue notes beside it and the seal of tonight's moon, the lighthouse
- * on the right whose beam rests on the button, three link cells that reveal
- * their handles, the year's activity as square cells, and the footer with
- * the atlas number.
+ * Contact: the line, the paragraph, the one call, and the quieter ways in,
+ * mail first. The photograph stands beside it on a wide screen and below it
+ * on a phone.
  */
 export function Contact() {
-  const year = new Date().getFullYear();
   return (
-    <div className="sheet issue">
-      <div className="grid-8">
-        <div className="issue__lead">
-          <p className="t-display-1 issue__line">
-            Let&apos;s build
-            <br />
-            something<span className="issue__stop">.</span>
-          </p>
-          <p className="t-body issue__para">
+    <section id="contact" className="section contact" aria-labelledby="contact-title" data-callbar-hide>
+      <div className="frame grid contact__grid">
+        <div className="contact__lead" data-reveal>
+          <p className="t-label section-head__label">Contact</p>
+          <h2 id="contact-title" className="t-hero contact__line">
+            Let&apos;s build something.
+          </h2>
+          <p className="t-lead contact__para">
             Open to remote work and interesting projects. The quickest way to reach me is a fifteen-minute call; the second
             quickest is mail.
           </p>
-          <dl className="issue__notes t-label">
-            <div>
-              <dt>Issued for</dt>
-              <dd>remote work</dd>
-            </div>
-            <div>
-              <dt>Qty</dt>
-              <dd>1</dd>
-            </div>
-            <div>
-              <dt>Light-time</dt>
-              <dd>15 min</dd>
-            </div>
-          </dl>
-          <p className="issue__cta">
-            <a href={SITE.calendar} target="_blank" rel="noopener" className="btn-accent arrow-link" data-anchor="call">
-              <CalendarDays className="h-4 w-4" aria-hidden="true" />
+          <p className="contact__cta" data-cta>
+            <a href={SITE.calendar} target="_blank" rel="noopener" className="btn btn--ember" data-umami-event="book-call-contact">
               Book a 15-minute call
-              <span className="arrow" aria-hidden="true">
-                ↗
-              </span>
+              <ArrowUpRight size={17} strokeWidth={1.75} aria-hidden="true" />
             </a>
           </p>
-          <Stamp className="issue__stamp" />
+          <address className="contact__cells">
+            {CELLS.map(({ icon: Icon, label, handle, href, me }) => (
+              <div key={label} className="contact__cell">
+                <a
+                  href={href}
+                  {...(href.startsWith('http') ? { target: '_blank', rel: me ? 'me noopener' : 'noopener' } : {})}
+                  className="contact__cell-link"
+                  data-umami-event={label === 'Email' ? 'email-contact' : undefined}
+                >
+                  <Icon size={16} strokeWidth={1.5} aria-hidden="true" />
+                  <span className="contact__cell-label">{label}</span>
+                  <span className="contact__handle">{handle}</span>
+                </a>
+                {label === 'Email' ? <CopyEmail /> : null}
+              </div>
+            ))}
+          </address>
         </div>
 
-        <figure className="issue__plate wash">
-          <Art name="lighthouse" sizes="(max-width: 47.99rem) 100vw, 28vw" alt="" />
-          <span className="issue__lamp" data-anchor="lamp" aria-hidden="true" style={{ left: `${LAMP[0] * 100}%`, top: `${LAMP[1] * 100}%` }} />
-          <figcaption className="sr-only">A lamp lit at night over dark foliage, one of my photographs, standing in for a lighthouse.</figcaption>
+        <figure className="contact__photo" data-reveal>
+          <div className="contact__frame">
+            <img
+              src={`/photos/${PHOTO.slug}-800.webp`}
+              srcSet={`/photos/${PHOTO.slug}-400.webp 400w, /photos/${PHOTO.slug}-800.webp 800w, /photos/${PHOTO.slug}-1600.webp 1600w`}
+              sizes="(max-width: 47.99rem) calc(100vw - 40px), 32vw"
+              width={PHOTO.width}
+              height={PHOTO.height}
+              alt={PHOTO.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <figcaption className="t-micro contact__caption">{PHOTO.caption}</figcaption>
         </figure>
       </div>
-
-      <address className="issue__cells sheet-card">
-        {LINKS.map(({ icon: Icon, label, handle, href, aria, me }) => (
-          <div key={label} className="issue__cell">
-            <div className="issue__cell-head">
-              <a href={href} target="_blank" rel={me ? 'me noopener' : 'noopener'} aria-label={aria} className="arrow-link mono issue__cell-link">
-                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                {label}
-                <span className="arrow" aria-hidden="true">
-                  ↗
-                </span>
-              </a>
-              {label === 'mail' ? <CopyEmail /> : null}
-            </div>
-            <p className="t-data issue__handle">{handle}</p>
-          </div>
-        ))}
-      </address>
-
-      <div className="issue__activity">
-        <h3 className="t-label issue__activity-title">Activity · a long exposure of {year} · 365 frames · f/1.9</h3>
-        <LazyHeatmap />
-      </div>
-
-      <footer className="issue__footer t-data">
-        <p>© {year} {SITE.handle.toLowerCase()}</p>
-        <p className="issue__footer-no">[ pokédex entry No. {DRAWING_NO} ]</p>
-        <a
-          href="#cover"
-          onClick={(e) => {
-            e.preventDefault();
-            goTo('cover');
-          }}
-          className="arrow-link"
-        >
-          back to the cover
-          <span className="arrow" aria-hidden="true">
-            ↑
-          </span>
-        </a>
-      </footer>
-    </div>
+    </section>
   );
 }

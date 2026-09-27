@@ -39,7 +39,7 @@ export function buildStructuredData(lastModified: string) {
       url: SITE.ogImage,
       width: 1200,
       height: 630,
-      caption: `${SITE.name} — ${SITE.jobTitle}`,
+      caption: `${SITE.name}, ${SITE.jobTitle}`,
     },
     description: SITE.bio,
     disambiguatingDescription: SITE.shortDescription,
@@ -79,7 +79,7 @@ export function buildStructuredData(lastModified: string) {
 
   const projectList = {
     '@type': 'ItemList',
-    '@id': `${ORIGIN}/#projects`,
+    '@id': `${ORIGIN}/#work`,
     name: `Projects by ${SITE.name}`,
     description: 'Open-source and personal software projects.',
     numberOfItems: PROJECTS.length,
@@ -89,7 +89,7 @@ export function buildStructuredData(lastModified: string) {
       position: i + 1,
       item: {
         '@type': 'SoftwareSourceCode',
-        '@id': `${ORIGIN}/#project-${p.slug}`,
+        '@id': `${ORIGIN}/#work-${p.slug}`,
         name: p.title,
         headline: p.title,
         description: p.description,
@@ -260,7 +260,7 @@ export function buildNotesStructuredData(notes: Note[], lastModified: string) {
   };
 }
 
-/** A detail sheet at /work/<slug>. */
+/** A case study at /work/<slug>. */
 export function buildWorkStructuredData(slug: string, meta: WorkMeta, lastModified: string) {
   const p = PROJECTS.find((x) => x.slug === slug);
   if (!p) return { '@context': 'https://schema.org', '@graph': [] };
@@ -273,12 +273,12 @@ export function buildWorkStructuredData(slug: string, meta: WorkMeta, lastModifi
         '@id': `${url}#detail`,
         url,
         mainEntityOfPage: url,
-        headline: `${p.title}: a detail sheet`,
+        headline: `${p.title}: a case study`,
         description: p.summary,
         dateModified: lastModified,
         inLanguage: SITE.lang,
         author: { '@id': PERSON_ID },
-        about: { '@id': `${ORIGIN}/#project-${p.slug}` },
+        about: { '@id': `${ORIGIN}/#work-${p.slug}` },
         ...(meta.role ? { abstract: meta.role } : {}),
         image: p.image ? `${ORIGIN}/work/${p.image}-1600.webp` : SITE.ogImage,
       },

@@ -1,49 +1,70 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   The site is an atlas: ink on paper by day, paper on the night by dark.
-   One ramp per mode: four ink steps, two line steps, one accent, and the
-   sky's own marks (the stars, the chart lines, the paper the cards lie on).
-   Every text token clears 4.5:1 against both grounds; scripts/check-design.mjs
-   measures it at build time and fails on a regression. Nothing on the site
-   has a radius; the reset at the bottom of this file enforces it.
+   The Night Shift: a lone house with one lit window in green mountains under
+   a grainy night sky. Dark only; there is no light ramp and no toggle.
+
+   The ground is night, a near-black green. Surfaces and mountain layers are
+   pine. Text is starlight, never pure white; secondary text is sage. Ember is
+   the lit window and the primary call, and nothing else: one accent per
+   viewport, because if everything glows, nothing does.
+
+   Every text token clears 4.5:1 on night and on both pine surfaces;
+   scripts/check-design.mjs measures it at build time and fails on a
+   regression. Nothing has a radius; the reset at the bottom enforces it.
    ────────────────────────────────────────────────────────────────────────── */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  --paper: #f3f0e8;
-  --paper-2: #ebe7dd;
-  --ink: #161616;
-  --ink-2: #4a4844;
-  --ink-3: #6b6963;
-  --ink-4: #8a877f; /* ticks, arrowheads, marks; never text */
-  --line: #d6d2c8;
-  --line-2: #c4bfb3;
-  --accent: #a04d00;
-  --accent-ink: #ffffff;
+  /* Ground and surfaces. */
+  --night: #0a0e0c;
+  --pine: #13201a;
+  --pine-2: #1a2a22;
 
-  /* The sky. By day the stars are ink on the chart; a card is the paper itself. */
-  --star: #161616;
-  --chart-line: #6b6963;
-  --paper-card: #f3f0e8;
-  --grain-blend: multiply;
-  --grain-alpha: 0.07;
-  --moon: #e9e3d3; /* the moon's own cream, both modes; never text */
-  --moon-ink: #161616;
+  /* Text. */
+  --starlight: #ece8df;
+  --sage: #a3b0a3;
+  --sage-2: #84938a;
 
-  --heatmap-1: #cfcbc2;
-  --heatmap-2: #a09c92;
-  --heatmap-3: #6b6963;
-  --heatmap-4: #161616;
+  /* Lines: hairlines and the stronger rule. Never text. */
+  --line: #1c2822;
+  --line-2: #2b3a32;
 
-  /* Type roles. Sizes in rem; the viewport term keeps display type on the
-     sheet at every width. */
-  --text-display-1: clamp(3.5rem, 7.6vw, 7rem);
-  --text-display-2: clamp(2.25rem, 4.2vw, 3.75rem);
-  --text-pull: clamp(1.5rem, 2.4vw, 2rem);
-  --text-h3: 1.5rem;
+  /* The one warm thing. --ember-ink is text set on an ember fill. */
+  --ember: #f0a543;
+  --ember-ink: #0a0e0c;
+
+  /* The art: sky, mist, ridges far to near, the house, the light in the
+     window. Used by src/night only; never text. */
+  --sky-top: #060908;
+  --sky-horizon: #22322a;
+  --mist: #9fb3a4;
+  --ridge-1: #17231d;
+  --ridge-2: #111c16;
+  --ridge-3: #0d1812;
+  --ridge-4: #0a0e0c; /* the nearest ridge is the page ground */
+  --house: #040605;
+  --window: #ffc36e;
+  --star: #ece8df;
+
+  /* Grain: a static noise tile over the whole site, and a heavier pass
+     over large art. */
+  --grain-alpha: 0.045;
+  --grain-art-alpha: 0.07;
+
+  /* Type. Fraunces for display, Space Grotesk for everything readable,
+     JetBrains Mono for annotations. Sizes in rem; clamps keep display type
+     large on a phone and in proportion on a wide screen. */
+  --font-display: "Fraunces Variable", "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Space Grotesk Variable", "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  --text-hero: clamp(2.625rem, 1.4rem + 5.6vw, 6.75rem);
+  --text-title: clamp(2rem, 1.3rem + 3vw, 3.75rem);
+  --text-h3: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   --text-body: 1.0625rem;
-  --text-small: 0.875rem;
-  --text-data: 0.78125rem;
-  --text-label: 0.6875rem;
+  --text-small: 0.9375rem;
+  --text-label: 0.75rem;
+  --text-micro: 0.6875rem;
 
   /* Space. */
   --sp-1: 4px;
@@ -57,65 +78,38 @@
   --sp-24: 96px;
   --sp-32: 128px;
 
-  /* Sheet and grid. */
+  /* Layout. The frame is the page's measure; the gutter is its edge. */
+  --frame-max: 1320px;
+  --gutter: clamp(20px, 4vw, 56px);
   --cols: 10;
-  --gutter: 24px;
-  --sheet-max: 1440px;
-  --rail: 48px;
-  --nav-h: 56px;
-  --margin-l: 88px;
-  --margin-r: 64px;
-  --row: 96px;
+  --col-gap: 24px;
+  --nav-h: 64px;
 
-  /* Motion: two curves, four durations. */
+  /* Motion: two curves, four durations. Transform and opacity only. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-inout: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-1: 120ms;
   --dur-2: 240ms;
   --dur-3: 480ms;
   --dur-4: 900ms;
-}
 
-:root.dark {
-  color-scheme: dark;
-
-  --paper: #0a0b10;
-  --paper-2: #12131a;
-  --ink: #ededed;
-  --ink-2: #b4b4b4;
-  --ink-3: #8c8c8c;
-  --ink-4: #6e6e6e;
-  --line: #232430;
-  --line-2: #343646;
-  --accent: #f7d02c;
-  --accent-ink: #0a0b10;
-
-  /* By night the stars are the day's paper; a card is a sheet lying on the void. */
-  --star: #f3f0e8;
-  --chart-line: #8c8c8c;
-  --paper-card: #101118;
-  --grain-blend: screen;
-  --grain-alpha: 0.05;
-  --moon: #e9e3d3;
-  --moon-ink: #2a2d3f;
-
-  --heatmap-1: #2a2a2a;
-  --heatmap-2: #4d4d4d;
-  --heatmap-3: #8a8a8a;
-  --heatmap-4: #ededed;
+  /* Stacking. The grain sits over the page and under dialogs. */
+  --z-nav: 50;
+  --z-menu: 60;
+  --z-skip: 70;
+  --z-grain: 90;
+  --z-dialog: 100;
 }
 
 @media (max-width: 47.99rem) {
   :root {
     --cols: 4;
-    --margin-l: 24px;
-    --margin-r: 24px;
-    --row: 64px;
+    --col-gap: 16px;
+    --nav-h: 56px;
   }
 }
 
-/* Sharp corners everywhere: components, images, inputs, focus rings, the
-   scrollbar. The site has no radius and no exception. */
+/* Sharp corners everywhere: components, images, inputs, focus rings. */
 *,
 *::before,
 *::after {

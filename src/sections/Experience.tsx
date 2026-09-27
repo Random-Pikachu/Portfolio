@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { EXPERIENCES } from '../data/site';
+import { DimensionLine } from '../sheet/DimensionLine';
 
 /** The axis starts with the first role; it ends at now, which is the right edge. */
 const T0 = Date.UTC(2025, 6, 1);
@@ -18,7 +19,7 @@ const endOf = (ym: string) => {
 const FEATURED_AT = Date.UTC(2026, 1, 7);
 
 /**
- * Sheet 02, Schedule. Each role is a dimension on a time axis: it starts,
+ * Chart 02, Transits. Each role is a dimension on a time axis: it starts,
  * it is measured in months, it ends with a tick. The current role has no
  * end tick; its line leaves the sheet through the right margin with an
  * arrowhead. Choosing a row shows that role below. The KDE feature is the
@@ -48,7 +49,7 @@ export function Experience() {
             {m.label}
           </span>
         ))}
-        <span className="schedule__now t-label">now</span>
+        <span className="schedule__now t-label" data-anchor="now">now</span>
       </div>
 
       <ol className="schedule__rows" aria-label="Roles">
@@ -67,6 +68,7 @@ export function Experience() {
               <div className="schedule__track">
                 <span
                   className={`dim schedule__bar ${open ? 'dim--open' : ''}`}
+                  data-anchor={`orbit-${i}`}
                   style={{ left: x(start), width: open ? `calc(100% - ${x(start)} + var(--margin-r))` : `calc(${x(finish!)} - ${x(start)})` }}
                   role="img"
                   aria-label={open ? `${e.company}, ${monthsLong} months so far, present` : `${e.company}, ${monthsLong} months`}
@@ -99,7 +101,11 @@ export function Experience() {
         })}
       </ol>
 
-      <div key={selected} className="schedule__detail grid-8">
+      <div className="schedule__orbit" aria-hidden="true">
+        <DimensionLine label={`1 orbit · ${Math.round((end - T0) / MONTH)} mo`} />
+      </div>
+
+      <div key={selected} className="schedule__detail grid-8 sheet-card">
         <div className="schedule__detail-head">
           <p className="t-label schedule__detail-period">
             <b>{current.company}</b> · {current.period}

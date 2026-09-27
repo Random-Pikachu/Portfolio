@@ -80,4 +80,42 @@ export const WORK: Record<string, WorkMeta> = {
 };
 
 /** Newest first. */
-export const NOTES: Note[] = [];
+export const NOTES: Note[] = [
+  {
+    "slug": "lorem-ipsum",
+    "title": "Lorem ipsum dolor sit amet",
+    "date": "2026-09-28",
+    "summary": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "draft": false,
+    "minutes": 2,
+    "html": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor\nincididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis\nnostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu\nfugiat nulla pariatur.</p>\n<h2 id=\"excepteur-sint-occaecat\">Excepteur sint occaecat</h2>\n<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia\ndeserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus\nerror sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque\nipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta\nsunt explicabo.</p>\n<ul>\n<li>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</li>\n<li>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</li>\n<li>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.</li>\n</ul>\n<h3 id=\"quis-autem-vel-eum\">Quis autem vel eum</h3>\n<p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil\nmolestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla\npariatur.</p>\n<blockquote>\n<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis\npraesentium voluptatum deleniti atque corrupti quos dolores.</p>\n</blockquote>\n<h2 id=\"nam-libero-tempore\">Nam libero tempore</h2>\n<p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo\nminus id quod maxime placeat facere possimus, omnis voluptas assumenda est.</p>\n<pre class=\"shiki ink\" style=\"color:var(--ink)\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:var(--ink);font-weight:bold\">export</span><span style=\"color:var(--ink);font-weight:bold\"> function</span><span style=\"color:var(--ink)\"> loremIpsum</span><span style=\"color:var(--ink-4)\">(</span><span style=\"color:var(--ink)\">words</span><span style=\"color:var(--ink-4);font-weight:bold\">:</span><span style=\"color:var(--ink)\"> number</span><span style=\"color:var(--ink-4)\">)</span><span style=\"color:var(--ink-4)\"> {</span></span>\n<span class=\"line\"><span style=\"color:var(--ink);font-weight:bold\">  const</span><span style=\"color:var(--ink)\"> pool</span><span style=\"color:var(--ink-4);font-weight:bold\"> =</span><span style=\"color:var(--ink-4)\"> [</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-2)\">lorem</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\">,</span><span style=\"color:var(--ink-4)\"> '</span><span style=\"color:var(--ink-2)\">ipsum</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\">,</span><span style=\"color:var(--ink-4)\"> '</span><span style=\"color:var(--ink-2)\">dolor</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\">,</span><span style=\"color:var(--ink-4)\"> '</span><span style=\"color:var(--ink-2)\">sit</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\">,</span><span style=\"color:var(--ink-4)\"> '</span><span style=\"color:var(--ink-2)\">amet</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\">,</span><span style=\"color:var(--ink-4)\"> '</span><span style=\"color:var(--ink-2)\">consectetur</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\">];</span></span>\n<span class=\"line\"><span style=\"color:var(--ink);font-weight:bold\">  return</span><span style=\"color:var(--ink)\"> Array</span><span style=\"color:var(--ink-4)\">.</span><span style=\"color:var(--ink)\">from</span><span style=\"color:var(--ink-4)\">({</span><span style=\"color:var(--ink)\"> length</span><span style=\"color:var(--ink-4)\">:</span><span style=\"color:var(--ink)\"> words</span><span style=\"color:var(--ink-4)\"> },</span><span style=\"color:var(--ink-4)\"> (</span><span style=\"color:var(--ink)\">_</span><span style=\"color:var(--ink-4)\">,</span><span style=\"color:var(--ink)\"> i</span><span style=\"color:var(--ink-4)\">)</span><span style=\"color:var(--ink);font-weight:bold\"> =></span><span style=\"color:var(--ink)\"> pool</span><span style=\"color:var(--ink-4)\">[</span><span style=\"color:var(--ink)\">i</span><span style=\"color:var(--ink-4);font-weight:bold\"> %</span><span style=\"color:var(--ink)\"> pool</span><span style=\"color:var(--ink-4)\">.</span><span style=\"color:var(--ink)\">length</span><span style=\"color:var(--ink-4)\">]).</span><span style=\"color:var(--ink)\">join</span><span style=\"color:var(--ink-4)\">(</span><span style=\"color:var(--ink-4)\">'</span><span style=\"color:var(--ink-4)\"> '</span><span style=\"color:var(--ink-4)\">);</span></span>\n<span class=\"line\"><span style=\"color:var(--ink-4)\">}</span></span></code></pre>\n<p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus\nsaepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>\n<h3 id=\"itaque-earum-rerum\">Itaque earum rerum</h3>\n<table>\n<thead>\n<tr>\n<th>Lorem</th>\n<th>Ipsum</th>\n<th>Dolor</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>sit</td>\n<td>amet</td>\n<td>1</td>\n</tr>\n<tr>\n<td>tempor</td>\n<td>incididunt</td>\n<td>2</td>\n</tr>\n<tr>\n<td>labore</td>\n<td>magna aliqua</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>\n<p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus\nmaiores alias consequatur aut perferendis doloribus asperiores repellat. See\n<a href=\"https://en.wikipedia.org/wiki/Lorem_ipsum\">lorem ipsum</a> for where this text\ncomes from.</p>\n<h2 id=\"et-harum-quidem\">Et harum quidem</h2>\n<p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,\ncum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod\nmaxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor\nrepellendus.</p>",
+    "headings": [
+      {
+        "depth": 2,
+        "id": "excepteur-sint-occaecat",
+        "text": "Excepteur sint occaecat"
+      },
+      {
+        "depth": 3,
+        "id": "quis-autem-vel-eum",
+        "text": "Quis autem vel eum"
+      },
+      {
+        "depth": 2,
+        "id": "nam-libero-tempore",
+        "text": "Nam libero tempore"
+      },
+      {
+        "depth": 3,
+        "id": "itaque-earum-rerum",
+        "text": "Itaque earum rerum"
+      },
+      {
+        "depth": 2,
+        "id": "et-harum-quidem",
+        "text": "Et harum quidem"
+      }
+    ],
+    "number": "001"
+  }
+];

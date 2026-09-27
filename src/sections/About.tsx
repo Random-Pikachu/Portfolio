@@ -16,7 +16,7 @@ const FIG = {
 };
 
 /**
- * Sheet 01, General. The pull line comes to ink word by word as the sheet
+ * Chart 01, Observer. The pull line comes to ink word by word as the sheet
  * scrolls in; under it the measure it was set to, the paragraph, and the two
  * small tables. Fig. 1 on the right with its impossible diameter.
  */
@@ -40,7 +40,7 @@ export function About() {
           </p>
 
           <div className="general__tables">
-            <div className="spec">
+            <div className="spec sheet-card">
               <h3 className="t-label spec__title">Currently</h3>
               <dl className="spec__rows">
                 {NOW.map((n) => (
@@ -59,7 +59,7 @@ export function About() {
                 ))}
               </dl>
             </div>
-            <div className="spec">
+            <div className="spec sheet-card">
               <h3 className="t-label spec__title">Instruments</h3>
               <dl className="spec__rows">
                 {TOOLBOX.map((g) => (
@@ -86,6 +86,7 @@ export function About() {
               decoding="async"
             />
             <DimensionLine label="Ø 1 night" vertical className="fig__dim" />
+            <span className="fig__opening" data-anchor="fig-moon" aria-hidden="true" />
           </div>
           <figcaption className="t-label fig__cap">{FIG.caption}</figcaption>
         </figure>

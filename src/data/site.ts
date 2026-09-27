@@ -24,7 +24,7 @@ export const SITE = {
   ogImage: `${ORIGIN}/og.png`,
   locale: 'en_US',
   lang: 'en',
-  themeColorDark: '#0a0a0a',
+  themeColorDark: '#0a0b10',
   themeColorLight: '#f3f0e8',
   calendar: 'https://www.cal.com/random-pikachu/15min',
   resume: '/resume.pdf',
@@ -42,19 +42,27 @@ export const SITE = {
 
 /**
  * Ordered list of in-page sections. Drives nav, anchors and the sitemap. Each
- * section is a sheet of the drawing set; `block` is what its title block reads.
+ * section is a chart of the atlas; `block` is what its title block reads and
+ * `caption` sits at the right of its head row.
  */
 export const SECTIONS = [
-  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '01', block: 'General' },
-  { id: 'experience', label: 'experience', heading: 'Work experience', num: '02', block: 'Schedule' },
-  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '03', block: 'Details' },
-  { id: 'contact', label: 'contact', heading: 'Contact', num: '04', block: 'Issue' },
+  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '01', block: 'Observer', caption: 'Station ABV-IIITM · 1 instrument' },
+  { id: 'experience', label: 'experience', heading: 'Work experience', num: '02', block: 'Transits', caption: '3 transits · Jul 2025 → now' },
+  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '03', block: 'Constellations', caption: '6 plates · 2 not charted' },
+  { id: 'contact', label: 'contact', heading: 'Contact', num: '04', block: 'Transmission', caption: 'Signal · light-time 15 min' },
 ] as const;
 
-/** Sheet 00, the cover. Not a nav section; it is the top of the page. */
-export const COVER = { id: 'cover', label: 'cover', heading: 'Sangam Pratap Singh', num: '00', block: 'Cover' } as const;
+/** Chart 00, the frontispiece. Not a nav section; it is the top of the page. */
+export const COVER = {
+  id: 'cover',
+  label: 'cover',
+  heading: 'Sangam Pratap Singh',
+  num: '00',
+  block: 'Frontispiece',
+  caption: 'Gwalior · 26°13′ N 78°10′ E · Epoch J2026.7',
+} as const;
 
-/** Every sheet of the home page, cover first. */
+/** Every chart of the home page, frontispiece first. */
 export const SHEETS = [COVER, ...SECTIONS] as const;
 
 /** The pages outside the home set, as the rail and the index list them. */
@@ -73,7 +81,7 @@ export const PLACE = {
   zoneLabel: 'IST',
 } as const;
 
-/** The drawing number on every sheet. */
+/** The atlas number on every chart. Also a pokédex entry. */
 export const DRAWING_NO = '025';
 
 /** The toolbox, grouped so a reader can scan it in three glances. */
@@ -199,7 +207,7 @@ export interface Project {
   youtube: string;
   /** Basename under public/work, or null for a project with no screenshot yet. */
   image: string | null;
-  /** Listed after the strip as "not issued" rather than given a plate. */
+  /** Listed after the strip as "not charted" rather than given a plate. */
   archived?: true;
 }
 
@@ -312,9 +320,9 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-/** The six plates of the Details sheet, in order. */
+/** The six plates of the Constellations chart, in order. */
 export const PLATES = PROJECTS.filter((p) => !p.archived);
-/** Projects listed after the strip as not issued. */
+/** Projects listed after the strip as not charted. */
 export const ARCHIVE = PROJECTS.filter((p) => p.archived);
 
 /** Everything the Person entity claims expertise in, deduped across sections. */

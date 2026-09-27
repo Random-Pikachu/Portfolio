@@ -16,7 +16,7 @@ export function Detail({ slug }: { slug: string }) {
     return (
       <main id="main" className="min-h-screen">
         <div className="sheet detail">
-          <p className="t-body">This detail sheet is not issued.</p>
+          <p className="t-body">This plate is not charted.</p>
         </div>
       </main>
     );

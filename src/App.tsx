@@ -2,6 +2,7 @@ import Navigation from './components/Navigation';
 import SinglePage from './pages/SinglePage';
 import SmoothScroll from './components/SmoothScroll';
 import { GridLayer } from './sheet/GridLayer';
+import { SkyLayer } from './sky/SkyLayer';
 import { Rail } from './sheet/Rail';
 import { TitleBlock } from './sheet/TitleBlock';
 import { TileIndex } from './sheet/TileIndex';
@@ -14,6 +15,7 @@ import { TileIndex } from './sheet/TileIndex';
 export default function App() {
   return (
     <SmoothScroll>
+      <SkyLayer />
       <GridLayer />
       <a
         href="#about"

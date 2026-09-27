@@ -13,10 +13,10 @@
   <link rel="preconnect" href="https://devtrackr-backend-84jw.onrender.com" crossorigin />
 
 
-  <!-- The cover wash is the largest thing above the fold; fetch it before the
-       stylesheet asks for it. One preload per layout. -->
-  <link rel="preload" as="image" href="/wash/cover-phone.webp" media="(max-width: 47.99rem)" />
-  <link rel="preload" as="image" imagesrcset="/wash/cover-960.webp 960w, /wash/cover-1600.webp 1600w" imagesizes="46vw" media="(min-width: 48rem)" />
+  <!-- The frontispiece plate is the largest thing above the fold; fetch it
+       before the stylesheet asks for it. One preload per layout. -->
+  <link rel="preload" as="image" href="/art/00-frontispiece-phone.webp" media="(max-width: 47.99rem)" />
+  <link rel="preload" as="image" imagesrcset="/art/00-frontispiece-960.webp 960w, /art/00-frontispiece-1600.webp 1600w" imagesizes="46vw" media="(min-width: 48rem)" />
 
   <!-- Icons -->
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -27,7 +27,7 @@
   <link rel="manifest" href="/site.webmanifest" />
 
   <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#0a0b10" media="(prefers-color-scheme: dark)" />
   <meta name="color-scheme" content="dark light" />
 
   <!-- Primary SEO -->
@@ -106,11 +106,12 @@
     } catch (_) { }
   </script>
 
-  <!-- The prerendered markup carries Framer Motion's initial opacity:0. Without
-       JS those elements would never animate in, so force them visible. -->
+  <!-- Without JS nothing animates in: the pull line's words are inked, the
+       scene never mounts and the chart stands alone. -->
   <noscript>
     <style>
-      .reveal {
+      .reveal,
+      .words__w {
         opacity: 1 !important;
         transform: none !important;
       }

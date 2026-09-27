@@ -3,15 +3,15 @@ import { registerSheet } from './scroll';
 import { SheetRule } from './SheetRule';
 
 /**
- * One sheet of the set: a section one viewport tall (at least), a rule with
- * crosshairs at the top, a head row that names the sheet, and the content.
+ * One chart of the atlas: a section one viewport tall (at least), a rule with
+ * crosshairs at the top, a head row that names the chart, and the content.
  * The head's text is the section heading, focusable so anchor navigation can
  * land keyboard and screen-reader users on it.
  */
 export function Sheet({
   id,
   num,
-  kind = 'Sheet',
+  kind = 'Chart',
   headless = false,
   block,
   heading,
@@ -21,7 +21,7 @@ export function Sheet({
 }: {
   id: string;
   num: string;
-  /** What the number counts: a sheet of the set, a note, a detail. */
+  /** What the number counts: a chart of the atlas, a note, a plate. */
   kind?: string;
   /** The head is the section's h2, except on the cover, whose heading is the h1 in its content. */
   headless?: boolean;

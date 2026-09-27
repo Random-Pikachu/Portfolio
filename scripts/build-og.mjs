@@ -1,7 +1,7 @@
 /**
  * Social cards, 1200×630, one per page: the sheet's title block over the
  * paper with the ten faint columns, the page's title in Zodiak, and on the
- * cover the wash. Rendered with the local Chrome through the DevTools
+ * cover the frontispiece plate. Rendered with the local Chrome through the DevTools
  * protocol, so this runs on a machine that has Chrome, not on Vercel; the
  * PNGs are committed like the banners.
  *
@@ -60,11 +60,11 @@ const titleOf = (slug) => (site.match(new RegExp(`slug: '${slug}',\\s*title: '([
 const summaryOf = (slug) => (site.match(new RegExp(`slug: '${slug}',\\s*title: '[^']+',\\s*summary: '([^']+)'`)) || [])[1] ?? '';
 
 const cards = [
-  { out: join(ROOT, 'public', 'og.png'), sheet: 'Sheet 00/04', block: 'Cover', title: NAME, sub: 'I build full-stack and systems software. Legal tech at Retsguide by day, KDE Plasma patches by night.', wash: true },
+  { out: join(ROOT, 'public', 'og.png'), sheet: 'Chart 00/04', block: 'Frontispiece', title: NAME, sub: 'I build full-stack and systems software. Legal tech at Retsguide by day, KDE Plasma patches by night.', wash: true },
   { out: join(OUT, 'survey.png'), sheet: 'Survey', block: 'Photography', title: 'Photography', sub: 'Twenty-seven frames from a Nothing Phone (1), mostly while walking somewhere else.' },
   { out: join(OUT, 'notes.png'), sheet: 'Notes', block: `${notes.length} issued`, title: 'Notes', sub: 'Writing, in Markdown, with code.' },
   ...notes.map((n) => ({ out: join(OUT, `note-${n.slug}.png`), sheet: 'Note', block: 'Notes', title: String(n.data.title ?? n.slug), sub: String(n.data.summary ?? '') })),
-  ...work.map((w) => ({ out: join(OUT, `work-${w.slug}.png`), sheet: 'Detail', block: 'Details', title: titleOf(w.slug), sub: summaryOf(w.slug) })),
+  ...work.map((w) => ({ out: join(OUT, `work-${w.slug}.png`), sheet: 'Plate', block: 'Constellations', title: titleOf(w.slug), sub: summaryOf(w.slug) })),
 ];
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -74,7 +74,7 @@ const fonts = {
   sans: font(join(ROOT, 'node_modules', '@fontsource-variable', 'ibm-plex-sans', 'files', 'ibm-plex-sans-latin-wght-normal.woff2')),
   mono: font(join(ROOT, 'node_modules', '@fontsource', 'ibm-plex-mono', 'files', 'ibm-plex-mono-latin-400-normal.woff2')),
 };
-const wash = font(join(ROOT, 'public', 'wash', 'cover-960.webp'));
+const wash = font(join(ROOT, 'public', 'art', '00-frontispiece-960.webp'));
 
 const html = (c) => `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Zodiak;src:url("${fonts.zodiak}") format("woff2")}
@@ -101,7 +101,7 @@ html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#f3f0e8;
 <div class="title">${esc(c.title)}</div>
 <div class="sub">${esc(c.sub)}</div>
 ${c.wash ? `<img class="wash" src="${wash}">` : ''}
-<div class="tb"><div><b>${esc(NAME)}</b><span>Drawing No. ${NO}</span></div><div><b>${esc(c.sheet)}</b><span>${esc(c.block)}</span></div><div><b>Rev <svg width="13" height="13" viewBox="-11 -11 22 22"><circle r="10" fill="none" stroke="#161616" stroke-width="1.2"/><path d="${moonPath}" fill="#161616"/></svg></b><span>${rev}</span></div><div class="foot"><span>${esc(PLACE)}</span><span>Scale ${c.wash ? 'NTS' : '1:1'}</span></div></div>
+<div class="tb"><div><b>${esc(NAME)}</b><span>Atlas No. ${NO}</span></div><div><b>${esc(c.sheet)}</b><span>${esc(c.block)}</span></div><div><b>Rev <svg width="13" height="13" viewBox="-11 -11 22 22"><circle r="10" fill="none" stroke="#161616" stroke-width="1.2"/><path d="${moonPath}" fill="#161616"/></svg></b><span>${rev}</span></div><div class="foot"><span>${esc(PLACE)}</span><span>Scale ${c.wash ? 'NTS' : '1:1'}</span></div></div>
 </body></html>`;
 
 // ── Chrome ─────────────────────────────────────────────────────────────────

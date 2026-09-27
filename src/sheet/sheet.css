@@ -268,7 +268,7 @@
     display: grid;
     grid-template-columns: auto auto auto;
     border: 1px solid var(--line-2);
-    background: var(--paper);
+    background: var(--paper-card);
     font-family: var(--font-mono);
     font-size: 10.5px;
     line-height: 1.5;

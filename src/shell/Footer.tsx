@@ -17,7 +17,7 @@ const LINKS = [
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="footer">
+    <footer className="footer" data-callbar-hide>
       <div className="frame footer__inner">
         <p className="footer__sign">
           <WindowMark size={40} />

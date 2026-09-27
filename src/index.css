@@ -8,6 +8,7 @@
 @import "tailwindcss";
 @import "./night/night.css";
 @import "./shell/shell.css";
+@import "./sections/sections.css";
 @import "./pages/pages.css";
 @import "./pages/prose.css";
 
@@ -193,6 +194,69 @@
   .link:hover,
   .link:focus-visible {
     text-decoration-color: currentColor;
+  }
+
+  /* ─── Buttons ────────────────────────────────────────────────────────────
+     Two kinds. Ember is the call and nothing else; quiet is every other
+     action. The arrow nudges on hover where hover exists; the tap needs no
+     hint. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 50px;
+    padding: 0 22px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .btn svg {
+    flex: none;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .btn--ember {
+    color: var(--ember-ink);
+    background: var(--ember);
+    border-color: var(--ember);
+  }
+
+  .btn--ember:hover,
+  .btn--ember:focus-visible {
+    opacity: 0.9;
+  }
+
+  .btn--quiet {
+    color: var(--starlight);
+    background: rgb(10 14 12 / 0.35);
+    border-color: var(--line-2);
+  }
+
+  .btn--quiet:hover,
+  .btn--quiet:focus-visible {
+    border-color: var(--starlight);
+  }
+
+  @media (hover: hover) {
+    .btn--ember:hover svg {
+      transform: translate(2px, -2px);
+    }
+
+    .btn--quiet:hover svg {
+      transform: translateY(2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn svg {
+      transition: none;
+    }
   }
 }
 

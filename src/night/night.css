@@ -65,8 +65,8 @@
   .ns-mullion { fill: none; stroke: var(--house); stroke-width: 1.4; }
   .ns-star { fill: var(--star); }
 
-  /* Phones get half the stars. */
-  @media (max-width: 47.99rem) {
+  /* Phones and upright tablets get at most half the stars, none behind the type. */
+  @media (max-width: 47.99rem), (orientation: portrait) and (max-width: 63.99rem) {
     .ns-star--wide { display: none; }
   }
 

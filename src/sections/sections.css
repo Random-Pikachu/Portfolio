@@ -1,0 +1,454 @@
+/* ─── The home page: hero, work, about, contact, the call bar ─────────────
+   "Narrow" below means a phone, or a tablet held upright: the hero's words
+   stack at the top there, so the house stays in view beneath them.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .section {
+    padding-block: clamp(96px, 12vw, 168px);
+  }
+
+  .section-head {
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  .section-head__label {
+    margin: 0;
+    color: var(--sage-2);
+  }
+
+  .section-head__title {
+    max-width: 16ch;
+    margin: var(--sp-4) 0 0;
+    color: var(--starlight);
+  }
+
+  /* ─── Hero ─────────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 620px;
+    overflow: hidden;
+  }
+
+  .hero__art {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* A scrim under the words, never over the house. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgb(6 9 8 / 0.6) 0%, rgb(6 9 8 / 0.3) 38%, transparent 60%);
+  }
+
+  .hero__frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    padding-top: calc(var(--nav-h) + var(--sp-6));
+    padding-bottom: clamp(72px, 13vh, 150px);
+  }
+
+  .hero__copy {
+    max-width: 44rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 var(--sp-6);
+    color: var(--sage);
+  }
+
+  .hero__title {
+    max-width: 11ch;
+    margin: 0;
+    color: var(--starlight);
+    text-wrap: balance;
+  }
+
+  .hero__proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin: var(--sp-8) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero__proof li {
+    padding: 7px 11px;
+    color: var(--sage);
+    background: rgb(10 14 12 / 0.45);
+    border: 1px solid var(--line-2);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-8);
+  }
+
+  /* The scroll cue: a small mono line, not a bouncing arrow. */
+  .hero__cue {
+    position: absolute;
+    bottom: 32px;
+    left: var(--gutter);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    color: var(--sage-2);
+  }
+
+  .hero__cue::before {
+    content: "";
+    width: 32px;
+    height: 1px;
+    background: var(--line-2);
+  }
+
+  @media (max-width: 47.99rem), (orientation: portrait) and (max-width: 63.99rem) {
+    .hero {
+      min-height: 700px;
+    }
+
+    .hero__scrim {
+      background: linear-gradient(180deg, rgb(6 9 8 / 0.7) 0%, rgb(6 9 8 / 0.45) 50%, transparent 72%);
+    }
+
+    .hero__frame {
+      justify-content: flex-start;
+      padding-top: calc(var(--nav-h) + clamp(28px, 6vh, 64px));
+      padding-bottom: 0;
+    }
+
+    .hero__cue {
+      display: none;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero__eyebrow {
+      margin-bottom: var(--sp-4);
+    }
+
+    .hero__proof {
+      margin-top: var(--sp-6);
+    }
+
+    .hero__actions {
+      flex-direction: column;
+      margin-top: var(--sp-6);
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+    }
+  }
+
+  /* ─── Work (the index, until the covers arrive) ────────────────────────── */
+  .work-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .work-row {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    gap: var(--sp-2) var(--sp-6);
+    align-items: baseline;
+    padding-block: var(--sp-8);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .work-row__no {
+    color: var(--sage-2);
+  }
+
+  .work-row__title {
+    margin: 0;
+    color: var(--starlight);
+  }
+
+  .work-row__summary {
+    max-width: 56ch;
+    margin: var(--sp-2) 0 0;
+    color: var(--sage);
+  }
+
+  .work-row__stack {
+    margin: var(--sp-3) 0 0;
+    color: var(--sage-2);
+  }
+
+  .work-row__links {
+    display: flex;
+    gap: var(--sp-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .work-row__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 44px;
+    font-size: var(--text-small);
+    color: var(--sage);
+  }
+
+  .work-row__link:hover,
+  .work-row__link:focus-visible {
+    color: var(--starlight);
+  }
+
+  @media (max-width: 47.99rem) {
+    .work-row {
+      grid-template-columns: 36px minmax(0, 1fr);
+      padding-block: var(--sp-6);
+    }
+
+    .work-row__links {
+      grid-column: 2;
+    }
+  }
+
+  /* ─── About ────────────────────────────────────────────────────────────── */
+  .about__grid {
+    row-gap: var(--sp-6);
+  }
+
+  .about__label {
+    grid-column: 1 / span 2;
+    margin: 0;
+    padding-top: 0.5em;
+    color: var(--sage-2);
+  }
+
+  .about__text {
+    grid-column: 3 / span 6;
+  }
+
+  .about__text p {
+    max-width: 62ch;
+    margin: 0 0 var(--sp-6);
+    color: var(--sage);
+  }
+
+  .about__text .t-lead {
+    color: var(--starlight);
+  }
+
+  .about__split {
+    grid-column: 3 / -1;
+    margin: var(--sp-8) 0 0;
+    color: var(--starlight);
+  }
+
+  @media (max-width: 47.99rem) {
+    .about__label,
+    .about__text,
+    .about__split {
+      grid-column: 1 / -1;
+    }
+
+    .about__split {
+      margin-top: var(--sp-4);
+    }
+  }
+
+  /* ─── Contact ──────────────────────────────────────────────────────────── */
+  .contact__grid {
+    row-gap: var(--sp-12);
+    align-items: end;
+  }
+
+  .contact__lead {
+    grid-column: 1 / span 6;
+  }
+
+  .contact__line {
+    max-width: 10ch;
+    margin: var(--sp-4) 0 0;
+    color: var(--starlight);
+  }
+
+  .contact__para {
+    max-width: 42ch;
+    margin: var(--sp-6) 0 0;
+    color: var(--sage);
+  }
+
+  .contact__cta {
+    margin: var(--sp-8) 0 0;
+  }
+
+  /* The quieter ways in: one ruled row each, mail first. */
+  .contact__cells {
+    max-width: 36rem;
+    margin: var(--sp-12) 0 0;
+    font-style: normal;
+    border-top: 1px solid var(--line);
+  }
+
+  .contact__cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .contact__cell-link {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    min-width: 0;
+    min-height: 56px;
+    padding-block: 10px;
+    color: var(--starlight);
+  }
+
+  .contact__cell-label {
+    font-size: var(--text-small);
+    font-weight: 500;
+  }
+
+  .contact__handle {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--sage);
+    overflow-wrap: anywhere;
+  }
+
+  .contact__cell-link:hover .contact__handle,
+  .contact__cell-link:focus-visible .contact__handle {
+    color: var(--starlight);
+  }
+
+  .contact__copy {
+    min-height: 40px;
+    padding: 0 12px;
+    color: var(--sage);
+    background: none;
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+  }
+
+  .contact__copy:hover,
+  .contact__copy:focus-visible {
+    color: var(--starlight);
+    border-color: var(--starlight);
+  }
+
+  .contact__photo {
+    grid-column: 8 / -1;
+    margin: 0;
+  }
+
+  .contact__frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1600 / 2001;
+    background: var(--pine);
+  }
+
+  .contact__frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.94);
+  }
+
+  /* The grade: the edges fall into the night, nothing more. */
+  .contact__frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 90% at 40% 35%, transparent 55%, rgb(10 14 12 / 0.7) 100%);
+  }
+
+  .contact__caption {
+    margin-top: var(--sp-3);
+    color: var(--sage-2);
+  }
+
+  @media (max-width: 63.99rem) {
+    .contact__lead,
+    .contact__photo {
+      grid-column: 1 / -1;
+    }
+
+    .contact__photo {
+      max-width: 26rem;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .contact__cta .btn {
+      width: 100%;
+    }
+
+    .contact__handle {
+      flex-basis: 100%;
+      margin-left: 28px;
+    }
+  }
+
+  /* ─── The call bar, phones only ────────────────────────────────────────── */
+  .callbar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-nav);
+    display: flex;
+    gap: var(--sp-2);
+    padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+    background: var(--night);
+    border-top: 1px solid var(--line);
+    transform: translateY(110%);
+    transition: transform var(--dur-3) var(--ease-out);
+  }
+
+  .callbar[data-show] {
+    transform: none;
+  }
+
+  .callbar__call {
+    flex: 1;
+  }
+
+  .callbar__mail {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 50px;
+    color: var(--starlight);
+    border: 1px solid var(--line-2);
+  }
+
+  @media (min-width: 48rem) {
+    .callbar {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .callbar {
+      transition: none;
+    }
+  }
+}

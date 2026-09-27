@@ -21,10 +21,12 @@ const [P1, P2, P3, P4] = [R1, R2, R3, R4].map(ridge);
 
 /**
  * Stars stay out of the left half of the sky, where the hero's type sits on a
- * wide screen, and above the ridges. The top of the sky, under the bar, is
- * faded out in CSS, so no star sits behind the nav either.
+ * wide screen. On a phone or an upright tablet the crop is the right-hand part
+ * and the type sits in its upper two thirds, so stars there are wide-screen
+ * only. The top of the sky, under the bar, is faded out in CSS, so no star
+ * sits behind the nav either.
  */
-const STARS = stars(7, 64, { x0: 40, y0: 150, x1: 820, y1: 640 });
+const STARS = stars(7, 64, { x0: 40, y0: 150, x1: 820, y1: 640 }, { x0: 800, y0: 100, x1: 1600, y1: 640 });
 
 /** The house: walls and a gable roof with a chimney, as one silhouette. */
 const { x: hx, y: hy } = HOUSE;

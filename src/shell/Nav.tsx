@@ -16,8 +16,10 @@ const ITEMS = NAV.filter((n) => !('needsNotes' in n) || NOTE_COUNT > 0);
  * mark, the call and the toggle: room for all three at 360px.
  *
  * The call is rationed like every ember: on the home page it stays a quiet
- * outline while the hero (and its own lit window) is on screen, and lights
- * once the hero has gone. On every other page it is lit from the start.
+ * outline while the page's own call (the hero's or contact's, marked
+ * `data-cta`) is on screen, and lights in between. On a phone it steps aside
+ * for the call bar at the foot of the screen instead. On every other page it
+ * is lit from the start.
  *
  * `current` is the route this page is, from its app, so the prerendered
  * HTML and the hydrated tree agree on aria-current.
@@ -41,12 +43,22 @@ export function Nav({ kind, current }: { kind: PageKind; current?: string }) {
 
   useEffect(() => {
     if (!home) return;
-    // Without a hero to watch the call stays an outline: still there, still a link.
-    const hero = document.querySelector('[data-hero]');
-    if (!hero || typeof IntersectionObserver === 'undefined') return;
+    // Without a page call to watch the call stays an outline: still there, still a link.
+    const ctas = document.querySelectorAll('[data-cta]');
+    if (!ctas.length || typeof IntersectionObserver === 'undefined') return;
     const nav = headerRef.current?.offsetHeight ?? 64;
-    const io = new IntersectionObserver(([e]) => setLit(!e.isIntersecting), { rootMargin: `-${nav}px 0px 0px 0px` });
-    io.observe(hero);
+    const onScreen = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) onScreen.add(e.target);
+          else onScreen.delete(e.target);
+        }
+        setLit(onScreen.size === 0);
+      },
+      { rootMargin: `-${nav}px 0px 0px 0px` }
+    );
+    ctas.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [home]);
 
@@ -119,6 +131,7 @@ export function Nav({ kind, current }: { kind: PageKind; current?: string }) {
     <header
       ref={headerRef}
       className="nav"
+      data-home={home ? '' : undefined}
       data-scrolled={scrolled || open ? '' : undefined}
       data-open={open ? '' : undefined}
       onKeyDown={onKeyDown}

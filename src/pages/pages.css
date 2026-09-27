@@ -1,18 +1,3 @@
-/* ─── The home page's hero stage ───────────────────────────────────────── */
-@layer components {
-  .stage {
-    position: relative;
-    height: 100vh;
-    height: 100svh;
-    min-height: 560px;
-  }
-
-  .stage__art {
-    position: absolute;
-    inset: 0;
-  }
-}
-
 /* ─── Pages outside the home page: photos, notes, a note, a case study ─── */
 @layer components {
   .notes,

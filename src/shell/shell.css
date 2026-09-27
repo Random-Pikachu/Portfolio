@@ -44,7 +44,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: rgb(10 14 12 / 0.94);
+    background: var(--night);
     border-bottom: 1px solid var(--line);
     opacity: 0;
     transition: opacity var(--dur-2) var(--ease-out);
@@ -156,6 +156,13 @@
   .nav__cta[data-lit]:hover,
   .nav__cta[data-lit]:focus-visible {
     opacity: 0.9;
+  }
+
+  /* On a phone's home page, once lit, the call belongs to the bar at the foot. */
+  @media (max-width: 47.99rem) {
+    .nav[data-home] .nav__cta[data-lit] {
+      display: none;
+    }
   }
 
   .nav__toggle {

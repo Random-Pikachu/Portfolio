@@ -131,16 +131,27 @@ export interface Star {
   y: number;
   r: number;
   a: number;
-  /** Shown on wide screens only; phones get half the stars. */
+  /** Shown on wide screens only: phones get at most half the stars, and none behind their type. */
   wide: boolean;
 }
+
+export interface Box {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+const inside = (b: Box | undefined, x: number, y: number) => !!b && x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1;
 
 /**
  * A sparse field: low count, small, dim, thickest near the top of the sky
  * and thinning to nothing at the horizon. Nothing inside `clear`, the box
- * where the type sits, so no star ever lands behind a letter.
+ * where the type sits on a wide screen; stars inside `phoneClear`, where the
+ * type sits on a phone's crop, are kept for wide screens only. So no star
+ * ever lands behind a letter.
  */
-export function stars(seed: number, count: number, clear?: { x0: number; y0: number; x1: number; y1: number }) {
+export function stars(seed: number, count: number, clear?: Box, phoneClear?: Box) {
   const rand = rng(seed);
   const out: Star[] = [];
   let tries = 0;
@@ -150,8 +161,9 @@ export function stars(seed: number, count: number, clear?: { x0: number; y0: num
     const bright = rand() < 0.06;
     const r = bright ? 1.3 + rand() * 0.4 : 0.5 + rand() * 0.6;
     const a = bright ? 0.55 + rand() * 0.2 : 0.14 + rand() * 0.3;
-    if (clear && x > clear.x0 && x < clear.x1 && y > clear.y0 && y < clear.y1) continue;
-    out.push({ x: r1(x), y: r1(y), r: r1(r), a: Math.round(a * 100) / 100, wide: out.length % 2 === 1 });
+    if (inside(clear, x, y)) continue;
+    const wide = out.length % 2 === 1 || inside(phoneClear, x, y);
+    out.push({ x: r1(x), y: r1(y), r: r1(r), a: Math.round(a * 100) / 100, wide });
   }
   return out;
 }

@@ -11,7 +11,7 @@ Live: https://random-pikachu.dev
 
 | Page | URL | What it is |
 | --- | --- | --- |
-| Home | `/` | The hero over the Nightscape, then work, logbook, about and contact at `#work`, `#logbook`, `#about`, `#contact` |
+| Home | `/` | The hero over the Nightscape, then the work, the logbook, about and contact at `#work`, `#logbook`, `#about`, `#contact`; on phones a call bar after the hero |
 | Case study | `/work/<slug>` | Built when `content/work/<slug>.md` is published |
 | Photos | `/photography` | 27 frames from a Nothing Phone (1), with EXIF captions and a lightbox |
 | Blog | `/blog`, `/blog/<slug>` | Markdown notes. The route is built only once a real note exists |
@@ -95,6 +95,8 @@ src/tokens.css      the palette, the art's colours, type, space, motion,
 src/index.css       fonts, tokens into Tailwind, grain, type roles, the frame
 src/night/          the Nightscape, the terrain, the mark
 src/shell/          Shell, Nav, Footer, PageHead, SmoothScroll, scroll.ts
+src/sections/       Hero, Work (an index until the covers), About, Contact,
+                    CallBar (the phone call bar)
 src/pages/          Home, Photography, Notes, Note, Detail, Outline
 src/data/site.ts    the single source of truth for identity, nav, roles,
                     projects
@@ -106,8 +108,8 @@ src/data/content.generated.ts   written by the content build; committed
 - Dark only. `night` is the ground, `pine` the surfaces, `starlight` the text
   (never pure white), `sage` the secondary text.
 - `ember` is rationed: the lit window, the primary call, one accent per
-  viewport. The nav's call stays an outline while the hero is on screen and
-  lights once it has gone.
+  viewport. The nav's call stays an outline while the hero's or contact's call
+  is on screen and lights in between; on phones the call bar takes over.
 - Three families, one job each: Fraunces for display, Space Grotesk for
   everything readable, JetBrains Mono for labels, dates and captions. Never
   display for body, never mono for a sentence.

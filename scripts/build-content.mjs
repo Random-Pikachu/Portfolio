@@ -1,9 +1,9 @@
 /**
  * Reads content/ and writes src/data/content.generated.ts.
  *
- *   content/work/<slug>.md   front matter → what a plate shows (role, hardest
- *                            problem, outcomes) and whether its detail sheet
- *                            is published; body → the detail sheet's HTML.
+ *   content/work/<slug>.md   front matter → what the home page shows (role, hardest
+ *                            problem, outcomes) and whether its case study
+ *                            is published; body → the case study's HTML.
  *   content/blog/<slug>.md   front matter → title, date, summary, draft;
  *                            body → the note's HTML.
  *
@@ -147,12 +147,12 @@ export interface Heading {
 }
 
 export interface WorkMeta {
-  /** True once the detail sheet at /work/<slug> is written and built. */
+  /** True once the case study at /work/<slug> is written and built. */
   published: boolean;
   role: string;
   hardest: string;
   outcomes: string[];
-  /** The detail sheet's body, compiled from Markdown. Empty until published. */
+  /** The case study's body, compiled from Markdown. Empty until published. */
   html: string;
   headings: Heading[];
 }
@@ -173,6 +173,10 @@ export const WORK: Record<string, WorkMeta> = ${JSON.stringify(work, null, 2)};
 
 /** Newest first. */
 export const NOTES: Note[] = ${JSON.stringify(notes, null, 2)};
+
+/** How many notes are built. A literal, so the nav can ask whether the blog
+ *  exists without pulling every note into its bundle. */
+export const NOTE_COUNT: number = ${notes.length};
 `;
 writeFileSync(OUT, out);
 console.log(`✓ content: ${Object.keys(work).length} work entries, ${notes.length} notes${DRAFTS ? ' (drafts included)' : ''} → src/data/content.generated.ts`);

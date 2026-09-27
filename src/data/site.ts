@@ -13,10 +13,9 @@ export const SITE = {
   alternateNames: ['Random-Pikachu', 'random pikachu', 'random-pikachu', 'Sangam Singh'],
   jobTitle: 'Software Engineer',
   email: 'sangampratapsingh21012006@gmail.com',
-  title: 'Sangam Pratap Singh — Software Engineer & Open Source Contributor',
-  tagline: 'developer ✦ open source ✦ cultured',
+  title: 'Sangam Pratap Singh - Software Engineer & Open Source Contributor',
   description:
-    'Portfolio of Sangam Pratap Singh (Random-Pikachu) — software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra, DevTrackr and more. C++, Go, TypeScript, React, PostgreSQL.',
+    'Portfolio of Sangam Pratap Singh (Random-Pikachu), a software engineer building legal tech at Retsguide, a KDE Plasma contributor, and the builder of CodeRivals, Astra, DevTrackr and more. C++, Go, TypeScript, React, PostgreSQL.',
   shortDescription:
     'Software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra and DevTrackr. C++, Go, TypeScript, React, PostgreSQL.',
   bio:
@@ -24,8 +23,8 @@ export const SITE = {
   ogImage: `${ORIGIN}/og.png`,
   locale: 'en_US',
   lang: 'en',
-  themeColorDark: '#0a0b10',
-  themeColorLight: '#f3f0e8',
+  /** The night token: the only theme colour, since the site is dark only. */
+  themeColor: '#0a0e0c',
   calendar: 'https://www.cal.com/random-pikachu/15min',
   resume: '/resume.pdf',
   location: {
@@ -41,48 +40,39 @@ export const SITE = {
 } as const;
 
 /**
- * Ordered list of in-page sections. Drives nav, anchors and the sitemap. Each
- * section is a chart of the atlas; `block` is what its title block reads and
- * `caption` sits at the right of its head row.
+ * The sections of the home page, by anchor. Drives the nav, the JSON-LD
+ * `hasPart` list and llms.txt. Each is built in its own phase; until then its
+ * anchor has nothing to scroll to.
  */
 export const SECTIONS = [
-  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '01', block: 'Observer', caption: 'Station ABV-IIITM · 1 instrument' },
-  { id: 'experience', label: 'experience', heading: 'Work experience', num: '02', block: 'Transits', caption: '3 transits · Jul 2025 → now' },
-  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '03', block: 'Constellations', caption: '6 plates · 2 not charted' },
-  { id: 'contact', label: 'contact', heading: 'Contact', num: '04', block: 'Transmission', caption: 'Signal · light-time 15 min' },
+  { id: 'work', heading: 'Selected work' },
+  { id: 'logbook', heading: 'Logbook' },
+  { id: 'about', heading: 'About Sangam Pratap Singh' },
+  { id: 'contact', heading: 'Contact' },
 ] as const;
 
-/** Chart 00, the frontispiece. Not a nav section; it is the top of the page. */
-export const COVER = {
-  id: 'cover',
-  label: 'cover',
-  heading: 'Sangam Pratap Singh',
-  num: '00',
-  block: 'Frontispiece',
-  caption: 'Gwalior · 26°13′ N 78°10′ E · Epoch J2026.7',
-} as const;
+export type SectionId = (typeof SECTIONS)[number]['id'];
 
-/** Every chart of the home page, frontispiece first. */
-export const SHEETS = [COVER, ...SECTIONS] as const;
+export type NavItem = { label: string } & ({ section: SectionId } | { href: string; needsNotes?: true });
 
-/** The pages outside the home set, as the rail and the index list them. */
-export const PAGES = [
-  { id: 'notes', label: 'notes', heading: 'Notes', href: '/blog', block: 'Notes' },
-  { id: 'survey', label: 'survey', heading: 'Photography', href: '/photography', block: 'Survey' },
-] as const;
+/**
+ * The top bar, in order. A `section` is an anchor on the home page; an `href`
+ * is its own route. `needsNotes` keeps the blog out of the bar until a real
+ * note exists.
+ */
+export const NAV: readonly NavItem[] = [
+  { label: 'Work', section: 'work' },
+  { label: 'Logbook', section: 'logbook' },
+  { label: 'Photos', href: '/photography' },
+  { label: 'Blog', href: '/blog', needsNotes: true },
+  { label: 'Contact', section: 'contact' },
+];
 
-/** Where the drawings are made. Drives the title block and the clock. */
+/** Where the work is done: the footer's line. */
 export const PLACE = {
   city: 'Gwalior',
-  lat: 26.22,
-  lon: 78.18,
   coords: '26°13′ N 78°10′ E',
-  timeZone: 'Asia/Kolkata',
-  zoneLabel: 'IST',
 } as const;
-
-/** The atlas number on every chart. Also a pokédex entry. */
-export const DRAWING_NO = '025';
 
 /** The toolbox, grouped so a reader can scan it in three glances. */
 export const TOOLBOX = [
@@ -120,7 +110,7 @@ export interface Experience {
 
 export const EXPERIENCES: Experience[] = [
   {
-    period: 'Jun 2026 — Present',
+    period: 'Jun 2026 - Present',
     startDate: '2026-06',
     endDate: null,
     company: 'Retsguide',
@@ -135,7 +125,7 @@ export const EXPERIENCES: Experience[] = [
     stack: ['TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Prisma', 'Azure'],
   },
   {
-    period: 'Dec 2025 — May 2026',
+    period: 'Dec 2025 - May 2026',
     startDate: '2025-12',
     endDate: '2026-05',
     company: 'KDE Plasma',
@@ -177,7 +167,7 @@ export const EXPERIENCES: Experience[] = [
     stack: ['C++', 'Qt/QML', 'KConfig'],
   },
   {
-    period: 'Jul 2025 — Sep 2025',
+    period: 'Jul 2025 - Sep 2025',
     startDate: '2025-07',
     endDate: '2025-09',
     company: 'OpenSphere',
@@ -195,7 +185,7 @@ export const EXPERIENCES: Experience[] = [
 
 export interface Project {
   index: string;
-  /** URL-safe name: the plate anchor is #project-<slug>, the detail sheet /work/<slug>. */
+  /** URL-safe name: the anchor is #work-<slug>, the case study /work/<slug>. */
   slug: string;
   title: string;
   /** One line for the banner caption; the paragraph is for crawlers and the stacked view. */
@@ -207,7 +197,7 @@ export interface Project {
   youtube: string;
   /** Basename under public/work, or null for a project with no screenshot yet. */
   image: string | null;
-  /** Listed after the strip as "not charted" rather than given a plate. */
+  /** Kept for the record and the JSON-LD, not among the six on the home page. */
   archived?: true;
 }
 
@@ -320,9 +310,9 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-/** The six plates of the Constellations chart, in order. */
-export const PLATES = PROJECTS.filter((p) => !p.archived);
-/** Projects listed after the strip as not charted. */
+/** The six projects on the home page, in order. */
+export const FEATURED = PROJECTS.filter((p) => !p.archived);
+/** Older projects, not among the six. */
 export const ARCHIVE = PROJECTS.filter((p) => p.archived);
 
 /** Everything the Person entity claims expertise in, deduped across sections. */

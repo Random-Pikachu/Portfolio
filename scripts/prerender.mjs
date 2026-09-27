@@ -81,20 +81,25 @@ const PAGES = [
     minBytes: 1500,
     label: '/photography',
   },
-  {
-    shell: 'blog.html',
-    out: 'blog.html',
-    render: () => renderBlog('/blog'),
-    schema: notesStructuredData,
-    minBytes: 1000,
-    label: '/blog',
-    head: head({
-      title: `Notes — ${site.name}`,
-      description: `Notes by ${site.name} on software, systems and the things built along the way.`,
-      canonical: `${site.origin}/blog`,
-      image: card('notes'),
-    }),
-  },
+  // The blog ships only once a real note exists; until then /blog is not built.
+  ...(notes.length
+    ? [
+        {
+          shell: 'blog.html',
+          out: 'blog.html',
+          render: () => renderBlog('/blog'),
+          schema: notesStructuredData,
+          minBytes: 1000,
+          label: '/blog',
+          head: head({
+            title: `Notes - ${site.name}`,
+            description: `Notes by ${site.name} on software, systems and the things built along the way.`,
+            canonical: `${site.origin}/blog`,
+            image: card('notes'),
+          }),
+        },
+      ]
+    : []),
   ...notes.map((n) => ({
     shell: 'blog.html',
     out: path.join('blog', `${n.slug}.html`),
@@ -103,7 +108,7 @@ const PAGES = [
     minBytes: 1000,
     label: `/blog/${n.slug}`,
     head: head({
-      title: `${n.title} — Notes — ${site.name}`,
+      title: `${n.title} - ${site.name}`,
       description: n.summary || `A note by ${site.name}.`,
       canonical: `${site.origin}/blog/${n.slug}`,
       type: 'article',
@@ -119,7 +124,7 @@ const PAGES = [
     minBytes: 1000,
     label: `/work/${w.slug}`,
     head: head({
-      title: `${w.title} — Detail sheet — ${site.name}`,
+      title: `${w.title} - Case study - ${site.name}`,
       description: w.summary,
       canonical: `${site.origin}/work/${w.slug}`,
       type: 'article',
@@ -133,12 +138,11 @@ for (const page of PAGES) {
   if (!shells.has(page.shell)) shells.set(page.shell, await readFile(path.join(distDir, page.shell), 'utf8'));
   const appHtml = page.render();
   if (!appHtml || appHtml.length < page.minBytes) {
-    throw new Error(`Prerender of ${page.label} produced suspiciously little markup (${appHtml.length} bytes, expected >= ${page.minBytes}) — aborting.`);
+    throw new Error(`Prerender of ${page.label} produced suspiciously little markup (${appHtml.length} bytes, expected >= ${page.minBytes}), aborting.`);
   }
-  // The home page carries the chart and never the scene: the sky is in the
-  // static HTML, the canvas only ever exists in a browser after hydration.
-  if (page.label === '/' && (!appHtml.includes('class="sky"') || appHtml.includes('<canvas'))) {
-    throw new Error('Prerender of / must contain the sky chart and no canvas — aborting.');
+  // The hero art is inline SVG, so it is in the static HTML at first paint.
+  if (page.label === '/' && !appHtml.includes('data-nightscape="full"')) {
+    throw new Error('Prerender of / must contain the Nightscape, aborting.');
   }
   let html = shells.get(page.shell);
   if (!html.includes('<div id="root"></div>')) throw new Error(`Could not find the empty #root container in dist/${page.shell}.`);
@@ -155,13 +159,15 @@ for (const page of PAGES) {
   await writeFile(outPath, html);
   console.log(`✓ prerendered ${(appHtml.length / 1024).toFixed(1)} KB into dist/${page.out}`);
 }
-// work.html is only a shell; no page lives at /work.
+// work.html is only a shell; no page lives at /work. blog.html is one too
+// until the first note exists.
 await rm(path.join(distDir, 'work.html'), { force: true });
+if (!notes.length) await rm(path.join(distDir, 'blog.html'), { force: true });
 
 // ── Sitemap ──────────────────────────────────────────────────────────────────
 // Section anchors are advertised through the JSON-LD `hasPart` list rather than
 // as separate sitemap entries, because fragments are not distinct URLs. The
-// photography page carries an <image:image> per photo — image sitemaps are the
+// photography page carries an <image:image> per photo: image sitemaps are the
 // main lever for getting a gallery into Google Images.
 const urls = [
   {
@@ -169,7 +175,7 @@ const urls = [
     lastmod: lastModifiedDate,
     changefreq: 'weekly',
     priority: '1.0',
-    images: [{ loc: site.ogImage, title: `${site.name} — ${site.jobTitle}` }],
+    images: [{ loc: site.ogImage, title: `${site.name}, ${site.jobTitle}` }],
   },
   {
     loc: `${site.origin}/photography`,
@@ -239,7 +245,7 @@ ${site.bio}
 
 ## Page sections
 ${sections.map((s) => `- [${s.heading}](${site.origin}/#${s.id})`).join('\n')}
-${publishedWork.length ? `\n## Plates\n${publishedWork.map((w) => `- [${w.title}](${site.origin}/work/${w.slug}): ${w.summary}`).join('\n')}\n` : ''}${
+${publishedWork.length ? `\n## Case studies\n${publishedWork.map((w) => `- [${w.title}](${site.origin}/work/${w.slug}): ${w.summary}`).join('\n')}\n` : ''}${
   notes.length ? `\n## Notes\n${notes.map((n) => `- [${n.title}](${site.origin}/blog/${n.slug}) (${n.date})${n.summary ? `: ${n.summary}` : ''}`).join('\n')}\n` : ''
 }
 Last updated: ${lastModifiedDate}

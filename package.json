@@ -13,14 +13,13 @@
     "photos": "node scripts/build-photos.mjs",
     "work": "node scripts/build-work.mjs",
     "check": "node scripts/check-design.mjs",
-    "wash": "node scripts/build-wash.mjs",
     "content": "node scripts/build-content.mjs",
-    "og": "node scripts/build-og.mjs",
-    "art": "node scripts/build-art.mjs"
+    "og": "node scripts/build-og.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/ibm-plex-sans": "^5.3.0",
-    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
     "@tailwindcss/vite": "^4.1.17",
     "@vercel/analytics": "^1.6.1",
     "gray-matter": "^4.0.3",

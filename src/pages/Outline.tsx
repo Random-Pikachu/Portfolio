@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Heading } from '../data/content.generated';
 
 /**
- * "On this sheet": the article's h2 and h3 headings, with the one currently
+ * "On this page": the article's h2 and h3 headings, with the one currently
  * under the top of the viewport marked. Tracks with an IntersectionObserver
  * over the headings themselves; renders the same list on the server.
  */
@@ -28,12 +28,12 @@ export function Outline({ headings, articleId }: { headings: Heading[]; articleI
 
   if (!headings.length) return null;
   return (
-    <nav className="on-sheet" aria-label="On this sheet">
-      <p className="t-label on-sheet__title">On this sheet</p>
+    <nav className="on-sheet" aria-label="On this page">
+      <p className="t-label on-sheet__title">On this page</p>
       <ol className="on-sheet__list">
         {headings.map((h) => (
           <li key={h.id} className={`on-sheet__item on-sheet__item--${h.depth} ${active === h.id ? 'is-active' : ''}`}>
-            <a href={`#${h.id}`} className="t-data">
+            <a href={`#${h.id}`} className="t-small">
               {h.text}
             </a>
           </li>

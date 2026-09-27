@@ -15,9 +15,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
-  <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0a0b10" media="(prefers-color-scheme: dark)" />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0a0e0c" />
+  <meta name="color-scheme" content="dark" />
   <meta name="author" content="Sangam Pratap Singh" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
@@ -34,24 +33,6 @@
 
   <script defer src="https://cloud.umami.is/script.js" data-website-id="6b32c0a9-7f49-481a-8fc1-a95133286f30"></script>
 
-  <script>
-    try {
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    } catch (_) { }
-  </script>
-
-  <noscript>
-    <style>
-      .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-      }
-    </style>
-  </noscript>
 </head>
 
 <body>

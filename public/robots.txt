@@ -1,11 +1,11 @@
 # https://random-pikachu.dev/robots.txt
 
-# Everything is crawlable, including /assets/ — Googlebot needs the JS and CSS
+# Everything is crawlable, including /assets/: Googlebot needs the JS and CSS
 # bundles to render and to assess mobile usability.
 User-agent: *
 Allow: /
 
-# Answer engines and LLM crawlers — explicitly welcomed. These read raw HTML and
+# Answer engines and LLM crawlers are explicitly welcomed. These read raw HTML and
 # never run JavaScript, which is why the site is prerendered.
 User-agent: GPTBot
 Allow: /

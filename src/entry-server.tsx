@@ -11,7 +11,7 @@ import {
   buildNotesStructuredData,
   buildWorkStructuredData,
 } from './data/structuredData';
-import { SITE, SECTIONS, PROJECTS, PLATES, EXPERIENCES } from './data/site';
+import { SITE, SECTIONS, PROJECTS, FEATURED, EXPERIENCES } from './data/site';
 import { PHOTOS } from './data/photos';
 import { NOTES, WORK } from './data/content.generated';
 
@@ -64,5 +64,5 @@ export const projects = PROJECTS;
 export const experiences = EXPERIENCES;
 export const photos = PHOTOS;
 export const notes = NOTES.map((n) => ({ slug: n.slug, title: n.title, date: n.date, summary: n.summary, number: n.number }));
-/** Plates whose detail sheet is published, in strip order. */
-export const publishedWork = PLATES.filter((p) => WORK[p.slug]?.published).map((p) => ({ slug: p.slug, title: p.title, summary: p.summary, image: p.image }));
+/** Projects whose case study is published, in home-page order. */
+export const publishedWork = FEATURED.filter((p) => WORK[p.slug]?.published).map((p) => ({ slug: p.slug, title: p.title, summary: p.summary, image: p.image }));

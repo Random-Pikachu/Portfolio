@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
  * transition in index.css.
  *
  * This exists instead of Framer Motion's useInView because the photography page
- * is a separate bundle and its whole job is delivering image bytes — pulling in
+ * is a separate bundle and its whole job is delivering image bytes, and pulling in
  * an animation library to fade 27 tiles would be the wrong trade. The easing
  * matches FadeUp on the home page so both pages feel the same.
  *

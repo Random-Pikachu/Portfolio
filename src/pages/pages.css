@@ -1,4 +1,19 @@
-/* ─── Pages outside the home set: Notes, a Note, a Detail sheet ────────── */
+/* ─── The home page's hero stage ───────────────────────────────────────── */
+@layer components {
+  .stage {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+  }
+
+  .stage__art {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+/* ─── Pages outside the home page: photos, notes, a note, a case study ─── */
 @layer components {
   .notes,
   .note,
@@ -9,19 +24,13 @@
   }
 
   .survey__line {
-    margin: 0;
+    margin: 0 0 var(--sp-12);
     max-width: 36ch;
-    color: var(--ink);
-  }
-
-  .survey__hint {
-    margin: var(--sp-4) 0 var(--sp-8);
-    color: var(--ink-3);
-    font-weight: 400;
+    color: var(--starlight);
   }
 
   .notes__empty {
-    color: var(--ink-2);
+    color: var(--sage);
   }
 
   .notes__year {
@@ -30,7 +39,7 @@
 
   .notes__year-title {
     margin: 0 0 var(--sp-2);
-    color: var(--ink-3);
+    color: var(--sage-2);
   }
 
   .notes__list {
@@ -51,22 +60,22 @@
 
   .notes__no,
   .notes__meta {
-    color: var(--ink-3);
+    color: var(--sage-2);
     font-weight: 400;
     white-space: nowrap;
   }
 
   .notes__title {
-    color: var(--ink);
+    color: var(--starlight);
   }
 
   .notes__title:hover {
-    color: var(--accent);
+    color: var(--ember);
   }
 
   .notes__summary {
     margin: 0;
-    color: var(--ink-2);
+    color: var(--sage);
   }
 
   /* The note: side · article · outline on the ten columns. */
@@ -88,7 +97,7 @@
 
   .note__side-title {
     margin: 0 0 var(--sp-2);
-    color: var(--ink-3);
+    color: var(--sage-2);
   }
 
   .note__side-list {
@@ -105,17 +114,17 @@
   .note__side-list a {
     display: block;
     padding: 8px 0;
-    color: var(--ink-2);
+    color: var(--sage);
     transition: color var(--dur-2) ease;
   }
 
   .note__side-list a:hover,
   .note__side-list li.is-active a {
-    color: var(--ink);
+    color: var(--starlight);
   }
 
   .note__side-no {
-    color: var(--ink-3);
+    color: var(--sage-2);
     margin-right: 6px;
   }
 
@@ -126,16 +135,16 @@
 
   .note__title {
     margin: 0;
-    color: var(--ink);
+    color: var(--starlight);
     max-width: 22ch;
   }
 
   .note__summary {
     margin: var(--sp-4) 0 var(--sp-8);
     max-width: 62ch;
-    color: var(--ink-2);
+    color: var(--sage);
     font-family: var(--font-display);
-    font-size: var(--text-pull);
+    font-size: var(--text-lead);
     line-height: 1.3;
   }
 
@@ -148,7 +157,7 @@
 
   .on-sheet__title {
     margin: 0 0 var(--sp-3);
-    color: var(--ink-3);
+    color: var(--sage-2);
   }
 
   .on-sheet__list {
@@ -161,7 +170,7 @@
   .on-sheet__item a {
     display: block;
     padding: 5px 0 5px 14px;
-    color: var(--ink-3);
+    color: var(--sage-2);
     border-left: 1px solid transparent;
     margin-left: -1px;
     transition: color var(--dur-2) ease, border-color var(--dur-2) ease;
@@ -172,12 +181,12 @@
   }
 
   .on-sheet__item a:hover {
-    color: var(--ink);
+    color: var(--starlight);
   }
 
   .on-sheet__item.is-active a {
-    color: var(--ink);
-    border-left-color: var(--accent);
+    color: var(--starlight);
+    border-left-color: var(--ember);
   }
 
   .note__pager {
@@ -193,12 +202,12 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    color: var(--ink);
+    color: var(--starlight);
     max-width: 30ch;
   }
 
   .note__pager-link .t-label {
-    color: var(--ink-3);
+    color: var(--sage-2);
     font-weight: 400;
   }
 
@@ -207,20 +216,20 @@
     align-items: flex-end;
   }
 
-  /* The detail sheet. */
+  /* The case study. */
   .detail__head {
     grid-column: 1 / span 8;
   }
 
   .detail__title {
     margin: 0;
-    color: var(--ink);
+    color: var(--starlight);
   }
 
   .detail__line {
     margin: var(--sp-6) 0 0;
     max-width: 40ch;
-    color: var(--ink-2);
+    color: var(--sage);
   }
 
   .detail__print {
@@ -248,13 +257,13 @@
   }
 
   .detail__spec dt {
-    color: var(--ink-3);
+    color: var(--sage-2);
     margin-bottom: 4px;
   }
 
   .detail__spec dd {
     margin: 0;
-    color: var(--ink);
+    color: var(--starlight);
   }
 
   .detail__outcomes {

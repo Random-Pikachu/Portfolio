@@ -1,15 +1,15 @@
 /**
  * Screenshots of a running page through the local Chrome, for review.
  *
- *   node scripts/shot.mjs <url> <out.png> [--width 1280] [--height 800] [--dark]
+ *   node scripts/shot.mjs <url> <out.png> [--width 1280] [--height 800]
  *        [--reduce] [--scroll <px>|<#hash>] [--wait <ms>] [--dpr 1] [--full]
  *        [--no-gl] [--eval <js>] [--after <ms>]
  *
  * --eval runs a script in the page after the load wait, and --after is how
  * long to wait after it before the capture (default 400 ms).
  *
- * Runs on a machine with Chrome, never on Vercel. WebGL is rendered in
- * software (SwiftShader) so the sky's scene appears in the capture.
+ * Runs on a machine with Chrome, never on Vercel. Console messages,
+ * exceptions and browser errors are printed after the capture.
  */
 import { spawn } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
@@ -25,7 +25,7 @@ const opt = (name, fallback) => {
 };
 const flag = (name) => args.includes(`--${name}`);
 if (!url || !out) {
-  console.error('usage: node scripts/shot.mjs <url> <out.png> [--width W] [--height H] [--dark] [--reduce] [--scroll N|#id] [--wait ms] [--dpr N] [--full] [--no-gl]');
+  console.error('usage: node scripts/shot.mjs <url> <out.png> [--width W] [--height H] [--reduce] [--scroll N|#id] [--wait ms] [--dpr N] [--full] [--no-gl]');
   process.exit(1);
 }
 const width = Number(opt('width', 1280));
@@ -77,6 +77,8 @@ ws.onmessage = (m) => {
     logs.push(`${d.params.type}: ${d.params.args.map((a) => a.value ?? a.description ?? '').join(' ')}`);
   } else if (d.method === 'Runtime.exceptionThrown') {
     logs.push(`exception: ${d.params.exceptionDetails.exception?.description ?? d.params.exceptionDetails.text}`);
+  } else if (d.method === 'Log.entryAdded' && ['error', 'warning'].includes(d.params.entry.level)) {
+    logs.push(`${d.params.entry.level}: ${d.params.entry.text}${d.params.entry.url ? ` (${d.params.entry.url})` : ''}`);
   }
 };
 const send = (method, params = {}) =>
@@ -88,11 +90,9 @@ const send = (method, params = {}) =>
 
 await send('Page.enable');
 await send('Runtime.enable');
+await send('Log.enable');
 await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: dpr, mobile: width < 768 });
 if (flag('reduce')) await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
-await send('Page.addScriptToEvaluateOnNewDocument', {
-  source: `try { localStorage.theme = ${JSON.stringify(flag('dark') ? 'dark' : 'light')}; } catch (_) {}`,
-});
 await send('Page.navigate', { url });
 await sleep(wait);
 if (scroll) {
@@ -110,7 +110,7 @@ if (js) {
 const shot = flag('full') ? { format: 'png', captureBeyondViewport: true } : { format: 'png' };
 if (flag('full')) {
   const { result } = await send('Runtime.evaluate', { expression: 'document.documentElement.scrollHeight', returnByValue: true });
-  await send('Emulation.setDeviceMetricsOverride', { width, height: result.value, deviceScaleFactor: dpr, mobile: false });
+  await send('Emulation.setDeviceMetricsOverride', { width, height: result.value, deviceScaleFactor: dpr, mobile: width < 768 });
   await sleep(300);
 }
 const { data } = await send('Page.captureScreenshot', shot);

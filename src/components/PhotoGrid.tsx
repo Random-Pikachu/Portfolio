@@ -4,7 +4,7 @@ import { SITE } from '../data/site';
 import { useReveal } from '../hooks/useReveal';
 import PhotoModal from './PhotoModal';
 
-/** How many tiles load eagerly — roughly one screenful on a wide viewport. */
+/** How many tiles load eagerly: roughly one screenful on a wide viewport. */
 const EAGER_COUNT = 6;
 
 export default function PhotoGrid() {

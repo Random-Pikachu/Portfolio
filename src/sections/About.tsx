@@ -10,7 +10,7 @@ export function About() {
         <h2 id="about-title" className="t-label about__label">
           About
         </h2>
-        <div className="about__text">
+        <div className="about__text" data-reveal>
           <p className="t-lead">
             I&apos;m Sangam, a third-year Integrated Dual Degree student (B.Tech IT and MBA) at ABV-IIITM Gwalior. I build
             full-stack and systems software in TypeScript, Go and C++.
@@ -27,7 +27,7 @@ export function About() {
             I&apos;m probably sleeping.
           </p>
         </div>
-        <p className="t-title about__split">
+        <p className="t-title about__split" data-reveal>
           Legal tech by day.
           <br />
           KDE Plasma patches by night.

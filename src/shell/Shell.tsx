@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import SmoothScroll from './SmoothScroll';
 import { Nav, type PageKind } from './Nav';
 import { Footer } from './Footer';
+import { Motion } from '../motion/Motion';
 
 /**
  * The frame of every page: the skip link, the bar, the page's own <main>, the
@@ -18,6 +19,7 @@ export function Shell({ kind, current, children }: { kind: PageKind; current?: s
       {children}
       <Footer />
       <div className="grain" aria-hidden="true" />
+      <Motion />
     </SmoothScroll>
   );
 }

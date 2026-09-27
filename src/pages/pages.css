@@ -9,9 +9,14 @@
   }
 
   .survey__line {
-    margin: 0 0 var(--sp-12);
+    margin: 0;
     max-width: 36ch;
     color: var(--starlight);
+  }
+
+  .survey__hint {
+    margin: var(--sp-4) 0 var(--sp-12);
+    color: var(--sage-2);
   }
 
   .notes__empty {

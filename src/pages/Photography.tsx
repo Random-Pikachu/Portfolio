@@ -16,6 +16,7 @@ export default function Photography() {
       <PageHead label="Photos" title="Photography" caption={`${PHOTOS.length} frames${span ? ` · ${span}` : ''} · Nothing Phone (1)`} />
       <div className="frame survey">
         <p className="t-lead survey__line">All of it shot on a Nothing Phone (1), mostly while walking somewhere else.</p>
+        <p className="t-micro survey__hint">Tap a frame for the print and what the camera recorded.</p>
         <h2 className="sr-only">Photo gallery</h2>
         <PhotoGrid />
       </div>

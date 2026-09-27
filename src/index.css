@@ -11,6 +11,7 @@
 @import "./sections/sections.css";
 @import "./pages/pages.css";
 @import "./pages/prose.css";
+@import "./og/og.css";
 
 /* Tailwind reads the tokens through these; utilities like bg-night,
    text-starlight and border-line map straight onto the ramp. The font
@@ -70,9 +71,10 @@
     outline-offset: 3px;
   }
 
-  /* Anchored sections land below the bar, not under it. */
+  /* Anchored sections land below the bar, not under it, with room for a
+     reveal's 24px rise. */
   [id] {
-    scroll-margin-top: calc(var(--nav-h) + var(--sp-4));
+    scroll-margin-top: calc(var(--nav-h) + var(--sp-8));
   }
 
   ::-webkit-scrollbar {
@@ -93,6 +95,44 @@
 
   .mono {
     font-family: var(--font-mono);
+  }
+}
+
+/* ─── Motion ───────────────────────────────────────────────────────────────
+   The reveals: fade and a 24px rise, once, when an element first comes into
+   view (src/motion/Motion.tsx). Only with JavaScript, which adds the `js`
+   class before first paint; never under reduced motion. Between pages, a
+   quick fade and nothing else.
+   ────────────────────────────────────────────────────────────────────────── */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-4) var(--ease-out),
+    transform var(--dur-4) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 

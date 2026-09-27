@@ -1,6 +1,7 @@
-import type { MouseEvent } from 'react';
+import { useRef, type MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { SITE } from '../data/site';
+import { useParallax } from '../motion/parallax';
 import { Nightscape } from '../night/Nightscape';
 import { goTo } from '../shell/scroll';
 
@@ -14,11 +15,13 @@ const PROOF = ['Software Engineer Intern · Retsguide', 'KDE Plasma contributor'
  * the top over a scrim, and the house stays in view beneath them.
  */
 export function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  useParallax(ref);
   const toWork = (e: MouseEvent) => {
     if (goTo('work')) e.preventDefault();
   };
   return (
-    <section id="top" className="hero" data-hero aria-labelledby="hero-title">
+    <section ref={ref} id="top" className="hero" data-hero aria-labelledby="hero-title">
       <Nightscape id="hero" className="hero__art" />
       <div className="hero__scrim" aria-hidden="true" />
       <div className="frame hero__frame">

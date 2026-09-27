@@ -11,7 +11,7 @@ Live: https://random-pikachu.dev
 
 | Page | URL | What it is |
 | --- | --- | --- |
-| Home | `/` | The hero over the Nightscape, then the work, the logbook, about and contact at `#work`, `#logbook`, `#about`, `#contact`; on phones a call bar after the hero |
+| Home | `/` | The hero over the Nightscape; the six covers with their sixty-second stories (`#work`, `#work-<slug>` opens one); the logbook (`#logbook`); about (`#about`); the after-hours doors; contact (`#contact`); on phones a call bar after the hero |
 | Case study | `/work/<slug>` | Built when `content/work/<slug>.md` is published |
 | Photos | `/photography` | 27 frames from a Nothing Phone (1), with EXIF captions and a lightbox |
 | Blog | `/blog`, `/blog/<slug>` | Markdown notes. The route is built only once a real note exists |
@@ -41,6 +41,7 @@ npm run check      # design checks: contrast, no radius, no em dash, no placehol
 npm run lint
 npm run build      # content, checks, typecheck, client, prerender
 npm run preview    # serve dist/
+npm run og         # the social cards, from the build, through Chrome; commit them
 ```
 
 `npm run build` runs, in order: `scripts/build-content.mjs` (Markdown to
@@ -95,8 +96,11 @@ src/tokens.css      the palette, the art's colours, type, space, motion,
 src/index.css       fonts, tokens into Tailwind, grain, type roles, the frame
 src/night/          the Nightscape, the terrain, the mark
 src/shell/          Shell, Nav, Footer, PageHead, SmoothScroll, scroll.ts
-src/sections/       Hero, Work (an index until the covers), About, Contact,
-                    CallBar (the phone call bar)
+src/sections/       Hero, Work, Logbook, About, AfterHours (and the egg),
+                    Contact, CallBar (the phone call bar)
+src/motion/         Motion (the reveals), parallax (the hero's drift)
+src/og/             OgCard: the social card, rendered by scripts/build-og
+src/data/stories.ts the sixty-second stories, by slug, rendered exactly
 src/pages/          Home, Photography, Notes, Note, Detail, Outline
 src/data/site.ts    the single source of truth for identity, nav, roles,
                     projects
@@ -118,8 +122,14 @@ src/data/content.generated.ts   written by the content build; committed
 - No em dashes in copy, comments or content, and no placeholder text; the
   check fails the build on either. Missing content is left visibly empty.
 - Motion: transform and opacity only, two curves and four durations in
-  `tokens.css`. `prefers-reduced-motion` renders every final state. Grain
-  never moves. Every hover has a tap and focus equivalent.
+  `tokens.css`. Reveals (`data-reveal`) rise once, into place; the hero's
+  layers drift on scroll on wide screens only; pages cross-fade. All of it
+  is off under `prefers-reduced-motion`, which renders every final state,
+  and none of it hides anything without JavaScript. Grain never moves.
+  Every hover has a tap and focus equivalent.
+- Stories: `src/data/stories.ts` is rendered word for word. A project with
+  no honest number has no number line; nothing is filled in to look
+  complete, and the build fails on any placeholder marker left in.
 
 ## Routing note
 

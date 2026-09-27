@@ -151,73 +151,231 @@
     }
   }
 
-  /* ─── Work (the index, until the covers arrive) ────────────────────────── */
+  /* ─── Work: six covers and their stories ───────────────────────────────── */
   .work-list {
+    display: grid;
+    gap: clamp(64px, 9vw, 128px);
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--line);
   }
 
-  .work-row {
+  .work-item {
     display: grid;
-    grid-template-columns: 56px minmax(0, 1fr) auto;
-    gap: var(--sp-2) var(--sp-6);
-    align-items: baseline;
-    padding-block: var(--sp-8);
-    border-bottom: 1px solid var(--line);
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: var(--sp-6);
   }
 
-  .work-row__no {
+  /* The cover: the screenshot on pine, the page's grain over it, and an edge
+     that falls into the night. A button, so a tap opens the story. */
+  .work-cover {
+    position: relative;
+    grid-column: 1 / span 6;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: var(--pine);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+
+  .work-cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform var(--dur-4) var(--ease-out);
+  }
+
+  .work-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 100% at 50% 40%, transparent 60%, rgb(10 14 12 / 0.55) 100%);
+  }
+
+  .work-cover__empty {
+    display: grid;
+    place-items: center;
+    height: 100%;
     color: var(--sage-2);
   }
 
-  .work-row__title {
+  /* A slow zoom on hover where hover exists; a tap opens the story instead. */
+  @media (hover: hover) {
+    .work-item:hover .work-cover img {
+      transform: scale(1.035);
+    }
+  }
+
+  .work-item__text {
+    grid-column: 7 / -1;
+    align-self: end;
+  }
+
+  /* Alternate sides, and let the text sit a little lower each even row. */
+  .work-item:nth-child(even) .work-cover {
+    grid-column: 5 / -1;
+    grid-row: 1;
+  }
+
+  .work-item:nth-child(even) .work-item__text {
+    grid-column: 1 / span 4;
+    grid-row: 1;
+  }
+
+  .work-item__no {
+    margin: 0 0 var(--sp-3);
+    color: var(--sage-2);
+  }
+
+  .work-item__title {
     margin: 0;
     color: var(--starlight);
   }
 
-  .work-row__summary {
-    max-width: 56ch;
-    margin: var(--sp-2) 0 0;
+  .work-item__summary {
+    max-width: 40ch;
+    margin: var(--sp-3) 0 0;
     color: var(--sage);
   }
 
-  .work-row__stack {
-    margin: var(--sp-3) 0 0;
+  .work-item__number {
+    margin: var(--sp-4) 0 0;
+    color: var(--starlight);
+  }
+
+  .work-item__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: var(--sp-4);
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--starlight);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .work-item__toggle svg {
+    color: var(--sage);
+  }
+
+  .work-item__toggle:hover svg,
+  .work-item__toggle:focus-visible svg {
+    color: var(--starlight);
+  }
+
+  /* The story: the four parts on a ruled panel under both columns. It
+     appears at once, then its text fades in; nothing here moves layout on
+     its own. */
+  .work-story {
+    grid-column: 1 / -1;
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--line);
+  }
+
+  .work-story:not([hidden]) {
+    animation: story-in var(--dur-3) var(--ease-out);
+  }
+
+  @keyframes story-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .work-story__parts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-8) var(--sp-12);
+    margin: 0;
+  }
+
+  .work-story__parts dt {
+    margin: 0 0 var(--sp-2);
     color: var(--sage-2);
   }
 
-  .work-row__links {
-    display: flex;
-    gap: var(--sp-6);
+  .work-story__parts dd {
+    max-width: 52ch;
     margin: 0;
+    color: var(--sage);
+  }
+
+  .work-story__missing {
+    margin: 0;
+    color: var(--sage-2);
+  }
+
+  .work-story__stack {
+    margin: var(--sp-8) 0 0;
+    color: var(--sage-2);
+  }
+
+  .work-story__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--sp-6);
+    margin: var(--sp-2) 0 0;
     padding: 0;
     list-style: none;
   }
 
-  .work-row__link {
+  .work-story__link {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     min-height: 44px;
     font-size: var(--text-small);
-    color: var(--sage);
-  }
-
-  .work-row__link:hover,
-  .work-row__link:focus-visible {
+    font-weight: 500;
     color: var(--starlight);
   }
 
-  @media (max-width: 47.99rem) {
-    .work-row {
-      grid-template-columns: 36px minmax(0, 1fr);
-      padding-block: var(--sp-6);
+  .work-story__link svg {
+    color: var(--sage);
+  }
+
+  .work-story__link:hover svg,
+  .work-story__link:focus-visible svg {
+    color: var(--starlight);
+  }
+
+  @media (max-width: 63.99rem) {
+    .work-cover,
+    .work-item:nth-child(even) .work-cover {
+      grid-column: 1 / -1;
+      grid-row: auto;
     }
 
-    .work-row__links {
-      grid-column: 2;
+    .work-item__text,
+    .work-item:nth-child(even) .work-item__text {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+
+    .work-story__parts {
+      grid-template-columns: 1fr;
+      gap: var(--sp-6);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work-cover img {
+      transition: none;
+    }
+
+    .work-story:not([hidden]) {
+      animation: none;
     }
   }
 
@@ -405,6 +563,260 @@
       flex-basis: 100%;
       margin-left: 28px;
     }
+  }
+
+  /* ─── Logbook ──────────────────────────────────────────────────────────── */
+  .logbook__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .logbook__entry {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    padding-block: var(--sp-12);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .logbook__when {
+    grid-column: 1 / span 2;
+    margin: 0;
+    padding-top: 0.55em;
+    color: var(--sage-2);
+  }
+
+  .logbook__now {
+    color: var(--starlight);
+  }
+
+  .logbook__body {
+    grid-column: 3 / span 7;
+  }
+
+  .logbook__role {
+    margin: 0;
+    color: var(--starlight);
+  }
+
+  .logbook__at {
+    color: var(--sage);
+  }
+
+  .logbook__mission {
+    max-width: 44ch;
+    margin: var(--sp-4) 0 0;
+    color: var(--starlight);
+  }
+
+  .logbook__points {
+    max-width: 62ch;
+    margin: var(--sp-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .logbook__points li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--sage);
+  }
+
+  .logbook__points li + li {
+    margin-top: var(--sp-3);
+  }
+
+  .logbook__points li::before {
+    content: "";
+    position: absolute;
+    top: 0.72em;
+    left: 0;
+    width: 8px;
+    height: 1px;
+    background: var(--line-2);
+  }
+
+  .logbook__mr {
+    color: var(--starlight);
+    white-space: nowrap;
+  }
+
+  .logbook__mr:hover,
+  .logbook__mr:focus-visible {
+    color: var(--ember);
+  }
+
+  .logbook__stack {
+    margin: var(--sp-6) 0 0;
+    color: var(--sage-2);
+  }
+
+  .logbook__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 44px;
+    margin-top: var(--sp-2);
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--starlight);
+  }
+
+  .logbook__link svg {
+    color: var(--sage);
+  }
+
+  .logbook__link:hover svg,
+  .logbook__link:focus-visible svg {
+    color: var(--starlight);
+  }
+
+  @media (max-width: 47.99rem) {
+    .logbook__entry {
+      padding-block: var(--sp-8);
+    }
+
+    .logbook__when,
+    .logbook__body {
+      grid-column: 1 / -1;
+    }
+
+    .logbook__when {
+      padding-top: 0;
+      margin-bottom: var(--sp-3);
+    }
+  }
+
+  /* ─── After hours: a strip of doors ────────────────────────────────────── */
+  .after {
+    padding-block: var(--sp-8) clamp(96px, 12vw, 168px);
+  }
+
+  .after__label {
+    margin: 0 0 var(--sp-6);
+    color: var(--sage-2);
+  }
+
+  .after__doors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--sp-4);
+  }
+
+  .door {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    min-height: 44px;
+    padding: var(--sp-6);
+    text-align: left;
+    color: var(--starlight);
+    background: var(--pine);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+
+  .door:hover,
+  .door:focus-visible {
+    border-color: var(--line-2);
+  }
+
+  .door__label {
+    color: var(--sage-2);
+  }
+
+  .door__title {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.15;
+    letter-spacing: -0.008em;
+  }
+
+  .door__hook {
+    color: var(--sage);
+  }
+
+  .door__arrow {
+    position: absolute;
+    top: var(--sp-6);
+    right: var(--sp-6);
+    color: var(--sage);
+  }
+
+  .door:hover .door__arrow,
+  .door:focus-visible .door__arrow {
+    color: var(--starlight);
+  }
+
+  .door--egg {
+    font: inherit;
+  }
+
+  @media (max-width: 47.99rem) {
+    .after__doors {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* The egg: a native dialog on a night scrim. */
+  .egg {
+    position: fixed;
+    inset: 0;
+    max-width: min(24rem, calc(100vw - 32px));
+    margin: auto; /* the reset zeroes a dialog's margin; this centres it again */
+    padding: 0;
+    color: var(--starlight);
+    background: var(--pine);
+    border: 1px solid var(--line-2);
+  }
+
+  .egg::backdrop {
+    background: rgb(6 9 8 / 0.85);
+  }
+
+  .egg__inner {
+    position: relative;
+    padding: var(--sp-8);
+  }
+
+  .egg__close {
+    position: absolute;
+    top: var(--sp-2);
+    right: var(--sp-2);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--starlight);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .egg__img {
+    display: block;
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    margin: var(--sp-4) auto 0;
+    image-rendering: pixelated;
+  }
+
+  .egg__title {
+    margin: var(--sp-8) 0 0;
+    text-align: center;
+    color: var(--starlight);
+  }
+
+  .egg__line {
+    margin: var(--sp-2) 0 0;
+    text-align: center;
+    color: var(--sage);
   }
 
   /* ─── The call bar, phones only ────────────────────────────────────────── */

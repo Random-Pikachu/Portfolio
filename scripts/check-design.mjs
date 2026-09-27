@@ -8,7 +8,8 @@
  *      ember. The site is dark only, so there is one ramp to measure.
  *   3. No em dash (U+2014) in any copy, comment or content: sources, content,
  *      the HTML shells, the public text files and the README.
- *   4. No lorem ipsum. Missing content is left visibly empty, never filled.
+ *   4. No placeholder text: lorem ipsum, NEEDS FACT, TODO copy. Missing
+ *      content is left visibly empty, never filled.
  *
  * Exit code 1 on any failure, so `npm run build` stops.
  */
@@ -75,7 +76,7 @@ for (const [name, fg, bg] of rows) {
   console.log(`${ok ? 'ok  ' : 'FAIL'} ${name.padEnd(22)} ${fg} on ${bg}  ${r.toFixed(2)}:1`);
 }
 
-// ── 3 and 4. em dashes and lorem ipsum ─────────────────────────────────────
+// ── 3 and 4. em dashes and placeholder text ──────────────────────────────────
 const text = [
   ...code,
   ...walk(join(root, 'scripts'), /\.(mjs|js)$/),
@@ -92,9 +93,9 @@ for (const file of text) {
         failures++;
         console.error(`em dash: ${relative(root, file)}:${i + 1}: ${line.trim()}`);
       }
-      if (/lorem ipsum/i.test(line) && !file.endsWith('check-design.mjs')) {
+      if (/lorem ipsum|NEEDS FACT|\bTBD\b/i.test(line) && !file.endsWith('check-design.mjs')) {
         failures++;
-        console.error(`lorem ipsum: ${relative(root, file)}:${i + 1}: ${line.trim()}`);
+        console.error(`placeholder: ${relative(root, file)}:${i + 1}: ${line.trim()}`);
       }
     });
 }

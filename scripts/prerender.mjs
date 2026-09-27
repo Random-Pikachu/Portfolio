@@ -45,7 +45,7 @@ const lastModified = new Date().toISOString();
 const lastModifiedDate = lastModified.slice(0, 10);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 /** The page's own social card from scripts/build-og.mjs when it exists, else the cover's. */
-const card = (key) => (existsSync(path.join(root, 'public', 'og', `${key}.png`)) ? `${site.origin}/og/${key}.png` : site.ogImage);
+const card = (key) => (existsSync(path.join(root, 'public', 'og', `${key}.jpg`)) ? `${site.origin}/og/${key}.jpg` : site.ogImage);
 
 /** The head block for pages that share a shell. */
 const head = ({ title, description, canonical, type = 'website', image = site.ogImage, published }) => `

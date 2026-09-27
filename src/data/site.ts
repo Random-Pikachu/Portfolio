@@ -20,7 +20,7 @@ export const SITE = {
     'Software engineer building legal tech at Retsguide, KDE Plasma contributor, and builder of CodeRivals, Astra and DevTrackr. C++, Go, TypeScript, React, PostgreSQL.',
   bio:
     'Sangam Pratap Singh is a software engineer and third-year Integrated Dual Degree (B.Tech IT + MBA) student at ABV-IIITM Gwalior. He builds full-stack and systems software in TypeScript, Go and C++, contributes to KDE Plasma, and currently works on legal technology at Retsguide in Denmark.',
-  ogImage: `${ORIGIN}/og.png`,
+  ogImage: `${ORIGIN}/og.jpg`,
   locale: 'en_US',
   lang: 'en',
   /** The night token: the only theme colour, since the site is dark only. */
@@ -104,6 +104,10 @@ export interface Experience {
   company: string;
   companyUrl: string;
   role: string;
+  /** One line on what the role was for, in the logbook. */
+  mission: string;
+  /** The one link out of the entry: the company, or the artifact. */
+  link: { label: string; href: string };
   points: ExperiencePoint[];
   stack: string[];
 }
@@ -116,6 +120,8 @@ export const EXPERIENCES: Experience[] = [
     company: 'Retsguide',
     companyUrl: 'https://retsguide.dk/',
     role: 'Software Engineer Intern (Full Stack)',
+    mission: 'Legal technology in Denmark: the schema, the services and the screens.',
+    link: { label: 'retsguide.dk', href: 'https://retsguide.dk/' },
     points: [
       { href: null, label: null, text: 'Owned three customer-facing application flows end-to-end, from design to deployment' },
       { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations on production' },
@@ -131,6 +137,8 @@ export const EXPERIENCES: Experience[] = [
     company: 'KDE Plasma',
     companyUrl: 'https://kde.org/',
     role: 'Open Source Contributor',
+    mission: 'Merge requests to Plasma Workspace, Marknote and Drawy.',
+    link: { label: 'This Week in Plasma, Feb 2026', href: 'https://blogs.kde.org/2026/02/07/this-week-in-plasma-beefed-up-window-list-widget/' },
     points: [
       {
         href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6280',
@@ -173,6 +181,8 @@ export const EXPERIENCES: Experience[] = [
     company: 'OpenSphere',
     companyUrl: 'https://opensphere.ai/',
     role: 'Software Development Intern',
+    mission: 'Real-time commenting and the drafting workflow in a text editor.',
+    link: { label: 'opensphere.ai', href: 'https://opensphere.ai/' },
     points: [
       { href: null, label: null, text: 'Built concurrent WebSocket service powering real-time threaded commenting in the text editor' },
       { href: null, label: null, text: 'Reworked drafting workflow, removing a redundant data-filing stage and doubling throughput' },

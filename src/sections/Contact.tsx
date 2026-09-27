@@ -50,7 +50,7 @@ export function Contact() {
   return (
     <section id="contact" className="section contact" aria-labelledby="contact-title" data-callbar-hide>
       <div className="frame grid contact__grid">
-        <div className="contact__lead">
+        <div className="contact__lead" data-reveal>
           <p className="t-label section-head__label">Contact</p>
           <h2 id="contact-title" className="t-hero contact__line">
             Let&apos;s build something.
@@ -84,7 +84,7 @@ export function Contact() {
           </address>
         </div>
 
-        <figure className="contact__photo">
+        <figure className="contact__photo" data-reveal>
           <div className="contact__frame">
             <img
               src={`/photos/${PHOTO.slug}-800.webp`}

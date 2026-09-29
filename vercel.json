@@ -20,13 +20,25 @@
       "destination": "/photography.html"
     },
     {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug.html"
+    },
+    {
+      "source": "/work/:slug",
+      "destination": "/work/:slug.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/"
     }
   ],
   "headers": [
     {
-      "source": "/((?!assets/|photography(?:$|/)|photos/|resume\\.pdf|og\\.png|logo\\.|favicon|apple-touch-icon|maskable|robots\\.txt|sitemap\\.xml|site\\.webmanifest|llms\\.txt).+)",
+      "source": "/((?!assets/|photography(?:$|/)|blog(?:$|/)|work/|photos/|wash/|resume\\.pdf|og\\.png|logo\\.|favicon|apple-touch-icon|maskable|robots\\.txt|sitemap\\.xml|site\\.webmanifest|llms\\.txt).+)",
       "headers": [
         {
           "key": "X-Robots-Tag",

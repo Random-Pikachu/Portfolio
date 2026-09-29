@@ -9,7 +9,7 @@ interface DayData {
 }
 
 function getIntensity(count: number): string {
-    if (count === 0) return 'var(--border-main)';
+    if (count === 0) return 'var(--line)';
     if (count <= 2) return 'var(--heatmap-1, #9be9a8)';
     if (count <= 5) return 'var(--heatmap-2, #40c463)';
     if (count <= 10) return 'var(--heatmap-3, #30a14e)';
@@ -24,13 +24,9 @@ export default function ContributionHeatmap() {
     useEffect(() => {
         async function fetchData() {
             try {
-                // Refresh aggregate data using the same POST endpoint as the live client.
-                await fetch(`${BASE_URL}/${USER_ID}/aggregate`, {
-                    method: 'POST',
-                    credentials: 'omit',
-                });
-
-                // Then fetch heatmap
+                // Read only. The aggregate refresh used to be triggered from here on
+                // every visit, which meant a cold Render dyno and a thirty-second
+                // wait for each visitor; the service refreshes on its own schedule.
                 const year = new Date().getFullYear();
                 const res = await fetch(
                     `${BASE_URL}/${USER_ID}/heatmap?start=${year}-01-01&end=${year}-12-31`
@@ -52,14 +48,27 @@ export default function ContributionHeatmap() {
     }, []);
 
     if (loading) {
+        // The shape of the chart, in faint dots, while it loads.
         return (
-            <div className="flex items-center justify-center py-8">
-                <span className="mono text-xs text-text-faint animate-pulse">loading contributions...</span>
+            <div className="w-full max-w-full overflow-hidden" aria-busy="true" aria-label="Loading contributions">
+                <div className="h-5 w-40 skeleton-dot bg-line" />
+                <div className="mt-6 grid grid-flow-col gap-[3px]" style={{ gridTemplateRows: 'repeat(7, 12px)' }}>
+                    {Array.from({ length: 53 * 7 }, (_, i) => (
+                        <span
+                            key={i}
+                            className="skeleton-dot block h-[10px] w-[10px] bg-line"
+                            style={{ animationDelay: `${(i % 53) * 20}ms` }}
+                        />
+                    ))}
+                </div>
             </div>
         );
     }
 
-    if (days.length === 0) return null;
+    // The feed lives on a free dyno; when it is asleep, say so rather than leave a hole.
+    if (days.length === 0) {
+        return <p className="t-data text-ink-3">the activity feed is asleep right now.</p>;
+    }
 
     // Build the grid: 53 columns (weeks) x 7 rows (days)
     // First, find the starting day of week for Jan 1
@@ -103,7 +112,6 @@ export default function ContributionHeatmap() {
 
     const cellSize = 12;
     const gap = 3;
-    const radius = 5;
     const svgWidth = weeks.length * (cellSize + gap);
     const svgHeight = 7 * (cellSize + gap);
 
@@ -126,10 +134,10 @@ export default function ContributionHeatmap() {
     return (
         <div className="w-full max-w-full overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-2">
-                <p className="mono text-sm text-text-muted">
-                    <span className="text-accent font-semibold">{totalContribs}</span> contributions in {year}
+                <p className="t-data text-ink-2">
+                    <span className="text-ink font-medium tabular-nums">{totalContribs}</span> contributions in {year}
                 </p>
-                <div className="flex items-center gap-1.5 mono text-xs text-text-faint">
+                <div className="flex items-center gap-1.5 t-label text-ink-3">
                     <span>less</span>
                     {[0, 2, 5, 10, 15].map((level) => (
                         <svg key={level} width={10} height={10}>
@@ -139,13 +147,13 @@ export default function ContributionHeatmap() {
                     <span>more</span>
                 </div>
             </div>
-            <p className="mono text-xs text-text-faint mb-6">
+            <p className="t-data text-ink-3 mb-6">
                 aggregated from GitHub, LeetCode & Codeforces · powered by{' '}
                 <a
                     href="https://devtrackr-hci.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent hover:underline"
+                    className="underline-draw text-ink"
                 >
                     DevTrackr
                 </a>
@@ -159,32 +167,33 @@ export default function ContributionHeatmap() {
                             key={label}
                             x={x}
                             y={10}
-                            className="fill-text-faint"
-                            style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace' }}
+                            className="fill-ink-3"
+                            style={{ fontSize: '10px', fontFamily: 'var(--font-mono)' }}
                         >
                             {label}
                         </text>
                     ))}
 
-                    {/* Circles */}
+                    {/* Cells */}
                     {weeks.map((week, wi) =>
                         week.map((day, di) => {
                             if (!day) return null;
-                            const cx = wi * (cellSize + gap) + radius;
-                            const cy = di * (cellSize + gap) + radius + 16;
+                            const x = wi * (cellSize + gap);
+                            const y = di * (cellSize + gap) + 16;
                             return (
-                                <circle
+                                <rect
                                     key={day.date}
-                                    cx={cx}
-                                    cy={cy}
-                                    r={radius}
+                                    x={x}
+                                    y={y}
+                                    width={cellSize - 2}
+                                    height={cellSize - 2}
                                     fill={getIntensity(day.total_contributions)}
                                     className="transition-colors duration-150"
                                 >
                                     <title>
                                         {day.date}: {day.total_contributions} contribution{day.total_contributions !== 1 ? 's' : ''}
                                     </title>
-                                </circle>
+                                </rect>
                             );
                         })
                     )}

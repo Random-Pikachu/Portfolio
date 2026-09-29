@@ -24,8 +24,8 @@ export const SITE = {
   ogImage: `${ORIGIN}/og.png`,
   locale: 'en_US',
   lang: 'en',
-  themeColorDark: '#080808',
-  themeColorLight: '#ffffff',
+  themeColorDark: '#0a0a0a',
+  themeColorLight: '#f3f0e8',
   calendar: 'https://www.cal.com/random-pikachu/15min',
   resume: '/resume.pdf',
   location: {
@@ -40,23 +40,62 @@ export const SITE = {
   },
 } as const;
 
-/** Ordered list of in-page sections. Drives nav, anchors and the sitemap. */
+/**
+ * Ordered list of in-page sections. Drives nav, anchors and the sitemap. Each
+ * section is a sheet of the drawing set; `block` is what its title block reads.
+ */
 export const SECTIONS = [
-  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '00' },
-  { id: 'experience', label: 'experience', heading: 'Work experience', num: '01' },
-  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '02' },
-  { id: 'contact', label: 'contact', heading: 'Contact', num: '03' },
+  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '01', block: 'General' },
+  { id: 'experience', label: 'experience', heading: 'Work experience', num: '02', block: 'Schedule' },
+  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '03', block: 'Details' },
+  { id: 'contact', label: 'contact', heading: 'Contact', num: '04', block: 'Issue' },
 ] as const;
 
-export const SKILLS = [
-  'Photography', 'C++', 'Go', 'TypeScript', 'Qt/QML', 'Python', 'WebSockets',
-  'React', 'Node.js', 'PostgreSQL', 'AWS', 'Linux',
+/** Sheet 00, the cover. Not a nav section; it is the top of the page. */
+export const COVER = { id: 'cover', label: 'cover', heading: 'Sangam Pratap Singh', num: '00', block: 'Cover' } as const;
+
+/** Every sheet of the home page, cover first. */
+export const SHEETS = [COVER, ...SECTIONS] as const;
+
+/** The pages outside the home set, as the rail and the index list them. */
+export const PAGES = [
+  { id: 'notes', label: 'notes', heading: 'Notes', href: '/blog', block: 'Notes' },
+  { id: 'survey', label: 'survey', heading: 'Photography', href: '/photography', block: 'Survey' },
+] as const;
+
+/** Where the drawings are made. Drives the title block and the clock. */
+export const PLACE = {
+  city: 'Gwalior',
+  lat: 26.22,
+  lon: 78.18,
+  coords: '26°13′ N 78°10′ E',
+  timeZone: 'Asia/Kolkata',
+  zoneLabel: 'IST',
+} as const;
+
+/** The drawing number on every sheet. */
+export const DRAWING_NO = '025';
+
+/** The toolbox, grouped so a reader can scan it in three glances. */
+export const TOOLBOX = [
+  { group: 'languages', items: ['C++', 'Go', 'TypeScript', 'Python'] },
+  { group: 'runtime', items: ['React', 'Node.js', 'Qt/QML', 'WebSockets'] },
+  { group: 'infra', items: ['PostgreSQL', 'AWS', 'Linux'] },
+] as const;
+
+/** What is on the desk right now. */
+export const NOW = [
+  { label: 'reading', text: 'machine learning' },
+  { label: 'solving', text: 'LeetCode and Codeforces, to keep the brain warm' },
+  { label: 'shooting', text: 'on a Nothing Phone (1)', href: '/photography' },
 ] as const;
 
 export interface ExperiencePoint {
   href: string | null;
   label: string | null;
   text: string;
+  /** Marked in the timeline: the one line worth a second look. */
+  featured?: true;
 }
 
 export interface Experience {
@@ -124,6 +163,7 @@ export const EXPERIENCES: Experience[] = [
         href: 'https://blogs.kde.org/2026/02/07/this-week-in-plasma-beefed-up-window-list-widget/',
         label: 'This Week in Plasma',
         text: "work featured in KDE's weekly blog (Feb 2026)",
+        featured: true,
       },
     ],
     stack: ['C++', 'Qt/QML', 'KConfig'],
@@ -147,106 +187,135 @@ export const EXPERIENCES: Experience[] = [
 
 export interface Project {
   index: string;
+  /** URL-safe name: the plate anchor is #project-<slug>, the detail sheet /work/<slug>. */
+  slug: string;
   title: string;
+  /** One line for the banner caption; the paragraph is for crawlers and the stacked view. */
+  summary: string;
   description: string;
   stack: string[];
   github: string;
   live: string;
   youtube: string;
-  /** Bento column span on the 5-column desktop grid. */
-  span: 2 | 3 | 5;
+  /** Basename under public/work, or null for a project with no screenshot yet. */
+  image: string | null;
+  /** Listed after the strip as "not issued" rather than given a plate. */
+  archived?: true;
 }
 
 export const PROJECTS: Project[] = [
   {
     index: '01',
+    slug: 'ephemeris',
     title: 'Ephemeris',
+    summary: 'A daily planner, habit tracker and journal that asks for thirty seconds an evening.',
     description:
       'A daily planner, habit tracker and journal that asks for thirty seconds an evening. Name the blocks of a good day, record which ones happened, keep a streak and a Markdown diary, and get one email at dusk in your own time zone. Gemini summarises a day or reviews a week from your own entries.',
     stack: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Gemini', 'Resend'],
     github: 'https://github.com/Random-Pikachu/ephemeris-client',
     live: 'https://ephemeris.random-pikachu.dev/',
     youtube: '',
-    span: 5,
+    image: 'ephemeris',
   },
   {
     index: '02',
+    slug: 'coderivals',
     title: 'CodeRivals',
+    summary: 'Real-time 1v1 coding duels with power cards that change the round.',
     description:
       'A real-time 1v1 competitive coding platform where players duel in live matches and strategically deploy power cards to influence round outcomes.',
     stack: ['React', 'SpacetimeDB', 'AWS EC2', 'Monaco Editor'],
     github: 'https://github.com/Sypher845/code-rivals',
     live: 'https://code-rivals-six.vercel.app/',
     youtube: 'https://www.youtube.com/watch?v=mmFpLflQln4',
-    span: 3,
+    image: 'code-rivals',
   },
   {
     index: '03',
+    slug: 'astra',
     title: 'Astra',
+    summary: 'A desktop scanner that finds vulnerable dependencies and drafts the fix.',
     description:
       'A desktop tool that scans your code for security risks. It checks your project dependencies against vulnerability databases and uses AI to automatically suggest fixes, saving you from manual patching.',
     stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter', 'Socket.io'],
     github: 'https://github.com/Random-Pikachu/Astra',
     live: '',
     youtube: 'https://youtu.be/XFiMSWMZ4KU',
-    span: 2,
+    image: 'astra',
   },
   {
     index: '04',
+    slug: 'devtrackr',
     title: 'DevTrackr',
+    summary: 'One heatmap for GitHub, LeetCode and Codeforces, with a daily digest.',
     description:
       'Go service with PostgreSQL and REST APIs that aggregates user activity from platforms like GitHub, LeetCode, and Codeforces, and delivers daily digests.',
-    stack: ['Go', 'PostgreSQL', 'React', 'Github/LC/CF APIs'],
+    stack: ['Go', 'PostgreSQL', 'React', 'GitHub/LC/CF APIs'],
     github: 'https://github.com/Random-Pikachu/DevTrackr-Backend',
     live: 'https://devtrackr-hci.vercel.app/',
     youtube: 'https://youtu.be/kUKd9O6k4Zg',
-    span: 2,
+    image: 'devtrackr',
   },
   {
     index: '05',
+    slug: 'gitstory',
     title: 'GitStory',
+    summary: 'Talk to a repository and get timelines, diffs and risk maps back.',
     description:
       'AI-powered tool designed to visualize and analyze GitHub repositories through a conversational interface. It renders rich, interactive components such as commit timelines, pull request summaries, diff viewers, and risk heatmaps.',
     stack: ['React', 'TamboAI', 'Tailwind'],
     github: 'https://github.com/Random-Pikachu/GitStory',
     live: 'https://git-story-tan.vercel.app/',
     youtube: '',
-    span: 3,
+    image: 'gitstory',
   },
   {
     index: '06',
-    title: 'SecurePDF',
-    description:
-      "An offline desktop tool that locks PDFs to a specific computer so they can't be shared. It uses hardware binding and time limits to control access, while completely disabling printing and copying to prevent leaks.",
-    stack: ['Python', 'Fernet', 'PyMuPDF', 'CustomTkinter'],
-    github: 'https://github.com/Random-Pikachu/SecurePDF',
-    live: 'https://secure-pdf-five.vercel.app/',
-    youtube: '',
-    span: 3,
-  },
-  {
-    index: '07',
+    slug: 'code-sync',
     title: 'Code-Sync',
+    summary: 'Google Docs for code: shared cursors, one room, run it with Judge0.',
     description:
       'A collaborative code editor that works like Google Docs for developers. It lets you write code with friends in real-time, see their cursor position in the editor, and run code using Judge0.',
     stack: ['React', 'Socket.io', 'Node.js', 'MongoDB', 'Monaco Editor'],
     github: 'https://github.com/Random-Pikachu/Code-Sync',
     live: 'https://codesync-v8bl.onrender.com/',
     youtube: '',
-    span: 2,
+    image: 'code-sync',
+  },
+  {
+    index: '07',
+    slug: 'securepdf',
+    title: 'SecurePDF',
+    summary: 'PDFs locked to one machine, with a clock, and no way to print or copy.',
+    description:
+      "An offline desktop tool that locks PDFs to a specific computer so they can't be shared. It uses hardware binding and time limits to control access, while completely disabling printing and copying to prevent leaks.",
+    stack: ['Python', 'Fernet', 'PyMuPDF', 'CustomTkinter'],
+    github: 'https://github.com/Random-Pikachu/SecurePDF',
+    live: 'https://secure-pdf-five.vercel.app/',
+    youtube: '',
+    image: 'securepdf',
+    archived: true,
   },
   {
     index: '08',
+    slug: 'sorting-visualizer',
     title: 'Sorting Visualizer',
+    summary: 'Watch merge sort and quick sort race, bar by bar.',
     description:
       'Interactive visualizer for sorting algorithms. Watch Merge Sort, Quick Sort and more in real-time.',
     stack: ['React'],
     github: 'https://github.com/Random-Pikachu/Sorting-Visualizer-v2',
     live: 'https://random-pikachu.github.io/Sorting-Visualizer-v2/',
     youtube: '',
-    span: 5,
+    image: 'sorting-visualizer',
+    archived: true,
   },
 ];
+
+/** The six plates of the Details sheet, in order. */
+export const PLATES = PROJECTS.filter((p) => !p.archived);
+/** Projects listed after the strip as not issued. */
+export const ARCHIVE = PROJECTS.filter((p) => p.archived);
 
 /** Everything the Person entity claims expertise in, deduped across sections. */
 export const KNOWS_ABOUT = [

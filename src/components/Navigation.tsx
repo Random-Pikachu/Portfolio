@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { Menu, X, CalendarDays, Sun, Moon } from 'lucide-react';
-import { SECTIONS, SITE } from '../data/site';
-
-const NAV_IDS = SECTIONS.map((s) => s.id);
+import { Sun, Moon } from 'lucide-react';
+import { PAGES, SITE } from '../data/site';
+import { goTo } from '../sheet/scroll';
+import { sheetStore, useSheetState } from '../sheet/store';
 
 function applyTheme(isDark: boolean) {
   document.documentElement.classList.toggle('dark', isDark);
@@ -11,19 +11,24 @@ function applyTheme(isDark: boolean) {
 }
 
 /**
- * `home` wires the section links as in-page anchors with smooth scrolling.
- * `sub` is for standalone pages like /photography, where those same links have
- * to point back at the home page (`/#about`) instead of at nothing.
+ * The top bar of every sheet: the wordmark, the two pages, the résumé, the
+ * call, the theme toggle and, on phones, the index button. Transparent over
+ * the cover; a hairline arrives with the first scroll. `sub` is for pages
+ * outside the home set, where the wordmark goes home.
  */
 export default function Navigation({
   variant = 'home',
 }: {
   variant?: 'home' | 'sub';
 }) {
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+  const { menu } = useSheetState();
   const isHome = variant === 'home';
-  const sectionHref = (id: string) => (isHome ? `#${id}` : `/#${id}`);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   /**
    * The current theme is never held in React state. Both icons are rendered and
@@ -71,223 +76,63 @@ export default function Navigation({
     });
   };
 
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [open]);
-
-  /**
-   * Active-section tracking via IntersectionObserver rather than a scroll
-   * listener. The old version called getBoundingClientRect() on every section on
-   * every scroll event, which forces a synchronous layout each time and shows up
-   * as interaction latency; the observer costs nothing between transitions.
-   *
-   * rootMargin carves out a band just under the navbar — a section counts as
-   * active once it reaches the top of the viewport.
-   */
-  useEffect(() => {
-    if (!isHome) return;
-    const els = NAV_IDS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => el !== null
-    );
-    if (!els.length) return;
-
-    const visible = new Set<string>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) visible.add(entry.target.id);
-          else visible.delete(entry.target.id);
-        }
-        // Deepest section currently in the band wins, matching reading order.
-        let next = '';
-        for (let i = NAV_IDS.length - 1; i >= 0; i--) {
-          if (visible.has(NAV_IDS[i])) {
-            next = NAV_IDS[i];
-            break;
-          }
-        }
-        setActive(next);
-      },
-      { rootMargin: '-120px 0px -80% 0px', threshold: 0 }
-    );
-
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [isHome]);
-
-  // Real anchors keep the links crawlable and keyboard-operable; this only takes
-  // over to add smooth scrolling and to close the mobile sheet.
-  const handleAnchor = (id: string) => (e: React.MouseEvent) => {
-    if (!isHome) return;
-    const el = document.getElementById(id);
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: 'smooth' });
-    history.replaceState(null, '', `#${id}`);
-    setOpen(false);
-  };
-
-  const linkClass = (id: string) =>
-    `mono text-sm tracking-[0.08em] transition-colors duration-200 ${
-      active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
-    }`;
-
   const themeIcons = (
     <>
-      <Sun size={18} className="hidden dark:block" aria-hidden="true" />
-      <Moon size={18} className="block dark:hidden" aria-hidden="true" />
+      <Sun size={16} className="hidden dark:block" aria-hidden="true" />
+      <Moon size={16} className="block dark:hidden" aria-hidden="true" />
     </>
   );
 
-  return (
-    <>
-      <nav
-        aria-label="Primary"
-        className="fixed top-0 inset-x-0 z-50 h-[64px] flex items-center justify-between px-4 sm:px-6 border-b border-border-main bg-bg-base/80 backdrop-blur-md"
-      >
-        <a
-          href={isHome ? '#hero' : '/'}
-          onClick={handleAnchor('hero')}
-          className="mono text-sm text-text-light tracking-[0.1em] hover:text-text-muted transition-colors"
-        >
-          random-pikachu
-        </a>
+  const here = (href: string) =>
+    typeof location !== 'undefined' && (location.pathname === href || location.pathname === `${href}.html` || location.pathname.startsWith(`${href}/`));
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-6">
-          {SECTIONS.map(({ id, label }) => (
-            <a
-              key={id}
-              href={sectionHref(id)}
-              onClick={handleAnchor(id)}
-              aria-current={active === id ? 'true' : undefined}
-              className={linkClass(id)}
-            >
-              {label}
+  return (
+    <header className={`topbar ${scrolled || !isHome ? 'is-scrolled' : ''}`}>
+      <div className="sheet topbar__inner">
+        <a
+          href={isHome ? '#cover' : '/'}
+          onClick={
+            isHome
+              ? (e) => {
+                  e.preventDefault();
+                  goTo('cover');
+                }
+              : undefined
+          }
+          className="topbar__mark mono"
+          aria-label="Back to the cover"
+        >
+          /sangam<span className="caret" aria-hidden="true" />
+        </a>
+        <nav className="topbar__links" aria-label="Pages">
+          {PAGES.map((p) => (
+            <a key={p.id} href={p.href} aria-current={here(p.href) ? 'page' : undefined} className="topbar__page">
+              {p.block}
             </a>
           ))}
-          <a
-            href="/photography"
-            aria-current={!isHome ? 'page' : undefined}
-            className={`mono text-sm tracking-[0.08em] transition-colors duration-200 ${
-              !isHome ? 'text-accent' : 'text-text-faint hover:text-accent'
-            }`}
-          >
-            photography
+          <span className="topbar__sep" aria-hidden="true" />
+          <a href={SITE.resume} target="_blank" rel="noopener" className="topbar__page">
+            Résumé <span aria-hidden="true">↗</span>
           </a>
-          <div className="w-px h-3 bg-border-inner" aria-hidden="true" />
-          <a
-            href={SITE.resume}
-            target="_blank"
-            rel="noopener"
-            className="mono text-sm text-text-faint hover:text-accent transition-colors"
-          >
-            resume ↗
+          <a href={SITE.calendar} target="_blank" rel="noopener" className="topbar__page">
+            Call <span aria-hidden="true">↗</span>
           </a>
-          <a
-            href={SITE.calendar}
-            target="_blank"
-            rel="noopener"
-            className="mono text-sm text-text-faint hover:text-accent transition-colors flex items-center gap-1"
-          >
-            <CalendarDays className="w-4 h-4" aria-hidden="true" />
-            schedule ↗
-          </a>
-          <div className="w-px h-3 bg-border-inner" aria-hidden="true" />
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle colour theme"
-            className="text-text-faint hover:text-accent p-1 transition-colors"
-          >
-            {themeIcons}
-          </button>
-        </div>
-
-        {/* Mobile controls */}
-        <div className="md:hidden flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="text-text-faint hover:text-accent p-2 transition-colors"
-            aria-label="Toggle colour theme"
-          >
+          <span className="topbar__sep topbar__sep--wide" aria-hidden="true" />
+          <button type="button" onClick={toggleTheme} aria-label="Toggle colour theme" className="topbar__theme">
             {themeIcons}
           </button>
           <button
             type="button"
-            onClick={() => setOpen(!open)}
-            className="text-text-faint hover:text-accent p-2 transition-colors"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
+            className="topbar__index"
+            onClick={() => sheetStore.set({ menu: true })}
+            aria-label="Open the sheet index"
+            aria-expanded={menu}
+            aria-controls="tile-index"
           >
-            {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+            Index
           </button>
-        </div>
-      </nav>
-
-      {/* Mobile overlay */}
-      <div
-        id="mobile-menu"
-        aria-label="Primary"
-        className={`fixed inset-x-0 top-[64px] bottom-0 z-40 border-b border-border-main bg-bg-base/95 backdrop-blur-md md:hidden transition-all duration-300 ${
-          open
-            ? 'opacity-100 pointer-events-auto translate-y-0'
-            : 'opacity-0 pointer-events-none -translate-y-2'
-        }`}
-      >
-        <div className="flex h-full flex-col justify-between px-6 py-8">
-          <div className="flex flex-col gap-6">
-            {SECTIONS.map(({ id, label }) => (
-              <a
-                key={id}
-                href={sectionHref(id)}
-                onClick={handleAnchor(id)}
-                tabIndex={open ? 0 : -1}
-                className={`mono text-left text-xl tracking-[0.08em] transition-colors ${
-                  active === id ? 'text-accent' : 'text-text-faint hover:text-accent'
-                }`}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-4 border-t border-border-main pt-6">
-            <a
-              href="/photography"
-              tabIndex={open ? 0 : -1}
-              className={`mono text-sm transition-colors ${
-                !isHome ? 'text-accent' : 'text-text-faint hover:text-accent'
-              }`}
-            >
-              photography
-            </a>
-            <a
-              href={SITE.resume}
-              target="_blank"
-              rel="noopener"
-              tabIndex={open ? 0 : -1}
-              className="mono text-sm text-text-faint hover:text-accent transition-colors"
-            >
-              resume ↗
-            </a>
-            <a
-              href={SITE.calendar}
-              target="_blank"
-              rel="noopener"
-              tabIndex={open ? 0 : -1}
-              className="mono text-sm text-text-faint hover:text-accent transition-colors"
-            >
-              schedule ↗
-            </a>
-          </div>
-        </div>
+        </nav>
       </div>
-    </>
+    </header>
   );
 }

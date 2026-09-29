@@ -1,0 +1,221 @@
+/* ─── Prose ───────────────────────────────────────────────────────────────
+   Markdown bodies: notes and detail sheets. Plex Sans at 17px on a 62ch
+   measure, Zodiak for headings, code in Plex Mono on the raised paper, and
+   no radius anywhere.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .prose {
+    color: var(--ink-2);
+    font-size: var(--text-body);
+    line-height: 1.6;
+  }
+
+  .prose > * {
+    max-width: 62ch;
+  }
+
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--ink);
+    scroll-margin-top: calc(var(--nav-h) + 24px);
+  }
+
+  .prose h2 {
+    font-size: var(--text-display-2);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+    line-height: 1.1;
+    margin: var(--sp-16) 0 var(--sp-4);
+  }
+
+  .prose h3 {
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    margin: var(--sp-12) 0 var(--sp-3);
+  }
+
+  .prose h4 {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: var(--sp-8) 0 var(--sp-2);
+  }
+
+  .prose p {
+    margin: 0 0 var(--sp-4);
+  }
+
+  .prose a {
+    color: var(--ink);
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: 0 100%;
+  }
+
+  .prose a:hover {
+    color: var(--accent);
+  }
+
+  .prose strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  .prose ul,
+  .prose ol {
+    margin: 0 0 var(--sp-4);
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .prose li {
+    position: relative;
+    padding-left: 26px;
+    margin: 0 0 8px;
+  }
+
+  .prose ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 14px;
+    height: 1px;
+    background: var(--line-2);
+  }
+
+  .prose ol {
+    counter-reset: item;
+  }
+
+  .prose ol li::before {
+    counter-increment: item;
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.2em;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+  }
+
+  .prose blockquote {
+    margin: var(--sp-6) 0;
+    padding: 0 0 0 var(--sp-6);
+    border-left: 1px solid var(--line-2);
+    color: var(--ink-2);
+    font-family: var(--font-display);
+    font-size: var(--text-pull);
+    line-height: 1.3;
+  }
+
+  .prose hr {
+    border: 0;
+    height: 1px;
+    background: var(--line);
+    margin: var(--sp-12) 0;
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--paper-2);
+    padding: 1px 5px;
+    color: var(--ink);
+  }
+
+  .prose pre {
+    max-width: none;
+    margin: var(--sp-6) 0;
+    padding: var(--sp-4) var(--sp-6);
+    border: 1px solid var(--line);
+    background: var(--paper-2) !important;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.65;
+    tab-size: 2;
+  }
+
+  .prose pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  .prose img,
+  .prose video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: var(--sp-6) 0;
+  }
+
+  .prose figure {
+    margin: var(--sp-6) 0;
+  }
+
+  .prose figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-top: var(--sp-3);
+  }
+
+  .prose table {
+    max-width: none;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+    margin: var(--sp-6) 0;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .prose th,
+  .prose td {
+    text-align: left;
+    padding: 8px 16px 8px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  .prose th {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+  }
+
+  .prose input[type="checkbox"] {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--ink-3);
+    vertical-align: -1px;
+    margin-right: 8px;
+  }
+
+  .prose input[type="checkbox"]:checked {
+    background: var(--ink);
+  }
+
+  .prose sup a {
+    background: none;
+  }
+}

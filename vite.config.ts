@@ -7,13 +7,15 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/',
   build: {
-    // Two entries rather than a router: the 27-photo manifest and the gallery
-    // never load on the home page, and the home page bundle stays router-free.
-    // Rollup shares the React chunk between them automatically.
+    // One entry per page type rather than a router: the photo manifest, the
+    // notes and the detail sheets never load on the home page. Rollup shares
+    // the React chunk between them automatically.
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
         photography: resolve(__dirname, 'photography.html'),
+        blog: resolve(__dirname, 'blog.html'),
+        work: resolve(__dirname, 'work.html'),
       },
     },
   },

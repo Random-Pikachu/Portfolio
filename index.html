@@ -5,20 +5,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <!-- Resource hints: font CSS and the analytics/heatmap origins are all
-       cross-origin, so warming the connections early removes a full RTT each. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Resource hints: the analytics and heatmap origins are cross-origin, so
+       warming the connections early removes a full RTT each. Fonts are
+       self-hosted and bundled with the stylesheet. -->
   <link rel="dns-prefetch" href="https://cloud.umami.is" />
   <link rel="dns-prefetch" href="https://devtrackr-backend-84jw.onrender.com" />
   <link rel="preconnect" href="https://devtrackr-backend-84jw.onrender.com" crossorigin />
 
-  <!-- Loaded from HTML rather than @import in CSS: an @import puts the font
-       request behind the stylesheet in the critical chain instead of beside it. -->
-  <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+
+  <!-- The cover wash is the largest thing above the fold; fetch it before the
+       stylesheet asks for it. One preload per layout. -->
+  <link rel="preload" as="image" href="/wash/cover-phone.webp" media="(max-width: 47.99rem)" />
+  <link rel="preload" as="image" imagesrcset="/wash/cover-960.webp 960w, /wash/cover-1600.webp 1600w" imagesizes="46vw" media="(min-width: 48rem)" />
 
   <!-- Icons -->
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -28,8 +26,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
   <meta name="color-scheme" content="dark light" />
 
   <!-- Primary SEO -->
@@ -43,6 +41,7 @@
     content="Sangam Pratap Singh, Random-Pikachu, software engineer, full stack developer, KDE Plasma contributor, open source, C++, Go, TypeScript, React, PostgreSQL, ABV-IIITM Gwalior, portfolio" />
   <meta name="application-name" content="Sangam Pratap Singh" />
   <meta name="apple-mobile-web-app-title" content="Sangam" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="format-detection" content="telephone=no" />

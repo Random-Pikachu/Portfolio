@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <link rel="dns-prefetch" href="https://cloud.umami.is" />
+
+  <!-- Icons -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="author" content="Sangam Pratap Singh" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <link rel="me" href="https://github.com/Random-Pikachu" />
+  <link rel="me" href="https://linkedin.com/in/sangam21" />
+  <link rel="author" href="https://github.com/Random-Pikachu" />
+
+  <!-- Per-page title, description, canonical and social tags are injected at
+       build time by scripts/prerender.mjs. -->
+  <!--page-head-->
+
+  <!-- Structured data (injected at build time by scripts/prerender.mjs) -->
+  <!--structured-data-->
+
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="6b32c0a9-7f49-481a-8fc1-a95133286f30"></script>
+
+  <script>
+    try {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (_) { }
+  </script>
+
+  <noscript>
+    <style>
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/work.tsx"></script>
+</body>
+
+</html>

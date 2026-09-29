@@ -1,5 +1,6 @@
 import { SITE, ORIGIN, EXPERIENCES, PROJECTS, KNOWS_ABOUT, SECTIONS } from './site';
 import { PHOTOS } from './photos';
+import type { Note, WorkMeta } from './content.generated';
 
 const PERSON_ID = `${ORIGIN}/#person`;
 const WEBSITE_ID = `${ORIGIN}/#website`;
@@ -88,7 +89,7 @@ export function buildStructuredData(lastModified: string) {
       position: i + 1,
       item: {
         '@type': 'SoftwareSourceCode',
-        '@id': `${ORIGIN}/#project-${p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+        '@id': `${ORIGIN}/#project-${p.slug}`,
         name: p.title,
         headline: p.title,
         description: p.description,
@@ -209,6 +210,77 @@ export function buildPhotographyStructuredData(lastModified: string) {
           copyrightHolder: { '@id': PERSON_ID },
           creditText: SITE.name,
         })),
+      },
+    ],
+  };
+}
+
+/** A note at /blog/<slug>. */
+export function buildNoteStructuredData(note: Note, lastModified: string) {
+  const url = `${ORIGIN}/blog/${note.slug}`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        '@id': `${url}#note`,
+        url,
+        mainEntityOfPage: url,
+        headline: note.title,
+        description: note.summary,
+        datePublished: note.date,
+        dateModified: lastModified,
+        inLanguage: SITE.lang,
+        isPartOf: { '@id': `${ORIGIN}/blog#notes` },
+        author: { '@id': PERSON_ID },
+        publisher: { '@id': PERSON_ID },
+        image: SITE.ogImage,
+      },
+    ],
+  };
+}
+
+/** The index at /blog. */
+export function buildNotesStructuredData(notes: Note[], lastModified: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Blog',
+        '@id': `${ORIGIN}/blog#notes`,
+        url: `${ORIGIN}/blog`,
+        name: `Notes by ${SITE.name}`,
+        inLanguage: SITE.lang,
+        dateModified: lastModified,
+        isPartOf: { '@id': WEBSITE_ID },
+        author: { '@id': PERSON_ID },
+        blogPost: notes.map((n) => ({ '@id': `${ORIGIN}/blog/${n.slug}#note` })),
+      },
+    ],
+  };
+}
+
+/** A detail sheet at /work/<slug>. */
+export function buildWorkStructuredData(slug: string, meta: WorkMeta, lastModified: string) {
+  const p = PROJECTS.find((x) => x.slug === slug);
+  if (!p) return { '@context': 'https://schema.org', '@graph': [] };
+  const url = `${ORIGIN}/work/${p.slug}`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${url}#detail`,
+        url,
+        mainEntityOfPage: url,
+        headline: `${p.title}: a detail sheet`,
+        description: p.summary,
+        dateModified: lastModified,
+        inLanguage: SITE.lang,
+        author: { '@id': PERSON_ID },
+        about: { '@id': `${ORIGIN}/#project-${p.slug}` },
+        ...(meta.role ? { abstract: meta.role } : {}),
+        image: p.image ? `${ORIGIN}/work/${p.image}-1600.webp` : SITE.ogImage,
       },
     ],
   };

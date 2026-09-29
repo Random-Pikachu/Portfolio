@@ -1,25 +1,19 @@
 import type Lenis from 'lenis';
-import Snap from 'lenis/snap';
 import { sheetStore } from './store';
 
 /**
- * The scroll layer. One Lenis instance (from SmoothScroll), one Snap, one
+ * The scroll layer. One Lenis instance (from SmoothScroll) and one
  * IntersectionObserver. Everything that moves the page goes through here so
  * the hash, the rail, the title block and keyboard focus always agree.
  *
- * Snapping is proximity in both modes, with a threshold of 45% of the
- * viewport on pointer devices and 25% on touch. With sheets one viewport
- * tall that settles every stop onto a sheet, and on a sheet taller than the
- * viewport it never drags the reader away from what they stopped on. That is
- * the guard rail from the plan: no scroll trap, ever.
+ * There is no snapping. The project scene maps native vertical travel onto
+ * a horizontal track; every stop is the reader's own.
  */
 let lenis: Lenis | null = null;
-let snap: Snap | null = null;
 let observer: IntersectionObserver | null = null;
 const sheets = new Map<HTMLElement, string>();
 const visible = new Set<string>();
 const order: string[] = [];
-let plateRemovers: (() => void)[] = [];
 
 export const reducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -29,23 +23,10 @@ export const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(
 
 export function attachLenis(instance: Lenis) {
   lenis = instance;
-  const coarse = window.matchMedia('(pointer: coarse)').matches;
-  snap?.destroy();
-  snap = new Snap(instance, {
-    type: 'proximity',
-    distanceThreshold: coarse ? '25%' : '45%',
-    debounce: 400,
-    // A jump is not motion: under reduced motion the snap still lands, at once.
-    duration: reducedMotion() ? 0 : 0.9,
-    easing: easeInOut,
-  });
-  sheets.forEach((_, el) => snap?.addElement(el, { align: 'start' }));
   instance.on('scroll', ({ progress }: { progress: number }) => sheetStore.set({ progress }));
 }
 
 export function detachLenis() {
-  snap?.destroy();
-  snap = null;
   lenis = null;
 }
 
@@ -85,45 +66,11 @@ export function registerSheet(el: HTMLElement, id: string) {
   if (!order.includes(id)) order.push(id);
   ensureObserver();
   observer?.observe(el);
-  const remove = snap?.addElement(el, { align: 'start' });
   return () => {
     sheets.delete(el);
     visible.delete(id);
     observer?.unobserve(el);
-    remove?.();
   };
-}
-
-/** Details registers one snap point per plate, in page pixels. */
-export function setPlateSnaps(points: number[]) {
-  plateRemovers.forEach((r) => r());
-  plateRemovers = snap ? points.map((y) => snap!.add(y)) : [];
-}
-
-/**
- * A plate lives inside a transformed track, so its own position on the page
- * says nothing about where to scroll. The strip is six viewports tall with
- * one plate per viewport, so plate i sits at the strip's top plus i
- * viewports. Read from the DOM at call time, so it never depends on what
- * has mounted yet. Null when the plates are stacked and flow normally.
- */
-function platePosition(el: HTMLElement): number | null {
-  const strip = el.closest<HTMLElement>('.details');
-  if (!strip || strip.classList.contains('details--stack')) return null;
-  if (window.matchMedia('(max-width: 47.99rem)').matches || reducedMotion()) return null;
-  const plates = Array.from(strip.querySelectorAll<HTMLElement>('.plate'));
-  const i = plates.indexOf(el);
-  if (i < 0) return null;
-  return strip.getBoundingClientRect().top + window.scrollY + i * window.innerHeight;
-}
-
-/** Sideways trackpad input inside the strip becomes page scroll, at once. */
-export function scrollByPixels(delta: number) {
-  if (!lenis) {
-    window.scrollBy(0, delta);
-    return;
-  }
-  lenis.scrollTo(lenis.scroll + delta, { immediate: true });
 }
 
 export function scrollToY(y: number, { instant = false } = {}) {
@@ -146,13 +93,18 @@ export function scrollToY(y: number, { instant = false } = {}) {
  * Scroll to a sheet or plate by id, then set the hash without a history
  * entry and move keyboard focus to the sheet's heading.
  */
-export async function goTo(id: string, { instant = false } = {}) {
+export async function goTo(id: string, { instant = false, focus = true } = {}) {
   const el = document.getElementById(id);
   if (!el) return;
-  const top = (el.classList.contains('plate') ? platePosition(el) : null) ?? el.getBoundingClientRect().top + window.scrollY;
+  const scene = el.closest<HTMLElement>('[data-scroll-scene][data-pinned="true"]');
+  const pin = scene?.querySelector<HTMLElement>('[data-scroll-pin]');
+  const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+  const top = scene && pin
+    ? scene.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(pin).top) || 0) + el.offsetLeft
+    : el.getBoundingClientRect().top + window.scrollY - margin;
   await scrollToY(top, { instant });
   syncHash(`#${id}`);
-  focusHeading(el);
+  if (focus) focusHeading(el);
 }
 
 export function syncHash(hash: string) {

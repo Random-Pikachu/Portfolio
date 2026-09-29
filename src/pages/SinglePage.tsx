@@ -22,7 +22,7 @@ export default function SinglePage() {
       <Sheet id={ABOUT.id} num={ABOUT.num} block={ABOUT.block} heading={ABOUT.heading}>
         <About />
       </Sheet>
-      <Sheet id={EXPERIENCE.id} num={EXPERIENCE.num} block={EXPERIENCE.block} heading={EXPERIENCE.heading} caption="Jul 2025 → now">
+      <Sheet id={EXPERIENCE.id} num={EXPERIENCE.num} block={EXPERIENCE.block} heading={EXPERIENCE.heading} caption="3 roles · Jul 2025 → now">
         <Experience />
       </Sheet>
       <Sheet id={PROJECTS.id} num={PROJECTS.num} block={PROJECTS.block} heading={PROJECTS.heading} caption="6 sheets · 2 not issued">

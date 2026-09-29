@@ -1,295 +1,252 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent, type MouseEvent, type PointerEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { ARCHIVE, PLATES, type Project } from '../data/site';
 import { WORK } from '../data/content.generated';
-import { reducedMotion, scrollByPixels, scrollToY, setPlateSnaps, syncHash } from '../sheet/scroll';
+import { goTo, syncHash } from '../sheet/scroll';
 import { sheetStore, useSheetState } from '../sheet/store';
-import { useScrollProgress } from '../sheet/useScrollProgress';
 
 const N = PLATES.length;
-const STACK_QUERY = '(max-width: 47.99rem)';
 
 /**
- * One plate: a print lying on the sheet (hence the hard shadow), the banner
- * covering it, a dark gradient rising from the bottom, and at the bottom the
- * detail number, title, one line, the fields that exist, the stack and the
- * links. Only fields that exist are rendered; nothing is invented.
+ * One plate: the print — a screenshot lying on the sheet with its hard,
+ * offset shadow — and beside it the annotation: detail number, title, one
+ * line, the fields that exist, the stack and the links. Only fields that
+ * exist are rendered; nothing is invented.
  */
-function Plate({ p, i, active }: { p: Project; i: number; active: boolean }) {
+function Plate({ p, i }: { p: Project; i: number }) {
   const meta = WORK[p.slug];
   return (
-    <li
-      id={`project-${p.slug}`}
-      className="plate"
-      data-active={active}
-      aria-roledescription="sheet"
-      aria-label={`Detail ${i + 1} of ${N}, ${p.title}`}
-    >
-      <div className="plate__print">
+    <li id={`project-${p.slug}`} className="plate" aria-label={`Detail ${i + 1} of ${N}, ${p.title}`}>
+      <figure className="plate__print">
         {p.image ? (
           <img
             className="plate__img"
             src={`/work/${p.image}-1600.webp`}
             srcSet={`/work/${p.image}-960.webp 960w, /work/${p.image}-1600.webp 1600w`}
-            sizes="(max-width: 47.99rem) 100vw, calc(100vw - 168px)"
+            sizes="(max-width: 47.99rem) 100vw, 50vw"
             width={1600}
             height={1200}
             alt={`${p.title} screenshot`}
             loading={i < 2 ? 'eager' : 'lazy'}
             decoding="async"
+            draggable={false}
           />
         ) : (
           <div className="plate__type" aria-hidden="true">
             <span>{p.title}</span>
           </div>
         )}
-        <div className="plate__shade" aria-hidden="true" />
-        <div className="plate__caption">
-          <div className="plate__text">
-            <p className="t-label plate__num" aria-hidden="true">
-              Detail {i + 1} of {N}
-            </p>
-            <h3 id={`project-${p.slug}-title`} tabIndex={-1} data-plate-heading className="t-display-2 plate__title">
-              {p.title}
-            </h3>
-            <p className="t-body plate__line">{p.summary}</p>
-            <p className="sr-only">{p.description}</p>
-            {meta?.role || meta?.hardest ? (
-              <dl className="plate__spec t-data">
-                {meta.role ? (
-                  <div>
-                    <dt>Role</dt>
-                    <dd>{meta.role}</dd>
-                  </div>
-                ) : null}
-                {meta.hardest ? (
-                  <div>
-                    <dt>Hardest</dt>
-                    <dd>{meta.hardest}</dd>
-                  </div>
-                ) : null}
-              </dl>
+      </figure>
+      <div className="plate__caption">
+        <p className="t-label plate__num" aria-hidden="true">
+          Detail {i + 1} / {N}
+        </p>
+        <h3 id={`project-${p.slug}-title`} tabIndex={-1} data-plate-heading className="t-display-2 plate__title">
+          {p.title}
+        </h3>
+        <p className="t-body plate__line">{p.summary}</p>
+        <p className="sr-only">{p.description}</p>
+        {meta?.role || meta?.hardest ? (
+          <dl className="plate__spec t-data">
+            {meta.role ? (
+              <div>
+                <dt>Role</dt>
+                <dd>{meta.role}</dd>
+              </div>
             ) : null}
-            <p className="t-label plate__stack">{p.stack.join(' · ')}</p>
-          </div>
-          <p className="plate__links">
-            {p.live ? (
-              <a href={p.live} target="_blank" rel="noopener" className="plate__link plate__link--pri" aria-label={`${p.title}, live site`}>
-                Live <span aria-hidden="true">↗</span>
-              </a>
+            {meta.hardest ? (
+              <div>
+                <dt>Hardest</dt>
+                <dd>{meta.hardest}</dd>
+              </div>
             ) : null}
-            <a href={p.github} target="_blank" rel="noopener" className="plate__link" aria-label={`${p.title}, source on GitHub`}>
-              GitHub <span aria-hidden="true">↗</span>
+          </dl>
+        ) : null}
+        <p className="t-label plate__stack">{p.stack.join(' · ')}</p>
+        <p className="plate__links">
+          {p.live ? (
+            <a href={p.live} target="_blank" rel="noopener" className="plate__link plate__link--pri" aria-label={`${p.title}, live site`}>
+              Live <span aria-hidden="true">↗</span>
             </a>
-            {p.youtube ? (
-              <a href={p.youtube} target="_blank" rel="noopener" className="plate__link" aria-label={`${p.title}, video walkthrough`}>
-                Demo <span aria-hidden="true">↗</span>
-              </a>
-            ) : null}
-            {meta?.published ? (
-              <a href={`/work/${p.slug}`} className="plate__link">
-                Case study <span aria-hidden="true">→</span>
-              </a>
-            ) : null}
-          </p>
-        </div>
+          ) : null}
+          <a href={p.github} target="_blank" rel="noopener" className="plate__link" aria-label={`${p.title}, source on GitHub`}>
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+          {p.youtube ? (
+            <a href={p.youtube} target="_blank" rel="noopener" className="plate__link" aria-label={`${p.title}, video walkthrough`}>
+              Demo <span aria-hidden="true">↗</span>
+            </a>
+          ) : null}
+          {meta?.published ? (
+            <a href={`/work/${p.slug}`} className="plate__link">
+              Case study <span aria-hidden="true">→</span>
+            </a>
+          ) : null}
+        </p>
       </div>
     </li>
   );
 }
 
-/**
- * Sheet 03. The six plates travel through one frame the width of the sheet.
- * The section is six viewports tall; a sticky frame one viewport tall holds
- * the track, and vertical progress maps linearly onto the track's travel, so
- * native scroll is never hijacked and Lenis, the hash, the rail and the
- * keyboard all agree. Snap points sit on every plate. Dragging the frame,
- * arrow keys and a sideways trackpad swipe all move the same page scroll.
- * Under 48rem, with reduced motion or without scripting the plates stack.
- */
 export function Details() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
   const markerRef = useRef<HTMLSpanElement>(null);
-  const [stacked, setStacked] = useState(false);
-  const [frameW, setFrameW] = useState(0);
   const [current, setCurrent] = useState(0);
   const { sheet } = useSheetState();
 
-  // Progress through the section drives the track and the marker directly,
-  // without a render; only the whole-plate index goes through React.
-  const layout = useRef({ stacked, frameW });
-  useEffect(() => {
-    layout.current = { stacked, frameW };
-    // Re-read once with the new geometry so the track lands where it should.
-    window.dispatchEvent(new Event('scroll'));
-  }, [stacked, frameW]);
-  const onProgress = useCallback((p: number) => {
-    const { stacked: s, frameW: w } = layout.current;
-    if (s) return;
-    if (trackRef.current) trackRef.current.style.transform = `translate3d(${(-p * (N - 1) * w).toFixed(2)}px, 0, 0)`;
-    if (markerRef.current) markerRef.current.style.left = `${(p * 100).toFixed(3)}%`;
-    const i = Math.min(N - 1, Math.max(0, Math.round(p * (N - 1))));
-    setCurrent((prev) => (prev === i ? prev : i));
-  }, []);
-  useScrollProgress(sectionRef, onProgress);
-
-  // The store carries the active plate only while this sheet is the active
-  // one, and the hash names the plate in the frame.
-  useEffect(() => {
-    const inStrip = sheet === 'projects' && !stacked;
-    sheetStore.set({ plate: inStrip ? current : null });
-    if (inStrip) syncHash(`#project-${PLATES[current].slug}`);
-  }, [sheet, current, stacked]);
-
-  const sectionTop = () => (sectionRef.current ? sectionRef.current.getBoundingClientRect().top + window.scrollY : 0);
-
-  const measure = useCallback(() => {
-    // A fragment navigation to #project-<slug> makes the browser scroll this
-    // overflow-hidden frame sideways to reveal the plate. The track's transform
-    // is the only thing that may move it, so the frame's own scroll is pinned.
-    if (frameRef.current) frameRef.current.scrollLeft = 0;
-    const stackedNow = window.matchMedia(STACK_QUERY).matches || reducedMotion();
-    setStacked(stackedNow);
-    setFrameW(frameRef.current?.clientWidth ?? 0);
-    if (stackedNow) {
-      setPlateSnaps([]);
-      return;
-    }
-    const top = sectionTop();
-    const vh = window.innerHeight;
-    setPlateSnaps(Array.from({ length: N }, (_, i) => top + i * vh));
+  const show = useCallback((i: number) => {
+    void goTo(`project-${PLATES[i].slug}`);
   }, []);
 
-  useEffect(() => {
-    // Observing the document catches every layout change above the strip,
-    // and fires once on observe, which is the initial measure.
-    const ro = new ResizeObserver(measure);
-    ro.observe(document.documentElement);
-    if (frameRef.current) ro.observe(frameRef.current);
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const pin = pinRef.current;
+    const track = trackRef.current;
+    if (!section || !pin || !track) return;
+    const plates = Array.from(track.querySelectorAll<HTMLElement>('.plate'));
+    const narrow = window.matchMedia('(max-width: 47.99rem)');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let offsets: number[] = [];
+    let distance = 0;
+    let inset = 0;
+    let raf = 0;
+
+    const read = () => {
+      raf = 0;
+      let i = 0;
+      if (section.dataset.pinned === 'true') {
+        const x = Math.min(distance, Math.max(0, inset - section.getBoundingClientRect().top));
+        track.style.transform = `translate3d(${-x}px, 0, 0)`;
+        if (markerRef.current) markerRef.current.style.left = `${distance ? x / distance * 100 : 0}%`;
+        i = offsets.reduce((nearest, offset, index) => (
+          Math.abs(offset - x) < Math.abs(offsets[nearest] - x) ? index : nearest
+        ), 0);
+      } else {
+        const line = window.innerHeight * 0.45;
+        plates.forEach((plate, index) => {
+          if (plate.getBoundingClientRect().top <= line) i = index;
+        });
+      }
+      setCurrent((prev) => (prev === i ? prev : i));
+    };
+
+    const measure = () => {
+      section.dataset.pinned = String(!narrow.matches && !motion.matches && N > 1);
+      section.style.height = '';
+      track.style.transform = '';
+      inset = parseFloat(getComputedStyle(pin).top) || 0;
+      if (section.dataset.pinned === 'true' && pin.offsetHeight + inset + 24 > window.innerHeight) {
+        section.dataset.pinned = 'false';
+      }
+      if (section.dataset.pinned === 'true') {
+        offsets = plates.map((plate) => plate.offsetLeft);
+        distance = offsets.at(-1) ?? 0;
+        section.style.height = `${pin.offsetHeight + distance}px`;
+      }
+      read();
+    };
+
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(read);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(pin);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', measure);
+    narrow.addEventListener('change', measure);
+    motion.addEventListener('change', measure);
     return () => {
-      ro.disconnect();
-      setPlateSnaps([]);
+      observer.disconnect();
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', measure);
+      narrow.removeEventListener('change', measure);
+      motion.removeEventListener('change', measure);
+      if (raf) cancelAnimationFrame(raf);
+      delete section.dataset.pinned;
+      section.style.height = '';
+      track.style.transform = '';
     };
-  }, [measure]);
+  }, []);
 
-  // Arrow keys, Home and End, while this sheet is in view.
   useEffect(() => {
-    if (stacked) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (sheetStore.get().sheet !== 'projects') return;
-      const t = e.target as HTMLElement | null;
-      if (t && ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName)) return;
-      let i: number | null = null;
-      if (e.key === 'ArrowRight') i = Math.min(N - 1, current + 1);
-      else if (e.key === 'ArrowLeft') i = Math.max(0, current - 1);
-      else if (e.key === 'Home') i = 0;
-      else if (e.key === 'End') i = N - 1;
-      if (i === null) return;
-      e.preventDefault();
-      scrollToY(sectionTop() + i * window.innerHeight);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [current, stacked]);
+    const inSheet = sheet === 'projects';
+    sheetStore.set({ plate: inSheet ? current : null });
+    if (inSheet) syncHash(`#project-${PLATES[current].slug}`);
+  }, [sheet, current]);
 
-  // A sideways trackpad swipe over the frame moves the strip.
-  useEffect(() => {
-    const el = frameRef.current;
-    if (!el || stacked) return;
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) + 2) return;
-      e.preventDefault();
-      scrollByPixels(e.deltaX * (window.innerHeight / (frameW || 1)));
-    };
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, [stacked, frameW]);
-
-  // Drag: horizontal pointer travel becomes vertical page scroll, one-to-one
-  // with the track, so everything else stays in sync. A drag suppresses the
-  // click that would otherwise follow it.
-  const drag = useRef<{ x: number; scroll: number; moved: boolean } | null>(null);
-  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    if (stacked || e.button !== 0) return;
-    drag.current = { x: e.clientX, scroll: window.scrollY, moved: false };
-    e.currentTarget.setPointerCapture(e.pointerId);
-    e.currentTarget.classList.add('is-dragging');
-  };
-  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    const dx = e.clientX - drag.current.x;
-    if (Math.abs(dx) > 4) drag.current.moved = true;
-    scrollToY(drag.current.scroll - dx * (window.innerHeight / (frameW || 1)), { instant: true });
-  };
-  const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    e.currentTarget.classList.remove('is-dragging');
-    const moved = drag.current.moved;
-    drag.current = null;
-    if (moved) {
-      suppressClick.current = true;
-      setTimeout(() => (suppressClick.current = false), 0);
-    }
-  };
-  const suppressClick = useRef(false);
-  const onClickCapture = (e: MouseEvent<HTMLDivElement>) => {
-    if (suppressClick.current) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (sectionRef.current?.dataset.pinned !== 'true' || e.altKey || e.ctrlKey || e.metaKey) return;
+    let i: number | null = null;
+    if (e.key === 'ArrowRight') i = Math.min(N - 1, current + 1);
+    else if (e.key === 'ArrowLeft') i = Math.max(0, current - 1);
+    else if (e.key === 'Home') i = 0;
+    else if (e.key === 'End') i = N - 1;
+    if (i === null) return;
+    e.preventDefault();
+    show(i);
   };
 
-  // Tabbing into a plate brings it into the frame.
   const onFocus = (e: FocusEvent<HTMLDivElement>) => {
-    if (stacked) return;
-    const li = (e.target as HTMLElement).closest<HTMLElement>('.plate');
-    if (!li) return;
-    const i = PLATES.findIndex((p) => `project-${p.slug}` === li.id);
-    if (i >= 0 && i !== current) scrollToY(sectionTop() + i * window.innerHeight);
+    if (sectionRef.current?.dataset.pinned !== 'true') return;
+    const plate = (e.target as HTMLElement).closest<HTMLElement>('.plate');
+    const frame = e.currentTarget.getBoundingClientRect();
+    const target = e.target.getBoundingClientRect();
+    if (plate && (target.left < frame.left || target.right > frame.right)) {
+      void goTo(plate.id, { instant: true, focus: false });
+    }
   };
 
   return (
     <div className="sheet">
-      <div ref={sectionRef} className={`details ${stacked ? 'details--stack' : ''}`} style={{ '--n': N } as CSSProperties}>
-        <div className="details__pin">
+      <div ref={sectionRef} className="details" data-scroll-scene>
+        <div ref={pinRef} className="details__pin" data-scroll-pin onKeyDown={onKeyDown}>
           <div className="details__head">
-            <p className="t-label details__counter" aria-live="polite">
-              {stacked ? (
-                <>
-                  <b>{N}</b> details
-                </>
-              ) : (
-                <>
-                  Detail <b>{current + 1}</b> of {N}
-                </>
-              )}
+            <p className="t-label details__counter">
+              Selected work
+              <span className="details__position"> / <b>{String(current + 1).padStart(2, '0')}</b></span>
+              {' / '}{String(N).padStart(2, '0')}
             </p>
-            {stacked ? null : (
+            <div className="details__nav">
               <p className="t-label details__hint" aria-hidden="true">
-                scroll · drag · ← →
+                Scroll down to explore <span aria-hidden="true">↓</span>
               </p>
-            )}
+              <button
+                type="button"
+                className="details__step"
+                onClick={() => show(Math.max(0, current - 1))}
+                disabled={current === 0}
+                aria-label="Previous detail"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                className="details__step"
+                onClick={() => show(Math.min(N - 1, current + 1))}
+                disabled={current === N - 1}
+                aria-label="Next detail"
+              >
+                →
+              </button>
+            </div>
           </div>
+
           <div
-            ref={frameRef}
             className="details__frame"
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
-            onClickCapture={onClickCapture}
             onFocus={onFocus}
             onScroll={(e) => {
               if (e.currentTarget.scrollLeft) e.currentTarget.scrollLeft = 0;
             }}
           >
-            <ol ref={trackRef} className="details__track" aria-label="Plates">
+            <ol ref={trackRef} className="details__track" aria-label="Project details">
               {PLATES.map((p, i) => (
-                <Plate key={p.slug} p={p} i={i} active={stacked || i === current} />
+                <Plate key={p.slug} p={p} i={i} />
               ))}
             </ol>
           </div>
+
           <div className="ruler" aria-hidden="true">
             <span className="ruler__line" />
             {PLATES.map((p, i) => (
@@ -298,8 +255,6 @@ export function Details() {
               </span>
             ))}
             <span ref={markerRef} className="ruler__marker" />
-            <span className="ruler__label t-label">{N} sheets</span>
-            <span className="ruler__depth t-label">Depth 0 mm</span>
           </div>
         </div>
       </div>

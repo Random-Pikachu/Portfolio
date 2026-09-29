@@ -1,0 +1,40 @@
+# .github/workflows/ai-review.yml
+name: AI Review (on demand)
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  ai_review:
+    # Runs ONLY when a repo member types /review on a PR. Nothing automatic.
+    if: >-
+      ${{ github.event.issue.pull_request
+          && github.event.sender.type != 'Bot'
+          && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+          && (github.event.comment.body == '/review'
+              || startsWith(github.event.comment.body, '/review ')) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Run pr-agent review
+        uses: The-PR-Agent/pr-agent@1d01f24f455bb879c1d9c557ad7de3d72dcc7975   # v0.46.0, pinned SHA
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Primary: OpenRouter free models (your chosen lineup)
+          OPENROUTER__KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          CONFIG__MODEL: "openrouter/deepseek/deepseek-v4-flash:free"
+          CONFIG__FALLBACK_MODELS: '["openrouter/qwen/qwen3.7-flash:free","openrouter/minimax/minimax-m2.7:free","groq/llama-3.3-70b-versatile","azure/${{ secrets.AZURE_OPENAI_DEPLOYMENT_LUNA }}"]'
+          CONFIG__CUSTOM_MODEL_MAX_TOKENS: "128000"
+          GROQ__API_KEY: ${{ secrets.GROQ_API_KEY }}
+          # Azure Foundry last resort (only fires when every free tier fails)
+          OPENAI_KEY: ${{ secrets.AZURE_OPENAI_KEY_LUNA }}
+          OPENAI.API_TYPE: "azure"
+          OPENAI.API_VERSION: "2025-03-01-preview"
+          OPENAI.API_BASE: ${{ secrets.AZURE_OPENAI_ENDPOINT_LUNA }}
+          OPENAI.DEPLOYMENT_ID: ${{ secrets.AZURE_OPENAI_DEPLOYMENT_LUNA }}
+          # Noise control: cap findings, keep one persistent comment
+          PR_REVIEWER.NUM_MAX_FINDINGS: "5"
+          PR_REVIEWER.PERSISTENT_COMMENT: "true"

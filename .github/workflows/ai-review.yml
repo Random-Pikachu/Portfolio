@@ -25,8 +25,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Primary: OpenRouter free models (your chosen lineup)
           OPENROUTER__KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          CONFIG__MODEL: "openrouter/deepseek/deepseek-v4-flash:free"
-          CONFIG__FALLBACK_MODELS: '["openrouter/qwen/qwen3.7-flash:free","openrouter/minimax/minimax-m2.7:free","groq/llama-3.3-70b-versatile","azure/${{ secrets.AZURE_OPENAI_DEPLOYMENT_LUNA }}"]'
+          CONFIG__MODEL: "openrouter/qwen/qwen3.8-27b:free"
+          CONFIG__FALLBACK_MODELS: '["openrouter/nvidia/nemotron-3-ultra-550b-a55b:free","openrouter/stealth/space-bunny-alpha","openrouter/thinkingmachines/inkling:free","openrouter/cohere/north-mini-code:free","openrouter/poolside/laguna-s-2.1:free","openrouter/openrouter/free","groq/openai/gpt-oss-120b","azure/${{ secrets.AZURE_OPENAI_DEPLOYMENT_LUNA }}"]'
           CONFIG__CUSTOM_MODEL_MAX_TOKENS: "128000"
           GROQ__API_KEY: ${{ secrets.GROQ_API_KEY }}
           # Azure Foundry last resort (only fires when every free tier fails)

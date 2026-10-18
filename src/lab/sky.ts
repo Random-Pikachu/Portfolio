@@ -88,8 +88,15 @@ void main() {
                 fbm(uv * 2.2 + vec2(5.2, 1.3) - uTime * 0.0035, oct));
   float clouds = fbm(uv * 2.8 + q * 1.5, oct);
 
-  float r = length((uv - uSun) * ar);
-  float sunD = exp(-r * mix(3.1, 6.4, uDusk));
+  /*
+    Glow radius measured in units of the SHORT viewport edge, not in
+    aspect-corrected uv. With aspect correction the x term is divided by W/H, so on a
+    portrait phone (about 0.46) the falloff stretched to the full width and
+    the sun swallowed the top half of the screen. This keeps its size a fixed
+    fraction of the short edge at every aspect ratio.
+  */
+  float r = length((uv - uSun) * uRes) / min(uRes.x, uRes.y);
+  float sunD = exp(-r * mix(3.1, 8.2, uDusk));
 
   /*
     Ink is the minority. In daylight the plates print only at the top and the
@@ -115,11 +122,17 @@ void main() {
     texture meaningful where it does survive: the transition band and the
     halo around the lamp, and nowhere else.
   */
-  float dBlue = mix(top * 0.40, 0.88 + sky * 0.11, uDusk);
+  float dBlue = mix(top * 0.33, 0.88 + sky * 0.11, uDusk);
   dBlue -= sunD * mix(0.30, 0.62, uDusk);          // the lamp burns through the plate
 
   // ── Separation 2: orange. A warm edge, then only the lamp. ──
-  float dOrange = mix(bottom * 0.19 + sunD * 0.34, sunD * 0.88, uDusk);
+  /*
+    At dusk the lamp used to float in open sky in the lower right, which read
+    as a smudge rather than a light: a glow needs either a source or an edge to
+    come from. Its centre now sits below the trim, so only the upper falloff
+    enters the frame and it reads as light from off the sheet.
+  */
+  float dOrange = mix(bottom * 0.17 + sunD * 0.30, sunD * 0.62, uDusk);
 
   // The well exists to keep dark type legible on pale paper. At dusk the type
   // is cream and the sheet is overprinted, so a pale band through the middle
@@ -168,7 +181,12 @@ void main() {
 
   // Half a pixel of misregistration, in opposite directions. Barely nameable,
   // but its absence is exactly what makes a print look digital.
-  float cell = max(4.0, uRes.x / 320.0);
+  /*
+    Cell size. This was 4.5 device pixels at desktop width — about 3 CSS px,
+    fine enough that the grid shimmers and is genuinely tiring to read against.
+    Fewer, larger dots carry the same density and sit still.
+  */
+  float cell = max(6.5, uRes.x / 190.0);
   float cB = screen(gl_FragCoord.xy, dBlue,   15.0, cell, vec2(-0.6,  0.35));
   float cO = screen(gl_FragCoord.xy, dOrange, 45.0, cell, vec2( 0.55, -0.4));
 

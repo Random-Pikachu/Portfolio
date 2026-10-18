@@ -7,10 +7,13 @@
 <title>Last Light — sunset lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- Fraunces carries SOFT and WONK axes, so one family gives a wonky 96px
-     display and a calm 18px prose face. Martian Mono is the hard counterpart:
-     wide, rigid, mechanical. Two families, maximum contrast between them. -->
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Martian+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<!-- Young Serif is a single-weight display slab: heavy bracketed serifs that
+     read as letterpressed rather than rendered, which is the only treatment
+     that agrees with a riso sheet. Newsreader carries the prose, DM Mono the
+     spec-sheet fields. Fontshare has better faces for this (Zodiak, Erode) but
+     is unreachable from the build container, so these are what can be seen
+     before they ship. -->
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
 </head>
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
@@ -55,7 +58,7 @@
 
   </main>
 
-  <p class="hint"><kbd>t</kbd> for dusk</p>
+  <p class="hint"><kbd>t</kbd> for <span id="hintTarget">dusk</span></p>
   <script type="module" src="/src/lab/main.ts"></script>
 </body>
 </html>

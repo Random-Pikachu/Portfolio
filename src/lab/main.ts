@@ -24,6 +24,7 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 */
 const phaseEl = document.querySelector<HTMLElement>('#phase')!;
 const clockEl = document.querySelector<HTMLTimeElement>('#clock')!;
+const hintEl = document.querySelector<HTMLElement>('#hintTarget')!;
 
 function tickClock() {
   const d = new Date();
@@ -48,7 +49,7 @@ if (!sky) {
 
 /** Sun travels down the frame as dusk arrives, and the lamp sits lower. */
 // At dusk the lamp drops into the corner, clear of the index row.
-const SUN_Y = { day: 0.74, night: 0.17 };
+const SUN_Y = { day: 0.74, night: -0.06 };
 const SUN_X = 0.78;
 const SUN_X_NIGHT = 0.88;
 
@@ -71,6 +72,8 @@ function apply(ch: SunsetChannels, next: Theme) {
   if (root.dataset.theme !== flipped) {
     root.dataset.theme = flipped;
     phaseEl.textContent = flipped === 'dusk' ? 'dusk' : 'last light';
+    // The hint names where you are going, not where you are.
+    hintEl.textContent = flipped === 'dusk' ? 'daylight' : 'dusk';
   }
   void next;
 }
@@ -81,13 +84,19 @@ const sunset = new Sunset(theme, {
   onDone: (t) => {
     root.dataset.theme = t;
     storeTheme(t);
-    toggle.setAttribute('aria-pressed', String(t === 'dusk'));
-    toggle.setAttribute('aria-label', t === 'dusk' ? 'Switch to daylight' : 'Switch to dusk');
+    label(t);
   },
 });
 
+function label(t: Theme) {
+  phaseEl.textContent = t === 'dusk' ? 'dusk' : 'last light';
+  hintEl.textContent = t === 'dusk' ? 'daylight' : 'dusk';
+  toggle.setAttribute('aria-pressed', String(t === 'dusk'));
+  toggle.setAttribute('aria-label', t === 'dusk' ? 'Switch to daylight' : 'Switch to dusk');
+}
+
 apply(Sunset.settled(theme), theme);
-toggle.setAttribute('aria-pressed', String(theme === 'dusk'));
+label(theme);
 
 toggle.addEventListener('click', () => {
   // Anticipation: the dot pulls back before it travels. Driven by a class so

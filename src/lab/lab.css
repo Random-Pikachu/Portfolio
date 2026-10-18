@@ -28,8 +28,7 @@ body {
       var(--paper) 34%, var(--paper) 68%,
       var(--paper-raised) 68%);
   color: var(--ink);
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: 'opsz' 14, 'SOFT' 20, 'WONK' 0;
+  font-family: 'Newsreader', Georgia, serif;
   font-size: var(--t-body);
 }
 
@@ -68,7 +67,7 @@ body {
   height: 46px;
   padding: 0 clamp(14px, 2vw, 22px);
   border-bottom: 1px solid var(--line);
-  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-family: 'DM Mono', ui-monospace, monospace;
   font-size: var(--t-micro);
   font-weight: 300;
   letter-spacing: 0.02em;
@@ -93,12 +92,10 @@ body {
 }
 
 h1 {
+  font-family: 'Young Serif', Georgia, serif;
   font-size: var(--t-display);
-  font-weight: 450;
-  /* WONK on: the display cut gets the idiosyncratic leg and ear shapes that
-     make Fraunces look cut rather than generated. */
-  font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
-  line-height: 0.96;
+  font-weight: 400;          /* Young Serif ships one weight. Useful discipline. */
+  line-height: 1.02;
   letter-spacing: -0.028em;
   margin: 0 0 clamp(20px, 3vh, 34px);
   text-wrap: balance;
@@ -106,8 +103,8 @@ h1 {
   transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
 }
 h1 em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+  /* No italic cut in Young Serif, so the ampersand carries the accent alone. */
+  font-style: normal;
   color: var(--accent);
   transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
 }
@@ -140,7 +137,7 @@ h1 em {
   display: grid;
   grid-template-columns: 52px 1fr;
   gap: 7px 14px;
-  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-family: 'DM Mono', ui-monospace, monospace;
   font-size: var(--t-micro);
   font-weight: 300;
   line-height: 1.5;
@@ -151,7 +148,7 @@ h1 em {
 .lede {
   margin: 0;
   font-size: var(--t-lede);
-  font-variation-settings: 'opsz' 18, 'SOFT' 30, 'WONK' 0;
+  font-weight: 400;
   line-height: 1.62;
   text-wrap: pretty;
   color: var(--ink-muted);
@@ -159,7 +156,7 @@ h1 em {
 }
 .lede em {
   font-style: italic;
-  font-variation-settings: 'opsz' 18, 'SOFT' 60, 'WONK' 1;
+  font-weight: 500;
   color: var(--ink);
   transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
 }
@@ -171,7 +168,7 @@ h1 em {
   align-items: center;
   gap: 11px;
   margin: clamp(46px, 9vh, 104px) 0 0;
-  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-family: 'DM Mono', ui-monospace, monospace;
   font-size: var(--t-micro);
   font-weight: 300;
   color: var(--ink-muted);
@@ -230,7 +227,7 @@ h1 em {
   bottom: calc(var(--frame-inset) + 14px);
   z-index: 3;
   margin: 0;
-  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-family: 'DM Mono', ui-monospace, monospace;
   font-size: var(--t-micro);
   font-weight: 300;
   color: var(--ink-faint);

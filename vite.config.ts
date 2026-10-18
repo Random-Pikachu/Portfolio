@@ -14,6 +14,8 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         photography: resolve(__dirname, 'photography.html'),
+        // Phase 1 lab. Noindex, and dropped from the build before launch.
+        lab: resolve(__dirname, 'lab.html'),
       },
     },
   },

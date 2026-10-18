@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-theme="lastlight">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Last Light — sunset lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Fraunces carries SOFT and WONK axes, so one family gives a wonky 96px
+     display and a calm 18px prose face. Martian Mono is the hard counterpart:
+     wide, rigid, mechanical. Two families, maximum contrast between them. -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Martian+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <svg id="grain" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+
+  <!-- The frame. A hairline inset from the viewport edge turns the page from a
+       scrolling surface into a printed object with margins. -->
+  <div class="frame" aria-hidden="true"></div>
+
+  <header class="rail">
+    <span class="rail-l" data-stagger>random-pikachu.dev</span>
+    <span class="rail-c" data-stagger>last light — 16:40</span>
+    <button id="toggle" aria-pressed="false" aria-label="Switch to dusk">
+      <span class="rule"></span><span class="dot"></span>
+    </button>
+  </header>
+
+  <main id="stage">
+    <h1 data-stagger>Founding engineer<br><em>&amp;</em> AI systems</h1>
+
+    <div class="rule-h" aria-hidden="true"></div>
+
+    <!-- Two columns sharing a top edge: identity on the left as spec-sheet
+         fields, the claim on the right as prose. Space does the grouping. -->
+    <div class="cols">
+      <dl class="meta" data-stagger>
+        <dt>name</dt>      <dd>Sangam Pratap Singh</dd>
+        <dt>at</dt>        <dd>Retsguide, Copenhagen</dd>
+        <dt>since</dt>     <dd>Jun 2026</dd>
+      </dl>
+      <p class="lede" data-stagger>
+        I built the product end to end and am now building its <em>legal
+        brain</em>. I build AI systems that can be checked: the model reads
+        and ranks, the code decides.
+      </p>
+    </div>
+
+    <p class="cue" data-stagger><span class="tick" aria-hidden="true"></span>selected work</p>
+
+  </main>
+
+  <p class="hint"><kbd>t</kbd> for dusk</p>
+  <script type="module" src="/src/lab/main.ts"></script>
+</body>
+</html>

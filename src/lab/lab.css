@@ -1,0 +1,251 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+/* ─── Scale ────────────────────────────────────────────────────────────────
+   Six steps, each a clear jump from the last. The old cut had a 96px display
+   and then nothing until 13px, so nothing in between could carry hierarchy.
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  --t-display: clamp(40px, 6.4vw, 82px);
+  --t-lede:    clamp(17px, 1.5vw, 19px);
+  --t-stat:    clamp(21px, 2.1vw, 27px);
+  --t-body:    15px;
+  --t-label:   11.5px;
+  --t-micro:   10.5px;
+
+  --gutter: clamp(20px, 4.4vw, 60px);
+  --frame-inset: clamp(12px, 1.6vw, 20px);
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  /* Fallback sky for the no-WebGL path. Banded with hard colour stops rather
+     than a smooth blend, so even the fallback reads as print, not airbrush. */
+  background:
+    linear-gradient(to bottom,
+      var(--paper-sunk) 0%, var(--paper-sunk) 34%,
+      var(--paper) 34%, var(--paper) 68%,
+      var(--paper-raised) 68%);
+  color: var(--ink);
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: 'opsz' 14, 'SOFT' 20, 'WONK' 0;
+  font-size: var(--t-body);
+}
+
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0;
+       opacity: 0; animation: skyIn 800ms var(--ease-glide) 120ms forwards; }
+@keyframes skyIn { to { opacity: 1; } }
+
+/* An SVG with inset:0 but no CSS height keeps its intrinsic 150px, so the
+   grain only ever covered a strip across the top. */
+#grain { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1;
+         pointer-events: none; opacity: var(--grain-opacity);
+         transition: opacity var(--dur-slow) var(--ease-glide); }
+
+/* The printed margin. Structure, not decoration — it establishes the edges
+   every other element aligns to. */
+.frame {
+  position: fixed;
+  inset: var(--frame-inset);
+  z-index: 2;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  transition: border-color var(--dur-base) var(--ease-glide);
+}
+
+/* ─── Top rail ─────────────────────────────────────────────────────────── */
+.rail {
+  position: fixed;
+  top: var(--frame-inset);
+  left: var(--frame-inset);
+  right: var(--frame-inset);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 46px;
+  padding: 0 clamp(14px, 2vw, 22px);
+  border-bottom: 1px solid var(--line);
+  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-size: var(--t-micro);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--ink-faint);
+  transition: color var(--dur-base) var(--ease-glide),
+              border-color var(--dur-base) var(--ease-glide);
+}
+.rail-c { opacity: 0.8; }
+@media (max-width: 640px) { .rail-c { display: none; } }
+
+/* ─── Stage ────────────────────────────────────────────────────────────── */
+#stage {
+  position: relative;
+  z-index: 3;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--frame-inset) + 78px) calc(var(--frame-inset) + var(--gutter))
+           calc(var(--frame-inset) + 64px);
+  max-width: 1320px;
+}
+
+h1 {
+  font-size: var(--t-display);
+  font-weight: 450;
+  /* WONK on: the display cut gets the idiosyncratic leg and ear shapes that
+     make Fraunces look cut rather than generated. */
+  font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
+  line-height: 0.96;
+  letter-spacing: -0.028em;
+  margin: 0 0 clamp(20px, 3vh, 34px);
+  text-wrap: balance;
+  color: var(--ink);
+  transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
+}
+h1 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+  color: var(--accent);
+  transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
+}
+
+/* `flex: 1` here grew the rule to fill #stage's column axis — a 1px hairline
+   became a 200px block. It only ever needed to stretch inside .index-head,
+   which is a row. */
+.rule-h {
+  height: 1px;
+  align-self: stretch;
+  flex: none;
+  background: var(--line);
+  transition: background var(--dur-base) var(--ease-glide);
+}
+.index-head .rule-h { flex: 1; align-self: auto; }
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(180px, 230px) minmax(0, 58ch);
+  gap: clamp(24px, 5vw, 76px);
+  margin-top: clamp(22px, 3.4vh, 38px);
+  align-items: start;
+}
+@media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 26px; } }
+
+/* Spec-sheet fields. A definition list is the honest element here: these are
+   genuinely term/value pairs, not a styled table. */
+.meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 7px 14px;
+  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-size: var(--t-micro);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.meta dt { color: var(--ink-faint); transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms); }
+.meta dd { margin: 0; color: var(--ink-muted); transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms); }
+
+.lede {
+  margin: 0;
+  font-size: var(--t-lede);
+  font-variation-settings: 'opsz' 18, 'SOFT' 30, 'WONK' 0;
+  line-height: 1.62;
+  text-wrap: pretty;
+  color: var(--ink-muted);
+  transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
+}
+.lede em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 18, 'SOFT' 60, 'WONK' 1;
+  color: var(--ink);
+  transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
+}
+
+/* The one thing pulling the eye downward. Deliberately the quietest element
+   on the page: a tick and four words. */
+.cue {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: clamp(46px, 9vh, 104px) 0 0;
+  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-size: var(--t-micro);
+  font-weight: 300;
+  color: var(--ink-faint);
+  transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
+}
+.cue .tick {
+  width: 1px;
+  height: 26px;
+  background: var(--line);
+  transition: background var(--dur-base) var(--ease-glide);
+}
+
+/* ─── Toggle ───────────────────────────────────────────────────────────── */
+#toggle {
+  position: relative;
+  width: 58px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  flex: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#toggle .rule {
+  position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+  background: var(--line);
+  transition: background var(--dur-base) var(--ease-glide);
+}
+#toggle .dot {
+  position: absolute; top: 50%; left: 0;
+  width: 9px; height: 9px; margin: -4.5px 0 0 -1px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform:
+    translateX(calc(var(--p-sky, 0) * 49px))
+    translateY(calc(sin(var(--p-sky, 0) * 180deg) * -6px));
+  transition: background var(--dur-base) var(--ease-glide),
+              box-shadow var(--dur-slow) var(--ease-glide);
+}
+:root[data-theme='dusk'] #toggle .dot {
+  box-shadow: 0 0 9px 1px color-mix(in oklab, var(--accent) 50%, transparent);
+}
+#toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 3px; }
+#toggle:active .dot { scale: 0.96; }
+
+/* Anticipation — the dot pulls back before it travels. */
+#toggle.anticipate .dot { animation: pullback 90ms var(--ease-anticipate); }
+@keyframes pullback {
+  0% { margin-left: -1px; } 60% { margin-left: -5px; } 100% { margin-left: -1px; }
+}
+
+.hint {
+  position: fixed;
+  right: calc(var(--frame-inset) + clamp(14px, 2vw, 22px));
+  bottom: calc(var(--frame-inset) + 14px);
+  z-index: 3;
+  margin: 0;
+  font-family: 'Martian Mono', ui-monospace, monospace;
+  font-size: var(--t-micro);
+  font-weight: 300;
+  color: var(--ink-faint);
+  transition: color var(--dur-base) var(--ease-glide);
+}
+.hint kbd {
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 1px 5px;
+  margin-right: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sky { animation: none; opacity: 1; }
+  *, *::before, *::after { transition-duration: 0ms !important; }
+  #toggle.anticipate .dot { animation: none; }
+}

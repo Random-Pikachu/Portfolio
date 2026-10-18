@@ -1,0 +1,103 @@
+/* ─── Last Light — design tokens ───────────────────────────────────────────
+   Two themes built from one formula: a cool field with exactly one warm light
+   source. Light is 4:40pm in late October; dark is 7:20pm the same day.
+
+   Contrast ratios against their own background are noted per token and were
+   computed, not estimated. Everything carrying text clears WCAG AA. The two
+   --line values are for 1px rules only and must never sit under type.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root,
+:root[data-theme='lastlight'] {
+  color-scheme: light;
+
+  --paper:        #F4EFE6;
+  --paper-raised: #FAF6EE;
+  --paper-sunk:   #EBE4D8;
+
+  --ink:          #17150F;  /* 15.94:1 */
+  --ink-muted:    #5E564A;  /*  6.31:1 */
+  --ink-faint:    #776E60;  /*  4.38:1 */
+
+  --accent:       #A63D16;  /*  5.56:1 — the sun */
+  --cool:         #35497A;  /*  7.69:1 */
+  --line:         #BFB3A0;  /*  2.05:1 — hairlines; must hold against the dot field */
+
+  /* Night is grainier than afternoon; the sunset animates between these. */
+  --grain-opacity: 0.035;
+
+  /* Where the sky's warm source sits, as a fraction of the viewport. The
+     sunset drives these toward the dusk values below. */
+  --sun-x: 0.70;
+  --sun-y: 0.25;
+}
+
+:root[data-theme='dusk'] {
+  color-scheme: dark;
+
+  /* Indigo, not black. The whole reference is blue; black would lose it. */
+  --paper:        #0C1222;
+  --paper-raised: #131B2F;
+  --paper-sunk:   #080D1A;
+
+  --ink:          #EBE4D6;  /* 14.75:1 */
+  --ink-muted:    #A2A9BD;  /*  7.95:1 */
+  --ink-faint:    #8A93AC;  /*  4.41:1 on the dusk flood */
+
+  --accent:       #F0A258;  /*  8.90:1 — the lamp */
+  --cool:         #7392CF;  /*  5.99:1 */
+  --line:         #35456B;  /*  2.10:1 — hairlines; must hold against the dot field */
+
+  --grain-opacity: 0.06;
+
+  --sun-x: 0.70;
+  --sun-y: 0.62;
+}
+
+/* Respect the OS only until the visitor has chosen for themselves. The theme
+   script sets data-theme explicitly on first paint, so this block is a
+   belt-and-braces fallback for the no-JS case. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --paper: #0C1222; --paper-raised: #131B2F; --paper-sunk: #080D1A;
+    --ink: #EBE4D6; --ink-muted: #A2A9BD; --ink-faint: #6E7894;
+    --accent: #F0A258; --cool: #7392CF; --line: #1E2840;
+    --grain-opacity: 0.06;
+    --sun-x: 0.70; --sun-y: 0.62;
+  }
+}
+
+/* ─── Motion ───────────────────────────────────────────────────────────────
+   Anime timing rather than anime imagery. The two that matter:
+
+   --ease-anticipate has a negative first control point, so a move begins by
+   travelling backwards. --ease-settle overshoots past 1 and returns, so an
+   arrival lands with weight instead of easing politely into place.
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  --ease-anticipate: cubic-bezier(0.34, -0.25, 0.20, 1.00);
+  --ease-settle:     cubic-bezier(0.22,  1.40, 0.36, 1.00);
+  --ease-glide:      cubic-bezier(0.16,  1.00, 0.30, 1.00);
+  --ease-snap:       cubic-bezier(0.70,  0.00, 0.30, 1.00);
+
+  --dur-instant: 120ms;
+  --dur-quick:   220ms;
+  --dur-base:    420ms;
+  --dur-slow:    900ms;
+
+  /* Dusk is slower than dawn. Reversing at the same speed feels sluggish. */
+  --dur-sunset:  1600ms;
+  --dur-sunrise: 1100ms;
+
+  /* 間 — the held beat. Nothing may animate for this long after a section
+     settles. It is what makes the site read as unhurried rather than slow. */
+  --ma: 400ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0ms; --dur-quick: 0ms; --dur-base: 0ms;
+    --dur-slow: 0ms; --dur-sunset: 0ms; --dur-sunrise: 0ms; --ma: 0ms;
+  }
+}

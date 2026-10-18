@@ -86,16 +86,24 @@ yes when asked directly. If you want it on the site, ask Retsguide for clearance
 on the evaluation numbers alone. If the answer is no, the site still works — see
 §9, where every featured project is one you own outright.
 
-**Status.** Sangam has confirmed the figures are accurate and his own work. That
-settles accuracy, not permission. Work done for an employer, on their data, for
-their product, is normally theirs to release regardless of who wrote it, and the
-standing instruction here is that the architecture cannot be published right
-now. So the position stands until he says one of two things: that someone at
-Retsguide has cleared it, or that he is making the call himself knowing it is
-his risk to carry. Either answer unblocks it. Until then nothing from the held-
-back list enters the repo, the site or the Figma file.
+**Settled, 18 Oct 2026.** The numbers stay off the site for now and go up once
+Retsguide's product is public. Nothing from the held-back list enters the repo,
+the site or the Figma file before then.
 
-### Proof points to surface large
+When that day comes the change is small and already planned for: the retrieval
+work becomes featured project `#1` in §9, and the proof row in §2 leads with the
+before-and-after retrieval benchmark. Everything else stays as built.
+
+### Proof points — not in the hero
+
+**These do not go above the fold.** Stripped of their sentence, `15 of 18` and
+`2x` say nothing: the reader has no idea what eighteen of what, or twice what.
+A row of four orphaned figures is a landing-page billboard, and it is the exact
+opposite of the unhurried tone the rest of the design is built on. They belong
+beside the work they came from, where the surrounding sentence gives them
+meaning.
+
+The hero carries the name, the position and one claim. Nothing else.
 
 Chosen so every number is yours, publishable, and verifiable by a visitor.
 
@@ -215,13 +223,46 @@ functional, just not cinematic.
 
 ---
 
-## 5. The sky (WebGL, no images)
+## 5. The sky — a two-ink riso print (WebGL, no images)
 
 Per your note: no illustration, no photography-as-decoration, no generated
-imagery. All atmosphere is procedural. One fragment shader on a fixed
-full-viewport canvas behind the content.
+imagery. All atmosphere is procedural.
 
-What it draws:
+**This started as a soft gradient and that was the mistake.** A smooth
+airbrushed wash with text floating on it is the single clearest signature of a
+templated site, and dithering a gradient that gentle changes nothing. The fix
+was to commit to an actual medium rather than to a tasteful effect.
+
+The sky is now a **two-colour risograph separation**: warm cream stock, a dusty
+cobalt plate and a vermilion plate, each screened into visible halftone dots at
+its own angle (15 and 45 degrees, so the grids never moire). The plates are
+offset by about half a pixel in opposite directions — registration slop, which
+no press avoids and whose absence is most of what makes print look digital.
+Inks multiply where they overlap, so the overprint darkens the way wet ink does.
+
+Why it works where the gradient did not: a visible dot grid is *structurally*
+different from a rendered gradient. It cannot be mistaken for one.
+
+Density, not colour, carries the composition:
+
+- **Daylight.** Ink is the minority. The blue plate prints at the top, the
+  vermilion along the bottom edge, and the middle of the sheet stays near-bare
+  paper so type reads. Paper margins top and bottom leave the chrome on clean
+  stock — a halftone at partial coverage is a mid-tone and nothing is legible
+  on it.
+- **Dusk.** The blue plate runs near solid, with a second hit of a deeper ink,
+  because one pass of cobalt over cream tops out at a medium navy that is a dim
+  afternoon rather than a night. Around 0.5 coverage is peak dottiness and reads
+  as mud; at 0.88+ the dots merge into a flood, so the halftone survives only
+  where it means something — the horizon band and the halo around the lamp.
+- **Stars** are unprinted paper: holes punched in the blue plate, not added
+  light.
+
+All contrast values were computed against the actual flood colour, not
+estimated. Cream clears 10:1 on the dusk plate; the muted and faint tones were
+both lifted after the first pass failed AA on it.
+
+The remaining elements:
 1. Vertical gradient field driven by `uDusk` and `uTime`.
 2. Domain-warped fbm noise for soft cloud banding. Very slow — a band should
    take ~40s to visibly travel. This is the "dreamy" quality, with no image file.
@@ -551,10 +592,6 @@ Still open:
 1. ~~First company and person~~ — Documenso / Timur Ercan, written up in §10
    and committed to `src/data/pitches.ts`.
 2. ~~Hero sentence~~ — option A with your edits, in §11.
-3. **Retsguide clearance on the evaluation numbers** (§2.1) — still genuinely
-   open. You confirmed the numbers are accurate and yours, which was never in
-   doubt. What I asked, and still need, is whether *Retsguide* is fine with them
-   being on a public page. Those are different things, and your earlier answer
-   was that the architecture cannot be published right now. Nothing goes on the
-   site until this is settled one way or the other; see the note at the end of
-   §2.1.
+3. ~~Retsguide clearance~~ — deferred until their product is public. See §2.1.
+
+Nothing is blocking. Phase 0 and 1 are underway.

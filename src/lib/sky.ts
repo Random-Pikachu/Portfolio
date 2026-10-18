@@ -27,6 +27,7 @@ uniform float uDusk;    // 0 = last light, 1 = night
 uniform float uGrain;
 uniform vec2  uSun;
 uniform float uStars;
+uniform float uInk;     // overall plate strength, 0..1
 
 out vec4 outColor;
 
@@ -105,13 +106,19 @@ void main() {
     of this stays readable. An earlier pass flooded both separations across the
     whole frame and buried the content.
   */
-  float top    = smoothstep(0.46, 1.08, uv.y + (clouds - 0.5) * 0.34);
-  float bottom = 1.0 - smoothstep(0.0, 0.22, uv.y - (clouds - 0.5) * 0.10);
+  /*
+    The plate edge. Cloud displacement used to be strong enough to tilt the
+    boundary into a diagonal across the frame, which read as an arbitrary
+    slash rather than a horizon. Softened, and the smoothstep widened, so the
+    edge stays broadly horizontal and the cloud field only ruffles it.
+  */
+  float top    = smoothstep(0.40, 1.14, uv.y + (clouds - 0.5) * 0.16);
+  float bottom = 1.0 - smoothstep(0.0, 0.16, uv.y - (clouds - 0.5) * 0.06);
 
   // The text well. Both plates back off through the middle of the sheet so the
   // type sits on near-bare paper. Edges keep their ink; the content does not
   // have to fight a dot field for contrast.
-  float well = smoothstep(0.13, 0.30, uv.y) * (1.0 - smoothstep(0.62, 0.80, uv.y));
+  float well = smoothstep(0.10, 0.28, uv.y) * (1.0 - smoothstep(0.60, 0.84, uv.y));
 
   // ── Separation 1: blue. Sky at the top; floods the sheet at dusk. ──
   float sky = smoothstep(-0.05, 1.05, uv.y * 0.92 + (clouds - 0.5) * 0.55);
@@ -122,7 +129,7 @@ void main() {
     texture meaningful where it does survive: the transition band and the
     halo around the lamp, and nowhere else.
   */
-  float dBlue = mix(top * 0.33, 0.88 + sky * 0.11, uDusk);
+  float dBlue = mix(top * 0.30, 0.88 + sky * 0.11, uDusk);
   dBlue -= sunD * mix(0.30, 0.62, uDusk);          // the lamp burns through the plate
 
   // ── Separation 2: orange. A warm edge, then only the lamp. ──
@@ -132,12 +139,18 @@ void main() {
     come from. Its centre now sits below the trim, so only the upper falloff
     enters the frame and it reads as light from off the sheet.
   */
-  float dOrange = mix(bottom * 0.17 + sunD * 0.30, sunD * 0.62, uDusk);
+  /*
+    The vermilion stripe along the bottom edge was a second band competing with
+    the sky for attention and left the sheet bottom-heavy. It is now barely a
+    tint; the warmth in daylight comes from the sun bleeding into the top plate
+    instead, which is where a late sun actually is.
+  */
+  float dOrange = mix(bottom * 0.05 + sunD * 0.34, sunD * 0.62, uDusk);
 
   // The well exists to keep dark type legible on pale paper. At dusk the type
   // is cream and the sheet is overprinted, so a pale band through the middle
   // is exactly backwards — the well has to close as night falls.
-  float keep = 1.0 - well * mix(0.88, 0.0, uDusk);
+  float keep = 1.0 - well * mix(0.94, 0.0, uDusk);
   dBlue *= keep;
   dOrange *= keep;
 
@@ -154,6 +167,21 @@ void main() {
                     1.0, uDusk);
   dBlue *= sheet;
   dOrange *= sheet;
+
+  /*
+    Plate strength. The full sky belongs to the home hero, which is sized to
+    the viewport and has a text well carved for it. An inner page starts its
+    heading at the top of the sheet, right where the plate is densest, and the
+    heading loses. Inner routes print a whisper instead.
+  */
+  /*
+    Only daylight thins out. Dusk depends on the blue plate running near solid
+    for cream type to have anything to sit on, and scaling it to 0.3 lands it
+    back at the mid coverage that reads as mud and takes the text with it. The
+    lamp dims on inner pages either way.
+  */
+  dBlue *= mix(uInk, 1.0, uDusk);
+  dOrange *= uInk;
 
   // Stars are unprinted paper — holes in the blue plate, not added light.
   if (uStars > 0.001) {
@@ -214,6 +242,8 @@ export interface Sky {
   setDusk(v: number): void;
   /** Star opacity, animated on its own curve by the sunset sequence. */
   setStars(v: number): void;
+  /** Overall plate strength. 1 on the home hero, lower on reading pages. */
+  setInk(v: number): void;
   setGrain(v: number): void;
   /** Warm source position as viewport fractions. */
   setSun(x: number, y: number): void;
@@ -276,6 +306,7 @@ export function createSky(canvas: HTMLCanvasElement, opts: SkyOptions = {}): Sky
     grain: gl.getUniformLocation(program, 'uGrain'),
     sun:   gl.getUniformLocation(program, 'uSun'),
     stars: gl.getUniformLocation(program, 'uStars'),
+    ink:   gl.getUniformLocation(program, 'uInk'),
   };
 
   let dusk = opts.dusk ?? 0;
@@ -283,6 +314,7 @@ export function createSky(canvas: HTMLCanvasElement, opts: SkyOptions = {}): Sky
   let grain = 0.035;
   let sunX = 0.7;
   let sunY = 0.25;
+  let ink = 1;
 
   const frameMs = 1000 / (opts.fps ?? 30);
   let raf = 0;
@@ -314,6 +346,7 @@ export function createSky(canvas: HTMLCanvasElement, opts: SkyOptions = {}): Sky
     gl!.uniform1f(u.dusk, dusk);
     gl!.uniform1f(u.grain, grain);
     gl!.uniform1f(u.stars, stars);
+    gl!.uniform1f(u.ink, ink);
     gl!.uniform2f(u.sun, sunX, sunY);
     gl!.drawArrays(gl!.TRIANGLES, 0, 3);
   }
@@ -337,6 +370,7 @@ export function createSky(canvas: HTMLCanvasElement, opts: SkyOptions = {}): Sky
   return {
     setDusk(v) { dusk = Math.min(1, Math.max(0, v)); },
     setStars(v) { stars = Math.min(1, Math.max(0, v)); },
+    setInk(v) { ink = Math.min(1, Math.max(0, v)); },
     setGrain(v) { grain = v; },
     setSun(x, y) { sunX = x; sunY = y; },
     destroy() {
@@ -345,7 +379,14 @@ export function createSky(canvas: HTMLCanvasElement, opts: SkyOptions = {}): Sky
       document.removeEventListener('visibilitychange', onVisibility);
       gl.deleteProgram(program);
       gl.deleteVertexArray(vao);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      /*
+        Deliberately NOT calling WEBGL_lose_context.loseContext(). It kills the
+        context for the canvas element permanently, and React re-runs effects on
+        the same element — StrictMode does it on every mount in development —
+        so the next createSky got a dead canvas, returned null, and the whole
+        sky silently fell back to the CSS gradient. Dropping the canvas from
+        the DOM releases the context on its own.
+      */
     },
   };
 }

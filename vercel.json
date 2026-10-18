@@ -16,16 +16,8 @@
   ],
   "rewrites": [
     {
-      "source": "/lab",
-      "destination": "/lab.html"
-    },
-    {
-      "source": "/photography",
-      "destination": "/photography.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/"
+      "source": "/((?!.*\\.).*)",
+      "destination": "/404.html"
     }
   ],
   "headers": [

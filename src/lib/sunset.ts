@@ -167,5 +167,11 @@ export function themeFromClock(now = new Date()): Theme {
 }
 
 export function initialTheme(): Theme {
+  // The inline script in index.html already resolved this before first paint.
+  // Read what it decided so the app cannot disagree with what is on screen.
+  if (typeof document !== 'undefined') {
+    const painted = document.documentElement.dataset.theme;
+    if (painted === 'dusk' || painted === 'lastlight') return painted;
+  }
   return readStoredTheme() ?? themeFromClock();
 }

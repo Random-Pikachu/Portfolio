@@ -8,12 +8,16 @@ interface DayData {
     total_contributions: number;
 }
 
+/*
+  Burned in the sheet's own ink rather than GitHub's green, so the heatmap
+  belongs to this design instead of quoting someone else's.
+*/
 function getIntensity(count: number): string {
-    if (count === 0) return 'var(--border-main)';
-    if (count <= 2) return 'var(--heatmap-1, #9be9a8)';
-    if (count <= 5) return 'var(--heatmap-2, #40c463)';
-    if (count <= 10) return 'var(--heatmap-3, #30a14e)';
-    return 'var(--heatmap-4, #216e39)';
+    if (count === 0) return 'var(--heat-0)';
+    if (count <= 2) return 'var(--heat-1)';
+    if (count <= 5) return 'var(--heat-2)';
+    if (count <= 10) return 'var(--heat-3)';
+    return 'var(--heat-4)';
 }
 
 export default function ContributionHeatmap() {
@@ -53,13 +57,19 @@ export default function ContributionHeatmap() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-8">
-                <span className="mono text-xs text-text-faint animate-pulse">loading contributions...</span>
-            </div>
+            <p className="heat-loading">loading contributions&hellip;</p>
         );
     }
 
-    if (days.length === 0) return null;
+    if (days.length === 0) {
+        return (
+            <p className="heat-loading">
+                Contribution data is unavailable right now — it is aggregated from
+                GitHub, LeetCode and Codeforces by{' '}
+                <a href="https://devtrackr-hci.vercel.app/" target="_blank" rel="noopener">DevTrackr</a>.
+            </p>
+        );
+    }
 
     // Build the grid: 53 columns (weeks) x 7 rows (days)
     // First, find the starting day of week for Jan 1
@@ -124,12 +134,12 @@ export default function ContributionHeatmap() {
     });
 
     return (
-        <div className="w-full max-w-full overflow-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 gap-2">
-                <p className="mono text-sm text-text-muted">
-                    <span className="text-accent font-semibold">{totalContribs}</span> contributions in {year}
+        <div className="heat">
+            <div className="heat-head">
+                <p className="heat-total">
+                    <b>{totalContribs}</b> contributions in {year}
                 </p>
-                <div className="flex items-center gap-1.5 mono text-xs text-text-faint">
+                <div className="heat-key">
                     <span>less</span>
                     {[0, 2, 5, 10, 15].map((level) => (
                         <svg key={level} width={10} height={10}>
@@ -139,28 +149,27 @@ export default function ContributionHeatmap() {
                     <span>more</span>
                 </div>
             </div>
-            <p className="mono text-xs text-text-faint mb-6">
+            <p className="heat-src">
                 aggregated from GitHub, LeetCode & Codeforces · powered by{' '}
                 <a
                     href="https://devtrackr-hci.vercel.app/"
                     target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent hover:underline"
-                >
+                    rel="noopener"
+                    >
                     DevTrackr
                 </a>
             </p>
 
-            <div className="max-w-full overflow-x-auto overflow-y-hidden pb-2 [-webkit-overflow-scrolling:touch]">
-                <svg width={svgWidth} height={svgHeight + 16} className="block">
+            <div className="heat-scroll">
+                <svg width={svgWidth} height={svgHeight + 16} role="img" aria-label={`${totalContribs} contributions in ${year}`}>
                     {/* Month labels */}
                     {monthLabels.map(({ label, x }) => (
                         <text
                             key={label}
                             x={x}
                             y={10}
-                            className="fill-text-faint"
-                            style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace' }}
+                            fill="var(--ink-faint)"
+                            style={{ fontSize: '10px', fontFamily: 'var(--font-sans)' }}
                         >
                             {label}
                         </text>
@@ -179,8 +188,7 @@ export default function ContributionHeatmap() {
                                     cy={cy}
                                     r={radius}
                                     fill={getIntensity(day.total_contributions)}
-                                    className="transition-colors duration-150"
-                                >
+                                                                    >
                                     <title>
                                         {day.date}: {day.total_contributions} contribution{day.total_contributions !== 1 ? 's' : ''}
                                     </title>

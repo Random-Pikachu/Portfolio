@@ -1,0 +1,88 @@
+/* ─── Tokens ───────────────────────────────────────────────────────────────
+   The site is one document set as a technical paper: numbered sections, a
+   live margin carrying citations and figures, and line numbers down the left
+   edge — which is both legal pleading paper and a code listing, the two
+   things this work sits between.
+
+   Dark by default. Ratios computed, not estimated.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root,
+:root[data-theme='dusk'] {
+  color-scheme: dark;
+  --bg:     #0B0B0C;
+  --raised: #131315;
+  --text:   #E8E6E1;  /* 15.8:1 — warm white, paper rather than screen */
+  --muted:  #A3A099;  /*  7.5:1 */
+  --faint:  #767269;  /*  4.1:1 — metadata only */
+  --accent: #E8A34D;  /*  9.2:1 */
+  --gutter: #45423D;  /*  2.0:1 — line numbers, decorative by design */
+  --rule:   #1E1E20;
+  --rule-2: #161618;
+  --mark:   #1A1713;  /* cited-passage highlight */
+}
+
+:root[data-theme='lastlight'] {
+  color-scheme: light;
+  --bg:     #FAF9F6;
+  --raised: #FFFFFF;
+  --text:   #15140F;  /* 17.5:1 */
+  --muted:  #4F4C44;  /*  8.1:1 */
+  --faint:  #737068;  /*  4.7:1 */
+  --accent: #A8520E;  /*  5.1:1 */
+  --gutter: #B8B4AA;  /*  2.0:1 */
+  --rule:   #E4E1DA;
+  --rule-2: #EFEDE7;
+  --mark:   #F5EEE2;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dusk']) {
+    color-scheme: light;
+    --bg: #FAF9F6; --raised: #FFFFFF; --text: #15140F; --muted: #4F4C44;
+    --faint: #737068; --accent: #A8520E; --gutter: #B8B4AA;
+    --rule: #E4E1DA; --rule-2: #EFEDE7; --mark: #F5EEE2;
+  }
+}
+
+/* ─── Type ─────────────────────────────────────────────────────────────────
+   Source Serif 4 sets the prose: it was drawn for long-form technical reading
+   on screen, which is exactly what this is. Everything structural — section
+   numbers, line numbers, citations, data, captions — is JetBrains Mono, so
+   the apparatus is always visibly distinct from the argument.
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  --serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  --mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-body:    16.5px;
+  --t-lead:    19px;    /* the one sentence each section opens on */
+  --t-abstract: 20px;
+  --t-small:   14px;
+  --t-note:    11.5px;  /* margin notes, captions */
+  --t-label:   11px;    /* section labels, running head */
+  --t-num:     10.5px;  /* the gutter */
+
+  /* Line height is load-bearing: the gutter numbers are spaced to exactly
+     this, which is what makes them line up with the prose. */
+  --lh: 1.75;
+  --lh-px: 28.875px;    /* 16.5 × 1.75, kept in sync by the gutter component */
+
+  --col-gutter: 46px;
+  --col-body:   560px;
+  --col-margin: 210px;
+  --gap:        34px;
+
+  --s1: 4px; --s2: 8px; --s3: 14px; --s4: 22px; --s5: 34px; --s6: 56px; --s7: 88px;
+}
+
+:root {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fast: 110ms;
+  --base: 220ms;
+  --slow: 420ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --fast: 0ms; --base: 0ms; --slow: 0ms; }
+}

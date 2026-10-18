@@ -13,7 +13,7 @@ export default function PhotoGrid() {
 
   return (
     <div className="photo-grid-wrap" ref={ref}>
-      <ul className="photo-grid list-none p-0 m-0">
+      <ul className="photo-grid">
         {PHOTOS.map((photo, i) => {
           const eager = i < EAGER_COUNT;
           return (

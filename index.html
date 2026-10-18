@@ -16,9 +16,9 @@
   <!-- Loaded from HTML rather than @import in CSS: an @import puts the font
        request behind the stylesheet in the critical chain instead of beside it. -->
   <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,400..700;1,400..600&family=Krub:ital,wght@0,300;0,400;0,500;1,400&display=swap" />
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,400..700;1,400..600&family=Krub:ital,wght@0,300;0,400;0,500;1,400&display=swap" />
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" />
 
   <!-- Icons -->
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -28,8 +28,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
-  <meta name="theme-color" content="#F2EBDC" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0E1526" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#FBFAF9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0A0A0B" media="(prefers-color-scheme: dark)" />
   <meta name="color-scheme" content="dark light" />
 
   <!-- Primary SEO -->
@@ -131,7 +131,7 @@
           t = (h >= 18 || h < 7) ? 'dusk' : 'lastlight';
         }
         document.documentElement.dataset.theme = t;
-      } catch (e) { document.documentElement.dataset.theme = 'lastlight'; }
+      } catch (e) { document.documentElement.dataset.theme = 'dusk'; }
     })();
   </script>
   <div id="root"></div>

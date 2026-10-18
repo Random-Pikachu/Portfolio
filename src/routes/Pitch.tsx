@@ -9,7 +9,7 @@ import NotFound from './NotFound';
  * /for/<company> and /for/<company>/<person>.
  *
  * Unlisted rather than private: anyone with the link can open it, and these
- * carry noindex. An unknown person slug falls back to the company page, so a
+ * carry noindex. An unknown person slug falls back to the company page so a
  * mistyped or forwarded link still lands somewhere sensible.
  */
 export default function Pitch() {
@@ -18,64 +18,47 @@ export default function Pitch() {
   if (!pitch) return <NotFound />;
 
   const who = person ? pitch.people?.find((x) => x.slug === person) : undefined;
-  const greeting = who?.greeting ?? (who ? `Hi ${who.name}.` : `For the team at ${pitch.company}.`);
+  const greeting = who?.greeting ?? (who ? `Hi ${who.name}` : `For the team at ${pitch.company}`);
   const note = who?.note ?? pitch.note;
   const slugs = who?.highlights ?? pitch.highlights;
 
   return (
-    <article className="pitch">
-      <section className="page-head">
-        <Reveal as="header">
-          <h1 className="display">{greeting}</h1>
-        </Reveal>
-      </section>
+    <article>
+      <Reveal as="section" className="intro">
+        <h1>{greeting}</h1>
+        {pitch.role && <p className="role">{pitch.role} · {SITE.name}</p>}
+        <div className="prose"><p>{note}</p></div>
+      </Reveal>
 
-      <section className="band">
-        <Reveal><div className="prose prose-lede"><p>{note}</p></div></Reveal>
-
-        <Reveal delay={80}>
-          <dl className="fields">
-            <dt>name</dt><dd>{SITE.name}</dd>
-            {pitch.role && <><dt>for</dt><dd>{pitch.role}</dd></>}
-            <dt>now</dt><dd>Founding engineer, Retsguide, Copenhagen</dd>
-          </dl>
-        </Reveal>
-      </section>
-
-      <section className="band" aria-labelledby="pw-h">
-        <Reveal><h2 id="pw-h" className="eyebrow">Worth your time</h2></Reveal>
-        <ol className="worklist">
+      <section className="section">
+        <div className="section-head"><h2>Worth your time</h2></div>
+        <ul className="list">
           {slugs.map((s, i) => {
             const p = PROJECT_BY_SLUG[s];
             if (!p) return null;
+            const href = p.featured ? `/work/${p.slug}` : (p.live || p.github || '#');
             return (
-              <Reveal as="li" key={s} delay={i * 70}>
-                <a className="workrow" href={p.featured ? `/work/${p.slug}` : (p.github ?? '#')}>
-                  <span className="workrow-i">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="workrow-body">
-                    <h3>{p.title}</h3>
-                    <p>{p.blurb}</p>
-                    <ul className="chips">{p.stack.map((t) => <li key={t}>{t}</li>)}</ul>
-                  </span>
-                  <span className="workrow-go" aria-hidden="true">&rarr;</span>
+              <Reveal as="li" key={s} delay={i * 30}>
+                <a className="item" href={href}>
+                  <div className="item-row">
+                    <span className="item-title">{p.title}<span className="arrow" aria-hidden="true">&rarr;</span></span>
+                    <span className="meta item-year">{p.year}</span>
+                  </div>
+                  <p className="item-desc">{p.blurb}</p>
+                  <ul className="item-tags">{p.stack.slice(0, 4).map((t) => <li key={t}>{t}</li>)}</ul>
                 </a>
               </Reveal>
             );
           })}
-        </ol>
+        </ul>
       </section>
 
-      <section className="band contact">
-        <Reveal><h2 className="pull">Whenever suits.</h2></Reveal>
-        <Reveal delay={80}>
-          <address className="links">
-            <a href={`mailto:${SITE.email}`}>email</a>
-            <a href={SITE.calendar} target="_blank" rel="noopener">book 15 minutes</a>
-            <a href={SITE.resume}>resume</a>
-            <a href={SITE.profiles.github} target="_blank" rel="noopener">github</a>
-          </address>
-        </Reveal>
-      </section>
+      <footer className="foot">
+        <a href={`mailto:${SITE.email}`}>email</a>
+        <a href={SITE.calendar} target="_blank" rel="noopener">book 15 minutes</a>
+        <a href={SITE.resume}>resume</a>
+        <a href={SITE.profiles.github} target="_blank" rel="noopener" className="foot-end">github</a>
+      </footer>
     </article>
   );
 }

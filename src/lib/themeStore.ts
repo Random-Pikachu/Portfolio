@@ -7,7 +7,7 @@ import type { Theme } from './sunset';
  * useSyncExternalStore is for, and why this is not component state.
  */
 const listeners = new Set<() => void>();
-let snapshot: Theme = 'lastlight';
+let snapshot: Theme = 'dusk';
 
 export function subscribeTheme(fn: () => void) {
   listeners.add(fn);
@@ -21,7 +21,7 @@ export function getTheme(): Theme {
 
 /** The server has no DOM and renders the default sheet. */
 export function getServerTheme(): Theme {
-  return 'lastlight';
+  return 'dusk';
 }
 
 /** Writes the attribute and notifies readers. The single place both happen. */

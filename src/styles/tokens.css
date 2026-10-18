@@ -1,140 +1,93 @@
-/* ─── Last Light — design tokens ───────────────────────────────────────────
-   Two themes from one formula: cream stock, a cool plate and one warm plate.
-   Light is 4:40pm in late October; dark is 7:20pm the same day.
+/* ─── Tokens ───────────────────────────────────────────────────────────────
+   Built to the shape every design-engineer site shares: one narrow column,
+   one typeface, lists rather than cards, one accent used sparingly, and
+   motion that serves reading. Nothing decorative — the craft lives in the
+   type, the spacing and the interactions.
 
-   Contrast ratios are against the surface each token sits on and were computed,
-   not estimated. Everything carrying text clears WCAG AA.
+   Dark is the default. Contrast ratios are computed, not estimated.
    ────────────────────────────────────────────────────────────────────────── */
 
 :root,
-:root[data-theme='lastlight'] {
-  color-scheme: light;
-
-  --paper:        #F2EBDC;
-  --paper-raised: #F8F3E8;
-  --paper-sunk:   #E8DFCC;
-
-  --ink:          #17150F;  /* 15.5:1 */
-  --ink-muted:    #4A443A;  /*  8.5:1 */
-  --ink-faint:    #6B6354;  /*  5.6:1 */
-
-  --accent:       #A63D16;  /*  5.6:1 — the sun */
-  --cool:         #35497A;  /*  7.7:1 */
-  --line:         #B3A692;  /*  2.4:1 — hairlines, never under type */
-  --line-soft:    #CFC4AE;
-
-  --grain-opacity: 0.035;
-
-  --heat-0: #DED3BE;
-  --heat-1: #D9A98A;
-  --heat-2: #C87B4A;
-  --heat-3: #A63D16;
-  --heat-4: #7A2A0C;
-}
-
 :root[data-theme='dusk'] {
   color-scheme: dark;
 
-  /* Indigo, not black. The whole reference is blue. */
-  --paper:        #0E1526;
-  --paper-raised: #161F35;
-  --paper-sunk:   #090F1C;
+  --bg:        #0A0A0B;
+  --bg-raised: #121214;
+  --bg-sunk:   #050506;
 
-  --ink:          #EBE4D6;  /* 13.2:1 on the dusk flood */
-  --ink-muted:    #BCC2D1;  /*  7.3:1 */
-  --ink-faint:    #8A93AC;  /*  4.4:1 */
-
-  --accent:       #F0A258;  /*  8.1:1 — the lamp */
-  --cool:         #7392CF;
-  --line:         #35456B;
-  --line-soft:    #243253;
-
-  --grain-opacity: 0.055;
-
-  --heat-0: #1E2A45;
-  --heat-1: #5C4A3C;
-  --heat-2: #9A6436;
-  --heat-3: #D08A45;
-  --heat-4: #F0A258;
+  --text:      #EDEDEF;  /* 16.9:1 */
+  --muted:     #9B9BA3;  /*  7.2:1 */
+  --faint:     #73737B;  /*  4.2:1 — metadata only */
+  --accent:    #F0A258;  /*  9.4:1 */
+  --line:      #1E1E21;
+  --line-soft: #161618;
+  --hover:     #141416;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='lastlight']) {
-    color-scheme: dark;
-    --paper: #0E1526; --paper-raised: #161F35; --paper-sunk: #090F1C;
-    --ink: #EBE4D6; --ink-muted: #AEB5C6; --ink-faint: #8A93AC;
-    --accent: #F0A258; --cool: #7392CF; --line: #35456B; --line-soft: #243253;
-    --grain-opacity: 0.055;
+:root[data-theme='lastlight'] {
+  color-scheme: light;
+
+  --bg:        #FBFAF9;
+  --bg-raised: #FFFFFF;
+  --bg-sunk:   #F2F0ED;
+
+  --text:      #121214;  /* 18.0:1 */
+  --muted:     #56565E;  /*  7.0:1 */
+  --faint:     #76767E;  /*  4.3:1 — metadata only */
+  --accent:    #B4480F;  /*  5.2:1 */
+  --line:      #E7E5E2;
+  --line-soft: #F0EEEB;
+  --hover:     #F4F2EF;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dusk']) {
+    color-scheme: light;
+    --bg: #FBFAF9; --bg-raised: #FFFFFF; --bg-sunk: #F2F0ED;
+    --text: #121214; --muted: #56565E; --faint: #76767E;
+    --accent: #B4480F; --line: #E7E5E2; --line-soft: #F0EEEB; --hover: #F4F2EF;
   }
 }
 
 /* ─── Type ─────────────────────────────────────────────────────────────────
-   Faustina carries display and prose; Krub carries everything structural —
-   labels, fields, numbers, navigation. A warm humanist serif against a clean
-   humanist sans, which is the pairing Sangam picked out of Eskorte Latin,
-   Rooney and Sole Serif. Both are free and both render here.
-
-   One scale, ratio 1.25 from a 16px base, and nothing deviates from it. The
-   previous cut had a 96px display and then nothing until 10.5px, so the small
-   text was both too small to read comfortably and arbitrary.
+   One typeface and a mono for metadata. Host Grotesk has enough character to
+   avoid reading as a default without tipping into novelty, and it holds at
+   15px, which is where almost all of this page lives.
    ────────────────────────────────────────────────────────────────────────── */
 :root {
-  --font-serif: 'Faustina', Georgia, 'Times New Roman', serif;
-  --font-sans:  'Krub', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font: 'Host Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --t-micro:   13px;                      /* field labels, rail, captions */
-  --t-small:   15px;                      /* secondary prose */
-  --t-body:    16px;                      /* interface default */
-  --t-lede:    clamp(18px, 1.5vw, 20px);  /* hero and intro prose */
-  --t-h3:      clamp(20px, 1.9vw, 25px);
-  --t-h2:      clamp(27px, 3.1vw, 39px);
-  --t-h1:      clamp(32px, 4.6vw, 49px);
-  --t-display: clamp(38px, 6.0vw, 72px);
+  --t-xs:   12px;   /* metadata, years, labels */
+  --t-sm:   13.5px; /* secondary */
+  --t-base: 15px;   /* everything */
+  --t-md:   17px;
+  --t-lg:   21px;   /* section and page headings */
+  --t-xl:   28px;   /* the one big thing, used once */
 
-  --lh-display: 1.04;
-  --lh-head:    1.15;
-  --lh-prose:   1.62;
-  --lh-ui:      1.5;
+  --lh-tight: 1.3;
+  --lh-base:  1.65;
 
-  --measure: 60ch;
+  /* One narrow column. The single most consistent property of the genre. */
+  --col: 680px;
+  --pad: clamp(20px, 5vw, 32px);
 
-  --gutter: clamp(20px, 4.4vw, 60px);
-  --frame-inset: clamp(10px, 1.5vw, 18px);
-  --rail-h: 50px;
-
-  /* Section rhythm. Space is the grouping tool; rules are the last resort. */
-  --space-section: clamp(52px, 6.5vh, 86px);
-  --space-block:   clamp(20px, 2.6vh, 32px);
-  --space-tight:   10px;
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+  --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
 }
 
 /* ─── Motion ───────────────────────────────────────────────────────────────
-   Anime timing, not anime imagery. --ease-anticipate opens with a negative
-   control point so a move begins by travelling backwards; --ease-settle
-   overshoots past 1 and returns, so an arrival lands with weight.
+   Fast and interruptible. Transitions on interactive state changes, never
+   keyframes; nothing waits on an animation to become usable.
    ────────────────────────────────────────────────────────────────────────── */
 :root {
-  --ease-anticipate: cubic-bezier(0.34, -0.25, 0.20, 1.00);
-  --ease-settle:     cubic-bezier(0.22,  1.40, 0.36, 1.00);
-  --ease-glide:      cubic-bezier(0.16,  1.00, 0.30, 1.00);
-  --ease-snap:       cubic-bezier(0.70,  0.00, 0.30, 1.00);
-
-  --dur-instant: 120ms;
-  --dur-quick:   220ms;
-  --dur-base:    420ms;
-  --dur-slow:    900ms;
-
-  /* Dusk is slower than dawn; matching them makes the return feel sluggish. */
-  --dur-sunset:  1600ms;
-  --dur-sunrise: 1100ms;
-
-  /* 間 — the held beat. Nothing animates for this long after a section settles. */
-  --ma: 400ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --fast: 120ms;
+  --base: 200ms;
+  --slow: 420ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root {
-    --dur-instant: 0ms; --dur-quick: 0ms; --dur-base: 0ms;
-    --dur-slow: 0ms; --dur-sunset: 0ms; --dur-sunrise: 0ms; --ma: 0ms;
-  }
+  :root { --fast: 0ms; --base: 0ms; --slow: 0ms; }
 }

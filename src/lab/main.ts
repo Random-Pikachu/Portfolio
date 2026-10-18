@@ -16,6 +16,25 @@ const stage = document.querySelector<HTMLElement>('#stage')!;
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/*
+  The rail shows the visitor's own clock, not a decorative one. This is the
+  cheap half of the memory layer: arriving at 19:20 in Copenhagen opens the
+  site at dusk, and the rail says so, which explains the choice without a
+  word of copy.
+*/
+const phaseEl = document.querySelector<HTMLElement>('#phase')!;
+const clockEl = document.querySelector<HTMLTimeElement>('#clock')!;
+
+function tickClock() {
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  clockEl.textContent = `${hh}:${mm}`;
+  clockEl.dateTime = `${hh}:${mm}`;
+}
+tickClock();
+setInterval(tickClock, 30_000);
+
 const theme: Theme = initialTheme();
 root.dataset.theme = theme;
 
@@ -49,7 +68,10 @@ function apply(ch: SunsetChannels, next: Theme) {
   // Flip the theme attribute at the midpoint of the text crossfade rather than
   // at either end, so the swap is hidden inside the busiest part of the move.
   const flipped = ch.text >= 0.5 ? 'dusk' : 'lastlight';
-  if (root.dataset.theme !== flipped) root.dataset.theme = flipped;
+  if (root.dataset.theme !== flipped) {
+    root.dataset.theme = flipped;
+    phaseEl.textContent = flipped === 'dusk' ? 'dusk' : 'last light';
+  }
   void next;
 }
 

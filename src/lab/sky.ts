@@ -99,12 +99,12 @@ void main() {
     whole frame and buried the content.
   */
   float top    = smoothstep(0.46, 1.08, uv.y + (clouds - 0.5) * 0.34);
-  float bottom = 1.0 - smoothstep(0.0, 0.30, uv.y - (clouds - 0.5) * 0.12);
+  float bottom = 1.0 - smoothstep(0.0, 0.22, uv.y - (clouds - 0.5) * 0.10);
 
   // The text well. Both plates back off through the middle of the sheet so the
   // type sits on near-bare paper. Edges keep their ink; the content does not
   // have to fight a dot field for contrast.
-  float well = smoothstep(0.20, 0.36, uv.y) * (1.0 - smoothstep(0.62, 0.80, uv.y));
+  float well = smoothstep(0.13, 0.30, uv.y) * (1.0 - smoothstep(0.62, 0.80, uv.y));
 
   // ── Separation 1: blue. Sky at the top; floods the sheet at dusk. ──
   float sky = smoothstep(-0.05, 1.05, uv.y * 0.92 + (clouds - 0.5) * 0.55);
@@ -119,7 +119,7 @@ void main() {
   dBlue -= sunD * mix(0.30, 0.62, uDusk);          // the lamp burns through the plate
 
   // ── Separation 2: orange. A warm edge, then only the lamp. ──
-  float dOrange = mix(bottom * 0.30 + sunD * 0.34, sunD * 0.88, uDusk);
+  float dOrange = mix(bottom * 0.19 + sunD * 0.34, sunD * 0.88, uDusk);
 
   // The well exists to keep dark type legible on pale paper. At dusk the type
   // is cream and the sheet is overprinted, so a pale band through the middle

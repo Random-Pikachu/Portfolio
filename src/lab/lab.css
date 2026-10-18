@@ -174,7 +174,7 @@ h1 em {
   font-family: 'Martian Mono', ui-monospace, monospace;
   font-size: var(--t-micro);
   font-weight: 300;
-  color: var(--ink-faint);
+  color: var(--ink-muted);
   transition: color var(--dur-base) var(--ease-glide) var(--stagger, 0ms);
 }
 .cue .tick {

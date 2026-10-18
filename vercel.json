@@ -16,6 +16,10 @@
   ],
   "rewrites": [
     {
+      "source": "/lab",
+      "destination": "/lab.html"
+    },
+    {
       "source": "/photography",
       "destination": "/photography.html"
     },

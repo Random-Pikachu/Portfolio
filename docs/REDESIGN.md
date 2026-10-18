@@ -86,6 +86,15 @@ yes when asked directly. If you want it on the site, ask Retsguide for clearance
 on the evaluation numbers alone. If the answer is no, the site still works — see
 §9, where every featured project is one you own outright.
 
+**Status.** Sangam has confirmed the figures are accurate and his own work. That
+settles accuracy, not permission. Work done for an employer, on their data, for
+their product, is normally theirs to release regardless of who wrote it, and the
+standing instruction here is that the architecture cannot be published right
+now. So the position stands until he says one of two things: that someone at
+Retsguide has cleared it, or that he is making the call himself knowing it is
+his risk to carry. Either answer unblocks it. Until then nothing from the held-
+back list enters the repo, the site or the Figma file.
+
 ### Proof points to surface large
 
 Chosen so every number is yours, publishable, and verifiable by a visitor.
@@ -415,6 +424,36 @@ The page, top to bottom:
 sitemap. The prerender script already walks routes; it gets extended to
 enumerate company slugs and their people so each is static HTML.
 
+### First page: `/for/documenso/timur`
+
+Documenso builds an open-source alternative to DocuSign, out of Hamburg,
+co-founded by **Timur Ercan** (CEO) and **Lucas Smith**. Written and committed
+in `src/data/pitches.ts`.
+
+Why this is a real fit rather than a generic application:
+
+- **Open source is not a hobby for you.** Five MRs merged across three KDE
+  projects after maintainer review, shipping to millions of Plasma users, and a
+  mention in This Week in Plasma. At an open-source company that is the first
+  thing that gets read.
+- **The instinct matches.** Documenso exists so a signature can be *proven*
+  rather than asserted. Your thesis is that an AI system should be checkable,
+  with the model kept out of the final decision. Same reflex, different problem.
+- **Documents with many editors** is ground you have covered — the OpenSphere
+  WebSocket service kept comment threads consistent across concurrent editors.
+- **Legal-tech domain** from Retsguide, so provenance and "what did this say on
+  date X" are already familiar.
+
+Proof points chosen for them: KDE merges, editor adoption, Amazon ML. The
+featured three are the review agent, Astra, then load forecasting — tooling and
+open source first, research depth third.
+
+One unverified claim worth checking before you send it: I could not reach
+Documenso's repo from this container to confirm their stack. If it is
+TypeScript / Next.js / Prisma / PostgreSQL, that is your exact daily stack at
+Retsguide and belongs in the note as a fourth sentence. Takes ten seconds to
+check on their GitHub.
+
 One thing to be deliberate about: these URLs are unlisted, not private. Anyone
 with the link can open it, and a real person's name sits in the path. Use first
 names only (`/for/stripe/priya`, not a full name), and do not write anything in
@@ -430,26 +469,29 @@ founding engineer · ai systems              ← JetBrains Mono, 13px, tracked
 ```
 
 Then two sentences in Newsreader, ~20px, max 68ch. The hero grounds you; the
-position section below sharpens it to six words. Three options:
+position section below sharpens it to six words.
 
-> **A.** Founding engineer at a Danish legal-tech startup, building the
-> retrieval layer behind their legal reports. I build AI systems that can be
+**Chosen (option A, with your edits):**
+
+> Founding engineer at Retsguide in Copenhagen, where I built the product end to
+> end and am now building its legal brain. I build AI systems that can be
 > checked: the model reads and ranks, the code decides.
 
-> **B.** Founding engineer at a Danish legal-tech startup. I build the parts of
-> an AI product that have to be right, and I keep the model out of the parts
-> that do.
+"Legal brain" is doing real work here. It says what the thing is for without
+saying anything about how it is built, which keeps the strongest line on the
+site clear of §2.1 entirely. It is also the kind of phrase a person writes and a
+model does not.
 
-> **C.** I build AI systems that can be checked — the model reads, extracts and
-> ranks, and the code decides. Currently the retrieval layer behind legal
-> reports at a startup in Copenhagen.
+Retsguide is named, unlike in the earlier draft. The company being your employer
+is already public — it is on the current site, your resume and your LinkedIn —
+and naming it buys concreteness at no cost. The NDA question was never about the
+name.
 
-**A** is my pick. It grounds you in a real role before making a claim, and the
-claim is specific enough to be argued with. **B** is the best single sentence of
-the three but floats free of any evidence; it would work if the proof row sat
-directly beneath it. Neither names Retsguide in the hero, which keeps the
-strongest claim on the site clear of the NDA question entirely — the company is
-named lower down, in Experience.
+A variant, if you want the claim before the context:
+
+> I build AI systems that can be checked: the model reads and ranks, the code
+> decides. Founding engineer at Retsguide in Copenhagen, where I built the
+> product end to end and am now building its legal brain.
 
 The position section then states the thesis as a pull quote and gives it three
 sentences of support. Everything below it is evidence.
@@ -506,9 +548,13 @@ Settled:
 
 Still open:
 
-1. **The first real company and person** for `/for/`. Give me one and I will
-   write that page properly instead of building a template against a guess.
-2. **Which hero sentence** — A, B or C in §11.
-3. **Retsguide clearance on the evaluation numbers** (§2.1). Worth asking them.
-   It is the difference between "builds AI systems" and being able to put a
-   before-and-after retrieval benchmark on the page and defend it.
+1. ~~First company and person~~ — Documenso / Timur Ercan, written up in §10
+   and committed to `src/data/pitches.ts`.
+2. ~~Hero sentence~~ — option A with your edits, in §11.
+3. **Retsguide clearance on the evaluation numbers** (§2.1) — still genuinely
+   open. You confirmed the numbers are accurate and yours, which was never in
+   doubt. What I asked, and still need, is whether *Retsguide* is fine with them
+   being on a public page. Those are different things, and your earlier answer
+   was that the architecture cannot be published right now. Nothing goes on the
+   site until this is settled one way or the other; see the note at the end of
+   §2.1.

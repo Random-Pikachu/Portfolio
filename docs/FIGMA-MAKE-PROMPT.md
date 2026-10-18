@@ -177,9 +177,9 @@ centred.
 - JetBrains Mono, 13px, letter-spacing 0.18em, in the accent colour:
   `founding engineer · ai systems`
 - Newsreader, 20px, max 68 characters wide:
-  *"Founding engineer at a Danish legal-tech startup, building the retrieval
-  layer behind their legal reports. I build AI systems that can be checked: the
-  model reads and ranks, the code decides."*
+  *"Founding engineer at Retsguide in Copenhagen, where I built the product end
+  to end and am now building its legal brain. I build AI systems that can be
+  checked: the model reads and ranks, the code decides."*
 - Two links, mono 13px: `view work` and `resume`. Not buttons. Underlined with a
   1px rule that extends on hover.
 

@@ -1,16 +1,15 @@
 import { useParams } from 'react-router-dom';
-import Reveal from '../components/Reveal';
 import { PITCH_BY_SLUG } from '../data/pitches';
 import { PROJECT_BY_SLUG } from '../data/work';
 import { SITE } from '../data/site';
 import NotFound from './NotFound';
 
 /**
- * /for/<company> and /for/<company>/<person>.
+ * /for/<company> and /for/<company>/<person> — the same document, addressed.
  *
  * Unlisted rather than private: anyone with the link can open it, and these
  * carry noindex. An unknown person slug falls back to the company page so a
- * mistyped or forwarded link still lands somewhere sensible.
+ * forwarded or mistyped link still lands somewhere sensible.
  */
 export default function Pitch() {
   const { company, person } = useParams();
@@ -23,42 +22,50 @@ export default function Pitch() {
   const slugs = who?.highlights ?? pitch.highlights;
 
   return (
-    <article>
-      <Reveal as="section" className="intro">
-        <h1>{greeting}</h1>
-        {pitch.role && <p className="role">{pitch.role} · {SITE.name}</p>}
-        <div className="prose"><p>{note}</p></div>
-      </Reveal>
+    <>
+      <section>
+        <h2 className="sec-label"><i>—</i>Addressed to {pitch.company}</h2>
+        <h1 className="page-title" data-line-probe>{greeting}</h1>
+        <p className="lead">{note}</p>
+        <dl className="fields">
+          <dt>from</dt><dd>{SITE.name}</dd>
+          {pitch.role && <><dt>for</dt><dd>{pitch.role}</dd></>}
+          <dt>now</dt><dd>Founding engineer, Retsguide, Copenhagen</dd>
+        </dl>
+      </section>
 
-      <section className="section">
-        <div className="section-head"><h2>Worth your time</h2></div>
-        <ul className="list">
+      <section>
+        <h2 className="sec-label"><i>1</i>Worth your time</h2>
+        <ol className="artifacts">
           {slugs.map((s, i) => {
             const p = PROJECT_BY_SLUG[s];
             if (!p) return null;
-            const href = p.featured ? `/work/${p.slug}` : (p.live || p.github || '#');
             return (
-              <Reveal as="li" key={s} delay={i * 30}>
-                <a className="item" href={href}>
-                  <div className="item-row">
-                    <span className="item-title">{p.title}<span className="arrow" aria-hidden="true">&rarr;</span></span>
-                    <span className="meta item-year">{p.year}</span>
-                  </div>
-                  <p className="item-desc">{p.blurb}</p>
-                  <ul className="item-tags">{p.stack.slice(0, 4).map((t) => <li key={t}>{t}</li>)}</ul>
-                </a>
-              </Reveal>
+              <li key={s}>
+                <span className="art-n">1.{i + 1}</span>
+                <span className="art-body">
+                  <span className="art-title">
+                    <a href={p.featured ? `/work/${p.slug}` : (p.live || p.github || '#')}>{p.title}</a>
+                  </span>
+                  <span className="art-desc">{p.blurb}</span>
+                  <span className="art-stack">{p.stack.join(' · ')}</span>
+                </span>
+                <span className="art-year">{p.year}</span>
+              </li>
             );
           })}
-        </ul>
+        </ol>
       </section>
 
-      <footer className="foot">
-        <a href={`mailto:${SITE.email}`}>email</a>
-        <a href={SITE.calendar} target="_blank" rel="noopener">book 15 minutes</a>
-        <a href={SITE.resume}>resume</a>
-        <a href={SITE.profiles.github} target="_blank" rel="noopener" className="foot-end">github</a>
-      </footer>
-    </article>
+      <section>
+        <h2 className="sec-label"><i>—</i>References</h2>
+        <ol className="reflist">
+          <li><span>Email</span><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><span>Calendar</span><a href={SITE.calendar} target="_blank" rel="noopener">15 minutes, any time</a></li>
+          <li><span>Résumé</span><a href={SITE.resume}>resume.pdf</a></li>
+          <li><span>GitHub</span><a href={SITE.profiles.github} target="_blank" rel="noopener">github.com/Random-Pikachu</a></li>
+        </ol>
+      </section>
+    </>
   );
 }

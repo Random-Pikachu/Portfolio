@@ -2,14 +2,13 @@ import { Link } from 'react-router-dom';
 
 export default function NotFound() {
   return (
-    <section className="intro">
-      <h1>404</h1>
-      <p className="role">That page doesn&apos;t exist.</p>
-      <div className="prose">
-        <p>
-          Try <Link to="/">the start</Link> or <Link to="/work">the work</Link>.
-        </p>
-      </div>
+    <section>
+      <h2 className="sec-label"><i>—</i>404</h2>
+      <h1 className="page-title" data-line-probe>No such section</h1>
+      <p>
+        That page isn&apos;t in this document. Try <Link to="/">the start</Link> or{' '}
+        <Link to="/work">the artifacts</Link>.
+      </p>
     </section>
   );
 }

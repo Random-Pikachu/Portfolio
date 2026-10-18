@@ -1,13 +1,16 @@
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import LineGutter from './LineGutter';
 import ThemeToggle from './ThemeToggle';
 import { useSunset } from '../lib/useSunset';
+import { SITE } from '../data/site';
 
 /**
- * The page frame: a rail that scrolls away with the content, and one column.
+ * The page as a printed document: a running head, a numbered gutter, one
+ * measure of prose, and a margin that carries the apparatus.
  *
- * The rail is deliberately not fixed. Over a 680px column a sticky bar spends
- * a tenth of a phone screen repeating four links the reader can already see.
+ * The three-column grid is declared here rather than per route, so a citation
+ * dropped anywhere in the body lands in the same margin every time.
  */
 export default function Shell({ children }: { children: ReactNode }) {
   const { theme, toggle } = useSunset();
@@ -16,19 +19,26 @@ export default function Shell({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <a className="sr-only" href="#main">Skip to content</a>
+      <a className="skip" href="#doc">Skip to document</a>
 
-      <header className="rail">
-        <Link to="/" className="rail-home">Sangam</Link>
-        <nav className="rail-nav" aria-label="Main">
+      <header className="head">
+        <Link to="/" className="head-title">
+          <span className="head-mark" aria-hidden="true">§</span>
+          {SITE.name}
+        </Link>
+        <span className="head-sub">Founding Engineer &amp; AI Systems</span>
+        <nav className="head-nav" aria-label="Main">
           <Link to="/work" aria-current={on('/work')}>work</Link>
-          <Link to="/photography" aria-current={on('/photography')}>photos</Link>
-          <a href="/resume.pdf">resume</a>
+          <Link to="/photography" aria-current={on('/photography')}>plates</Link>
+          <a href={SITE.resume}>résumé</a>
         </nav>
         <ThemeToggle theme={theme} onToggle={toggle} />
       </header>
 
-      <main id="main">{children}</main>
+      <div className="sheet">
+        <LineGutter targetId="doc" />
+        <article id="doc" className="doc">{children}</article>
+      </div>
     </>
   );
 }

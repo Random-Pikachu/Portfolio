@@ -1,90 +1,85 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   Built to the shape every design-engineer site shares: one narrow column,
-   one typeface, lists rather than cards, one accent used sparingly, and
-   motion that serves reading. Nothing decorative — the craft lives in the
-   type, the spacing and the interactions.
+   The site is one document set as a technical paper: numbered sections, a
+   live margin carrying citations and figures, and line numbers down the left
+   edge — which is both legal pleading paper and a code listing, the two
+   things this work sits between.
 
-   Dark is the default. Contrast ratios are computed, not estimated.
+   Dark by default. Ratios computed, not estimated.
    ────────────────────────────────────────────────────────────────────────── */
 
 :root,
 :root[data-theme='dusk'] {
   color-scheme: dark;
-
-  --bg:        #0A0A0B;
-  --bg-raised: #121214;
-  --bg-sunk:   #050506;
-
-  --text:      #EDEDEF;  /* 16.9:1 */
-  --muted:     #9B9BA3;  /*  7.2:1 */
-  --faint:     #73737B;  /*  4.2:1 — metadata only */
-  --accent:    #F0A258;  /*  9.4:1 */
-  --line:      #1E1E21;
-  --line-soft: #161618;
-  --hover:     #141416;
+  --bg:     #0B0B0C;
+  --raised: #131315;
+  --text:   #E8E6E1;  /* 15.8:1 — warm white, paper rather than screen */
+  --muted:  #A3A099;  /*  7.5:1 */
+  --faint:  #767269;  /*  4.1:1 — metadata only */
+  --accent: #E8A34D;  /*  9.2:1 */
+  --gutter: #45423D;  /*  2.0:1 — line numbers, decorative by design */
+  --rule:   #1E1E20;
+  --rule-2: #161618;
+  --mark:   #1A1713;  /* cited-passage highlight */
 }
 
 :root[data-theme='lastlight'] {
   color-scheme: light;
-
-  --bg:        #FBFAF9;
-  --bg-raised: #FFFFFF;
-  --bg-sunk:   #F2F0ED;
-
-  --text:      #121214;  /* 18.0:1 */
-  --muted:     #56565E;  /*  7.0:1 */
-  --faint:     #76767E;  /*  4.3:1 — metadata only */
-  --accent:    #B4480F;  /*  5.2:1 */
-  --line:      #E7E5E2;
-  --line-soft: #F0EEEB;
-  --hover:     #F4F2EF;
+  --bg:     #FAF9F6;
+  --raised: #FFFFFF;
+  --text:   #15140F;  /* 17.5:1 */
+  --muted:  #4F4C44;  /*  8.1:1 */
+  --faint:  #737068;  /*  4.7:1 */
+  --accent: #A8520E;  /*  5.1:1 */
+  --gutter: #B8B4AA;  /*  2.0:1 */
+  --rule:   #E4E1DA;
+  --rule-2: #EFEDE7;
+  --mark:   #F5EEE2;
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dusk']) {
     color-scheme: light;
-    --bg: #FBFAF9; --bg-raised: #FFFFFF; --bg-sunk: #F2F0ED;
-    --text: #121214; --muted: #56565E; --faint: #76767E;
-    --accent: #B4480F; --line: #E7E5E2; --line-soft: #F0EEEB; --hover: #F4F2EF;
+    --bg: #FAF9F6; --raised: #FFFFFF; --text: #15140F; --muted: #4F4C44;
+    --faint: #737068; --accent: #A8520E; --gutter: #B8B4AA;
+    --rule: #E4E1DA; --rule-2: #EFEDE7; --mark: #F5EEE2;
   }
 }
 
 /* ─── Type ─────────────────────────────────────────────────────────────────
-   One typeface and a mono for metadata. Host Grotesk has enough character to
-   avoid reading as a default without tipping into novelty, and it holds at
-   15px, which is where almost all of this page lives.
+   Source Serif 4 sets the prose: it was drawn for long-form technical reading
+   on screen, which is exactly what this is. Everything structural — section
+   numbers, line numbers, citations, data, captions — is JetBrains Mono, so
+   the apparatus is always visibly distinct from the argument.
    ────────────────────────────────────────────────────────────────────────── */
 :root {
-  --font: 'Host Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  --mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --t-xs:   12px;   /* metadata, years, labels */
-  --t-sm:   13.5px; /* secondary */
-  --t-base: 15px;   /* everything */
-  --t-md:   17px;
-  --t-lg:   21px;   /* section and page headings */
-  --t-xl:   28px;   /* the one big thing, used once */
+  --t-body:    16.5px;
+  --t-lead:    19px;    /* the one sentence each section opens on */
+  --t-abstract: 20px;
+  --t-small:   14px;
+  --t-note:    11.5px;  /* margin notes, captions */
+  --t-label:   11px;    /* section labels, running head */
+  --t-num:     10.5px;  /* the gutter */
 
-  --lh-tight: 1.3;
-  --lh-base:  1.65;
+  /* Line height is load-bearing: the gutter numbers are spaced to exactly
+     this, which is what makes them line up with the prose. */
+  --lh: 1.75;
+  --lh-px: 28.875px;    /* 16.5 × 1.75, kept in sync by the gutter component */
 
-  /* One narrow column. The single most consistent property of the genre. */
-  --col: 680px;
-  --pad: clamp(20px, 5vw, 32px);
+  --col-gutter: 46px;
+  --col-body:   560px;
+  --col-margin: 210px;
+  --gap:        34px;
 
-  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
-  --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
+  --s1: 4px; --s2: 8px; --s3: 14px; --s4: 22px; --s5: 34px; --s6: 56px; --s7: 88px;
 }
 
-/* ─── Motion ───────────────────────────────────────────────────────────────
-   Fast and interruptible. Transitions on interactive state changes, never
-   keyframes; nothing waits on an animation to become usable.
-   ────────────────────────────────────────────────────────────────────────── */
 :root {
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --fast: 120ms;
-  --base: 200ms;
+  --fast: 110ms;
+  --base: 220ms;
   --slow: 420ms;
 }
 

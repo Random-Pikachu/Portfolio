@@ -15,15 +15,21 @@
   --paper-sunk:   #E8DFCC;
 
   --ink:          #17150F;  /* 15.5:1 */
-  --ink-muted:    #5A5246;  /*  6.7:1 */
-  --ink-faint:    #786F60;  /*  4.4:1 */
+  --ink-muted:    #4A443A;  /*  8.5:1 */
+  --ink-faint:    #6B6354;  /*  5.6:1 */
 
   --accent:       #A63D16;  /*  5.6:1 — the sun */
   --cool:         #35497A;  /*  7.7:1 */
-  --line:         #BFB3A0;  /*  2.1:1 — hairlines, never under type */
-  --line-soft:    #D8CFBC;
+  --line:         #B3A692;  /*  2.4:1 — hairlines, never under type */
+  --line-soft:    #CFC4AE;
 
   --grain-opacity: 0.035;
+
+  --heat-0: #DED3BE;
+  --heat-1: #D9A98A;
+  --heat-2: #C87B4A;
+  --heat-3: #A63D16;
+  --heat-4: #7A2A0C;
 }
 
 :root[data-theme='dusk'] {
@@ -35,7 +41,7 @@
   --paper-sunk:   #090F1C;
 
   --ink:          #EBE4D6;  /* 13.2:1 on the dusk flood */
-  --ink-muted:    #AEB5C6;  /*  6.1:1 */
+  --ink-muted:    #BCC2D1;  /*  7.3:1 */
   --ink-faint:    #8A93AC;  /*  4.4:1 */
 
   --accent:       #F0A258;  /*  8.1:1 — the lamp */
@@ -44,6 +50,12 @@
   --line-soft:    #243253;
 
   --grain-opacity: 0.055;
+
+  --heat-0: #1E2A45;
+  --heat-1: #5C4A3C;
+  --heat-2: #9A6436;
+  --heat-3: #D08A45;
+  --heat-4: #F0A258;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -91,9 +103,9 @@
   --rail-h: 50px;
 
   /* Section rhythm. Space is the grouping tool; rules are the last resort. */
-  --space-section: clamp(72px, 11vh, 150px);
-  --space-block:   clamp(28px, 4vh, 52px);
-  --space-tight:   12px;
+  --space-section: clamp(52px, 6.5vh, 86px);
+  --space-block:   clamp(20px, 2.6vh, 32px);
+  --space-tight:   10px;
 }
 
 /* ─── Motion ───────────────────────────────────────────────────────────────

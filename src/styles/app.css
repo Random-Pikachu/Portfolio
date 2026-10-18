@@ -152,9 +152,12 @@ body {
 }
 
 .hero {
-  min-height: calc(100svh - var(--rail-h) - var(--frame-inset) * 2 - 76px);
+  /* Deliberately short of a full screen. A hero sized to the viewport pushes
+     everything that proves the point below the fold, and four lines of text do
+     not earn 900px. The next section showing through is the point. */
+  min-height: min(68svh, 560px);
   display: flex; flex-direction: column; justify-content: center;
-  padding-block: clamp(28px, 7vh, 80px);
+  padding-block: clamp(20px, 4vh, 48px);
 }
 /* Inner pages open at the top of the sheet, so the heading needs clearance
    from the rail and from what little plate still prints there. */
@@ -411,3 +414,120 @@ a:hover { text-decoration-thickness: 2px; }
   display: flex; flex-direction: column; justify-content: center;
 }
 .pitch .fields { margin-top: var(--space-block); }
+
+/* ─── Hero links ───────────────────────────────────────────────────────── */
+.hero-links {
+  display: flex; flex-wrap: wrap; gap: 10px 26px;
+  margin: 22px 0 0; font-family: var(--font-sans); font-size: var(--t-body);
+}
+
+/* ─── About ────────────────────────────────────────────────────────────── */
+.about {
+  display: grid; grid-template-columns: minmax(0, var(--measure)) minmax(200px, 300px);
+  gap: clamp(22px, 4vw, 60px); align-items: start;
+}
+@media (max-width: 900px) { .about { grid-template-columns: 1fr; } }
+.chips-lg li { font-size: var(--t-small); padding: 5px 11px; }
+
+/* ─── Bento ────────────────────────────────────────────────────────────────
+   Varying spans, carried over from the old site. A grid of identical tiles
+   reads as a spreadsheet; this gives the eye somewhere to go and lets the
+   bigger pieces take the room they deserve.
+   ────────────────────────────────────────────────────────────────────────── */
+.bento {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: clamp(10px, 1.2vw, 16px);
+}
+.bento-5 { grid-column: span 5; }
+.bento-3 { grid-column: span 3; }
+.bento-2 { grid-column: span 2; }
+@media (max-width: 900px) {
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .bento-5, .bento-3 { grid-column: span 2; }
+  .bento-2 { grid-column: span 1; }
+}
+@media (max-width: 560px) {
+  .bento { grid-template-columns: 1fr; }
+  .bento-5, .bento-3, .bento-2 { grid-column: span 1; }
+}
+
+.tile {
+  height: 100%; min-width: 0;
+  display: flex; flex-direction: column;
+  padding: clamp(14px, 1.4vw, 20px);
+  border: 1px solid var(--line-soft); border-radius: 3px;
+  background: color-mix(in oklab, var(--paper-raised) 55%, transparent);
+  transition: border-color var(--dur-quick) var(--ease-glide),
+              background var(--dur-quick) var(--ease-glide),
+              transform var(--dur-quick) var(--ease-settle);
+}
+@media (hover: hover) {
+  .tile:hover {
+    border-color: var(--line);
+    background: color-mix(in oklab, var(--paper-raised) 85%, transparent);
+    transform: translateY(-2px);
+  }
+}
+.tile-top {
+  display: flex; justify-content: space-between; gap: 10px; margin: 0 0 8px;
+  font-family: var(--font-sans); font-size: var(--t-micro); color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.tile h3 { font-size: var(--t-h3); margin-bottom: 6px; }
+.tile h3 a { color: inherit; text-decoration: none; }
+.tile h3 a:hover { color: var(--accent); }
+.tile-blurb {
+  margin: 0; font-size: var(--t-small); line-height: 1.55;
+  color: var(--ink-muted); max-width: 54ch;
+}
+.tile .chips { margin-top: 12px; }
+.tile-links {
+  display: flex; flex-wrap: wrap; gap: 8px 18px;
+  margin: 14px 0 0; padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--font-sans); font-size: var(--t-micro);
+}
+/* Pushes the link row to the bottom so tiles of different heights still line
+   their actions up along a shared edge. */
+.tile-links { margin-top: auto; }
+
+/* ─── Heatmap ──────────────────────────────────────────────────────────── */
+.heat { width: 100%; max-width: 100%; overflow: hidden; }
+.heat-loading {
+  margin: 0; padding-block: 24px;
+  font-family: var(--font-sans); font-size: var(--t-micro); color: var(--ink-faint);
+}
+.heat-head {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 8px 16px; margin-bottom: 4px;
+}
+.heat-total {
+  margin: 0; font-family: var(--font-sans); font-size: var(--t-small); color: var(--ink-muted);
+}
+.heat-total b { color: var(--accent); font-weight: 500; }
+.heat-key {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-sans); font-size: var(--t-micro); color: var(--ink-faint);
+}
+.heat-src {
+  margin: 0 0 18px; font-family: var(--font-sans);
+  font-size: var(--t-micro); color: var(--ink-faint);
+}
+.heat-scroll {
+  max-width: 100%; overflow-x: auto; overflow-y: hidden;
+  padding-bottom: 8px; -webkit-overflow-scrolling: touch;
+}
+.heat-scroll svg { display: block; }
+
+/* ─── Colophon ─────────────────────────────────────────────────────────── */
+.colophon-row {
+  display: flex; align-items: flex-end; gap: clamp(18px, 3vw, 40px);
+  margin-top: var(--space-block); flex-wrap: wrap;
+}
+.pika {
+  margin: 0; font-family: var(--font-sans); font-size: var(--t-micro);
+  line-height: 1.45; color: var(--ink-faint); user-select: none;
+  transition: color var(--dur-base) var(--ease-glide);
+}
+.colophon-row .colophon { margin: 0; }

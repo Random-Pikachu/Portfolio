@@ -1,4 +1,5 @@
-import { SITE, ORIGIN, EXPERIENCES, PROJECTS, KNOWS_ABOUT, SECTIONS } from './site';
+import { SITE, ORIGIN, EXPERIENCES, KNOWS_ABOUT, SECTIONS } from './site';
+import { PROJECTS } from './work';
 import { PHOTOS } from './photos';
 
 const PERSON_ID = `${ORIGIN}/#person`;
@@ -83,25 +84,37 @@ export function buildStructuredData(lastModified: string) {
     description: 'Open-source and personal software projects.',
     numberOfItems: PROJECTS.length,
     itemListOrder: 'https://schema.org/ItemListOrderAscending',
-    itemListElement: PROJECTS.map((p, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: {
-        '@type': 'SoftwareSourceCode',
-        '@id': `${ORIGIN}/#project-${p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-        name: p.title,
-        headline: p.title,
-        description: p.description,
-        codeRepository: p.github,
-        programmingLanguage: p.stack,
-        runtimePlatform: p.stack.join(', '),
-        author: { '@id': PERSON_ID },
-        creator: { '@id': PERSON_ID },
-        isAccessibleForFree: true,
-        url: p.live || p.github,
-        ...(p.live ? { sameAs: [p.live] } : {}),
-      },
-    })),
+    itemListElement: PROJECTS.map((p, i) => {
+      // A featured project has a case study on this site, so that page is its
+      // canonical url and the repository is secondary. Everything else points
+      // at the running thing, then the source.
+      const canonical = p.featured
+        ? `${ORIGIN}/work/${p.slug}`
+        : (p.live || p.github);
+      const alsoAt = [p.live, p.github, p.video].filter(
+        (u): u is string => Boolean(u) && u !== canonical,
+      );
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'SoftwareSourceCode',
+          '@id': `${ORIGIN}/#project-${p.slug}`,
+          name: p.title,
+          headline: p.title,
+          description: p.blurb,
+          ...(p.github ? { codeRepository: p.github } : {}),
+          programmingLanguage: p.stack,
+          runtimePlatform: p.stack.join(', '),
+          author: { '@id': PERSON_ID },
+          creator: { '@id': PERSON_ID },
+          isAccessibleForFree: true,
+          ...(canonical ? { url: canonical } : {}),
+          ...(alsoAt.length ? { sameAs: alsoAt } : {}),
+          ...(p.shot ? { image: `${ORIGIN}${p.shot.replace('-700', '-1400')}` } : {}),
+        },
+      };
+    }),
   };
 
   return {

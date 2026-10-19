@@ -1,5 +1,20 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+
+/**
+ * Three inline icons instead of an icon package. lucide-react was the only
+ * thing left importing from it, for three glyphs, and a dependency is a poor
+ * trade for ~30KB of JavaScript the viewer has to download to see a cross.
+ */
+const icon = (d: string, size: number) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={d} />
+  </svg>
+);
+const X = ({ size }: { size: number }) => icon('M18 6 6 18M6 6l12 12', size);
+const ChevronLeft = ({ size }: { size: number }) => icon('m15 18-6-6 6-6', size);
+const ChevronRight = ({ size }: { size: number }) => icon('m9 18 6-6-6-6', size);
+
 import type { Photo } from '../data/photos';
 import { SITE } from '../data/site';
 
@@ -101,7 +116,7 @@ export default function PhotoModal({
           onClick={onClose}
           aria-label="Close"
         >
-          <X size={20} aria-hidden="true" />
+          <X size={20} />
         </button>
 
         {photos.length > 1 && (
@@ -112,7 +127,7 @@ export default function PhotoModal({
               onClick={() => go(-1)}
               aria-label="Previous photo"
             >
-              <ChevronLeft size={22} aria-hidden="true" />
+              <ChevronLeft size={22} />
             </button>
             <button
               type="button"
@@ -120,7 +135,7 @@ export default function PhotoModal({
               onClick={() => go(1)}
               aria-label="Next photo"
             >
-              <ChevronRight size={22} aria-hidden="true" />
+              <ChevronRight size={22} />
             </button>
           </>
         )}

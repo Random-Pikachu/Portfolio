@@ -162,7 +162,7 @@ export const PROJECTS: Project[] = [
     slug: 'coderivals',
     title: 'CodeRivals',
     blurb:
-      'Real-time 1v1 competitive coding. Matchmaking, live match state and an Elo update per match, with submissions executing in a sandboxed Piston instance.',
+      'Real-time 1v1 competitive coding. Matchmaking, live match state and an Elo update per match, and players deploy power cards mid-round to swing the result. Submissions execute in a sandboxed Piston instance.',
     year: 'Apr 2026',
     stack: ['React', 'SpacetimeDB', 'AWS EC2', 'Docker', 'Nginx', 'Monaco'],
     github: 'https://github.com/Sypher845/code-rivals',

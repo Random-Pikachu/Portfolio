@@ -1,41 +1,55 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   Creative portfolio. Near-black, one amber, oversized type, and every
-   interaction doing something. Single theme on purpose: this look commits,
-   and a light variant would halve the contrast the whole thing runs on.
+   A scrapbook. Cream stock with a graph-paper grid, charcoal voids for
+   contrast, coral marker for every hand-drawn mark, and yellow highlighter
+   used sparingly. Every ornament on the page is SVG authored by hand and run
+   through a turbulence displacement filter — that wobble is what separates an
+   inked line from a plotted one, and it is why none of this reads as clip art.
    ────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --ink:    #0A0A0A;
-  --ink-2:  #121211;
-  --ink-3:  #1C1B19;
-  --paper:  #F2F0EB;   /* 17.0:1 on ink */
-  --muted:  #A8A49B;   /*  8.0:1 */
-  --faint:  #6E6A62;   /*  3.6:1 — decorative and large only */
-  --accent: #E3B23C;   /* 10.6:1 */
-  --line:   #232220;
+  --paper:    #F2EDE0;
+  --paper-2:  #EAE3D2;   /* taped cutouts, raised scraps */
+  --grid:     #DCD4C1;
+  --char:     #23201A;   /* the voids */
+  --char-2:   #302C24;
 
-  --display: 'Bricolage Grotesque', 'Arial Black', sans-serif;
-  --mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ink:      #23201A;   /* 14.0:1 on paper */
+  --ink-2:    #544C3E;   /*  7.3:1 */
+  --ink-3:    #7A7160;   /*  4.1:1 — captions only */
+  --on-char:  #F2EDE0;   /* 13.9:1 on charcoal */
+  --on-char-2:#B4AB98;   /*  7.1:1 */
 
-  /* Display sizes are viewport-relative on purpose: the type is the layout. */
-  --t-mega:  clamp(54px, 13.5vw, 230px);
-  --t-huge:  clamp(40px, 8.5vw, 140px);
-  --t-big:   clamp(28px, 4.6vw, 76px);
-  --t-mid:   clamp(20px, 2.2vw, 32px);
-  --t-body:  clamp(15px, 1.15vw, 18px);
-  --t-meta:  12px;
+  --coral:    #C8441F;   /*  5.6:1 on paper — marker */
+  --coral-lt: #E6603A;   /*  on charcoal */
+  --yellow:   #E8B84B;   /* highlighter, never for text */
 
-  --pad: clamp(18px, 4vw, 56px);
+  --hand:  'Shantell Sans', 'Comic Sans MS', cursive;
+  --sans:  'Instrument Sans', system-ui, sans-serif;
+  --mono:  'JetBrains Mono', ui-monospace, monospace;
 
-  --ease:     cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in:  cubic-bezier(0.7, 0, 0.84, 0);
-  --fast: 180ms;
-  --base: 420ms;
-  --slow: 900ms;
+  --t-mega: clamp(42px, 8.5vw, 116px);
+  --t-big:  clamp(28px, 4.4vw, 62px);
+  --t-mid:  clamp(20px, 2.3vw, 30px);
+  --t-body: clamp(15px, 1.1vw, 17px);
+  --t-note: 13px;
+  --t-meta: 11px;
+
+  --pad: clamp(18px, 4vw, 64px);
+  --tilt-a: -1.6deg;
+  --tilt-b: 1.2deg;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pop:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fast: 160ms;
+  --base: 380ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root { --fast: 0ms; --base: 0ms; --slow: 0ms; }
+  :root { --fast: 0ms; --base: 0ms; }
 }
+
+/* The board needs a fixed aspect so percentage-positioned scraps land the same
+   way at every width. */
+:root { --board-ratio: 16 / 10; }

@@ -1,21 +1,23 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import Cursor from './Cursor';
-import Loader from './Loader';
+import Rough from './Rough';
+import { Underline } from './Doodle';
 
 export default function Shell({ children }: { children: ReactNode }) {
   return (
     <>
-      <Loader />
-      <Cursor />
+      <Rough />
       <a className="sr-only" href="#main">Skip to content</a>
 
-      <nav className="nav mono" aria-label="Main">
-        <Link to="/" className="nav-brand">Sangam</Link>
+      <nav className="nav" aria-label="Main">
+        <Link to="/" className="nav-brand">
+          Sangam
+          <Underline className="nav-u" />
+        </Link>
         <span className="nav-links">
-          <Link to="/work">Work</Link>
-          <Link to="/photography">Plates</Link>
-          <a href="/resume.pdf">Résumé</a>
+          <Link to="/work">work</Link>
+          <Link to="/photography">photos</Link>
+          <a href="/resume.pdf">résumé</a>
         </span>
       </nav>
 

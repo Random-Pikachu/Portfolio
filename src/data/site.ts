@@ -75,6 +75,8 @@ export interface Experience {
   role: string;
   /** City, where it is worth naming. */
   location?: string;
+  /** The one line from this job that is worth setting at scale. */
+  claim: string;
   points: ExperiencePoint[];
   stack: string[];
 }
@@ -88,6 +90,7 @@ export const EXPERIENCES: Experience[] = [
     companyUrl: 'https://retsguide.dk/',
     role: 'Software Engineer Intern (Founding Engineer)',
     location: 'Copenhagen',
+    claim: 'I build the legal knowledge graph the reports rest on, and no model is allowed to write to it.',
     points: [
       { href: null, label: null, text: 'Shipped three customer-facing flows end to end — research and schema design through production' },
       { href: null, label: null, text: 'Building the legal knowledge graph the product’s reports rest on, with no model permitted to write to it, so every claim traces back to the provision version it stands on' },
@@ -104,6 +107,7 @@ export const EXPERIENCES: Experience[] = [
     company: 'KDE Plasma',
     companyUrl: 'https://kde.org/',
     role: 'Open Source Contributor',
+    claim: 'Five patches merged into Plasma, and the work was picked up in This Week in Plasma.',
     points: [
       {
         href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6280',
@@ -146,6 +150,7 @@ export const EXPERIENCES: Experience[] = [
     companyUrl: 'https://opensphere.ai/',
     role: 'Software Development Intern',
     location: 'San Francisco',
+    claim: 'Built the concurrent WebSocket service behind real-time threaded commenting in the editor.',
     points: [
       { href: null, label: null, text: 'Built concurrent WebSocket service powering real-time threaded commenting in the text editor' },
       { href: null, label: null, text: 'Reworked drafting workflow, removing a redundant data-filing stage and doubling throughput' },

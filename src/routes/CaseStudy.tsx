@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import Reveal from '../components/Reveal';
+import { Arrow } from '../components/Icon';
 import Plate from '../components/Plate';
 import { DRAWN, PROJECTS, PROJECT_BY_SLUG } from '../data/work';
 import NotFound from './NotFound';
@@ -11,108 +11,104 @@ export default function CaseStudy() {
 
   const featured = PROJECTS.filter((x) => x.featured);
   const next = featured[(featured.findIndex((x) => x.slug === p.slug) + 1) % featured.length];
+  const hasMedia = Boolean(p.shot) || DRAWN.has(p.slug);
 
   return (
     <article>
-      <section className="sec" aria-labelledby="cs">
-        <div className="wrap">
-          <Reveal>
-            <p className="tag"><Link className="lnk" to="/work">Index</Link>&nbsp; / &nbsp;{p.year}</p>
-            <h1 className="h1" id="cs" style={{ marginTop: 20, maxWidth: '18ch' }}>{p.title}</h1>
-            <p className="lead" style={{ marginTop: 24 }}>{p.blurb}</p>
+      <section className="grid" style={{ paddingBlock: 'var(--s-5)' }} aria-labelledby="cs-h">
+        <header className="room-head">
+          <div className="room-head-row">
+            <Link className="fine lnk" to="/work" style={{ color: 'var(--accent)' }}>Work</Link>
+            <span className="fine">{p.year}</span>
+          </div>
+          <h1 className="h1" id="cs-h" data-rv="head" style={{ marginTop: 'var(--s-3)', maxWidth: '16em' }}>
+            <span className="w"><span className="g">{p.title}</span></span>
+          </h1>
+        </header>
 
-            <dl className="kv" style={{ marginTop: 'clamp(34px,5vh,56px)' }}>
-              <div><dt>Role</dt><dd>{p.role}</dd></div>
-              <div><dt>Built with</dt><dd>{p.stack.join(' · ')}</dd></div>
-              <div>
-                <dt>Links</dt>
-                <dd style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 18px' }}>
-                  {p.github && <a className="lnk" href={p.github} target="_blank" rel="noopener">Source</a>}
-                  {p.live && <a className="lnk" href={p.live} target="_blank" rel="noopener">Live</a>}
-                  {p.video && <a className="lnk" href={p.video} target="_blank" rel="noopener">Demo</a>}
-                  {!p.github && !p.live && !p.video && <span style={{ color: 'var(--fg-3)' }}>Private</span>}
-                </dd>
-              </div>
-            </dl>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <p className="lead" data-rv="text" style={{ marginTop: 'var(--s-3)' }}>{p.blurb}</p>
 
-            {(p.shot || DRAWN.has(p.slug)) && (
-              <figure className={`figure brk${p.shot ? '' : ' figure--plate'}`}>
-                {p.shot
-                  ? <img src={p.shot.replace('-700', '-1400')} alt={p.title} />
-                  : <Plate slug={p.slug} />}
-              </figure>
-            )}
-          </Reveal>
+          <dl className="kv" data-rv="row" style={{ marginTop: 'var(--s-4)', maxWidth: '34em' }}>
+            <div><dt>Role</dt><dd style={{ color: 'var(--fg)' }}>{p.role}</dd></div>
+            <div><dt>Built with</dt><dd style={{ color: 'var(--fg)' }}>{p.stack.join(' · ')}</dd></div>
+            <div>
+              <dt>Links</dt>
+              <dd style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--s-2)' }}>
+                {p.github && <a className="lnk" href={p.github} target="_blank" rel="noopener">Source</a>}
+                {p.live && <a className="lnk" href={p.live} target="_blank" rel="noopener">Live</a>}
+                {p.video && <a className="lnk" href={p.video} target="_blank" rel="noopener">Demo</a>}
+                {!p.github && !p.live && !p.video && <span style={{ color: 'var(--fg-3)' }}>Private</span>}
+              </dd>
+            </div>
+          </dl>
+
+          {hasMedia && (
+            <figure className={`figure${p.shot ? '' : ' figure--plate'}`} data-rv="plate">
+              {p.shot
+                ? <img src={p.shot.replace('-700', '-1400')} alt={p.title} />
+                : <Plate slug={p.slug} />}
+            </figure>
+          )}
         </div>
       </section>
 
-      <section className="sec sec--tight" data-sun="noon">
-        <div className="wrap">
-          <div className="prose">
-            {([['The problem', p.problem], ['What I built', p.built]] as const).map(([h, body], i) =>
-              body ? (
-                <Reveal key={h} delay={i * 60}>
-                  <p className="tag" style={{ marginTop: i ? 'clamp(40px,6vh,70px)' : 0 }}>{h}</p>
-                  <p className="body" style={{ marginTop: 16, fontSize: 'var(--t-lead)', lineHeight: 1.55 }}>{body}</p>
-                </Reveal>
-              ) : null)}
-          </div>
+      <section className="grid" data-sun="noon" style={{ paddingBlock: 'var(--s-4) var(--s-5)' }}>
+        <div className="prose" style={{ gridColumn: '1 / span min(8, var(--cols))' }}>
+          {([['The problem', p.problem], ['What I built', p.built]] as const).map(([h, body], i) =>
+            body ? (
+              <div key={h} data-rv="text" style={{ marginTop: i ? 'var(--s-5)' : 0 }}>
+                <p className="fine">{h}</p>
+                <p className="lead" style={{ marginTop: 'var(--s-2)', maxWidth: '27.4em' }}>{body}</p>
+              </div>
+            ) : null)}
         </div>
       </section>
 
       {p.decisions?.length ? (
-        <section className="sec" aria-labelledby="dec">
-          <div className="wrap">
-            <Reveal as="header" className="shead">
-              <div className="shead-row"><p className="tag">Decisions</p></div>
-              <h2 className="h2" id="dec">What I chose, and why.</h2>
-            </Reveal>
-            <ol className="decisions">
-              {p.decisions.map((d, i) => (
-                <Reveal as="li" key={d.claim} delay={i * 50}>
-                  <div>
-                    <p className="dec-claim">{d.claim}</p>
-                    <p className="dec-why">{d.why}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </ol>
-          </div>
+        <section className="grid" style={{ paddingBlock: 'var(--s-5)' }} aria-labelledby="dec-h">
+          <header className="room-head">
+            <div className="room-head-row"><span className="fine">Decisions</span></div>
+            <h2 className="h2" id="dec-h" data-rv="head">
+              <span className="w"><span className="g">What I chose.</span></span>
+            </h2>
+          </header>
+          <ol className="decisions" style={{ gridTemplateColumns: 'subgrid' }}>
+            {p.decisions.map((d) => (
+              <li key={d.claim} data-rv="row">
+                <div className="dec-body">
+                  <p className="h3">{d.claim}</p>
+                  <p className="dec-why">{d.why}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </section>
       ) : null}
 
       {p.stats?.length ? (
-        <section className="sec" aria-labelledby="res">
-          <div className="wrap">
-            <Reveal as="header" className="shead">
-              <div className="shead-row"><p className="tag">Results</p></div>
-              <h2 className="h2" id="res">Measured, not claimed.</h2>
-            </Reveal>
-            <ul className="stats">
-              {p.stats.map((s, i) => (
-                <Reveal as="li" key={s.value} delay={i * 60}>
-                  <span className="stat-v">{s.value}</span>
-                  <span className="stat-l">{s.label}</span>
-                </Reveal>
+        <section className="proof bleed" aria-labelledby="res-h">
+          <div className="grid">
+            <h2 className="sr-only" id="res-h">Results</h2>
+            <ul className="stats" style={{ gridTemplateColumns: 'subgrid', marginTop: 0 }}>
+              {p.stats.map((s) => (
+                <li key={s.value} data-rv="text">
+                  <span className="proof-v">{s.value}</span>
+                  <span className="proof-l">{s.label}</span>
+                </li>
               ))}
             </ul>
           </div>
         </section>
       ) : null}
 
-      <section className="sec sec--tight">
-        <div className="wrap">
-          <Reveal>
-            <div className="shead-row"><p className="tag">Next</p></div>
-            <Link className="row" to={`/work/${next.slug}`}>
-              <span className="row-n" aria-hidden="true">→</span>
-              <span>
-                <span className="row-title">{next.title}</span>
-                <span className="row-blurb">{next.blurb}</span>
-              </span>
-              <span className="row-right"><span className="row-year">{next.year}</span></span>
-            </Link>
-          </Reveal>
+      <section className="grid" style={{ paddingBlock: 'var(--s-5)' }}>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <span className="fine">Next</span>
+          <Link className="act" to={`/work/${next.slug}`}
+                style={{ display: 'flex', marginTop: 'var(--s-3)' }}>
+            {next.title} <Arrow />
+          </Link>
         </div>
       </section>
     </article>

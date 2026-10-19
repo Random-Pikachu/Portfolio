@@ -2,16 +2,18 @@ import { useEffect, useRef } from 'react';
 import Stars from './Stars';
 
 /**
- * The crosshair field, and the pointer lamp that relights it.
+ * Everything behind the page: the sun, the horizon it sits on, the crosshair
+ * grid, and the pointer lamp.
  *
- * Both layers are fixed and share one mask pitch, so they cannot drift out of
- * phase. The pointer position is lerped on a single rAF loop and written
- * straight to two custom properties — a state update per pointermove would
- * re-render the whole page.
+ * The lamp has two expressions. The one in here lights the paper, which is
+ * where it works by day. `.lamp-fg` sits above the content and is driven by
+ * --night, so after dark it is a real light source over the thing you are
+ * pointing at — the old single layer sat behind `.page`, which meant the only
+ * pointer motion on the site was visible exclusively where you were not
+ * pointing.
  */
-export default function Reticle() {
+export default function Field() {
   const lamp = useRef<HTMLDivElement>(null);
-  const glow = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.matchMedia('(hover: none)').matches) return;
@@ -30,18 +32,13 @@ export default function Reticle() {
         at.x = target.x;
         at.y = target.y;
         lamp.current?.classList.add('lit');
-        glow.current?.classList.add('lit');
       }
     };
-    const leave = () => {
-      seen = false;
-      lamp.current?.classList.remove('lit');
-      glow.current?.classList.remove('lit');
-    };
+    const leave = () => { seen = false; lamp.current?.classList.remove('lit'); };
 
     const tick = () => {
-      // A light trail rather than a hard lock: the lag is what makes the field
-      // read as something being lit instead of a cursor decoration.
+      // The lag is what makes the field read as something being lit rather
+      // than as a cursor decoration.
       at.x += (target.x - at.x) * 0.16;
       at.y += (target.y - at.y) * 0.16;
       const s = document.documentElement.style;
@@ -61,11 +58,15 @@ export default function Reticle() {
   }, []);
 
   return (
-    <div className="field" aria-hidden="true">
-      <Stars />
-      <div className="reticle" />
-      <div className="glow" ref={glow} />
-      <div className="lamp" ref={lamp} />
-    </div>
+    <>
+      <div className="field" aria-hidden="true">
+        <div className="sun" />
+        <Stars />
+        <div className="horizon" />
+        <div className="reticle" />
+        <div className="lamp" ref={lamp} />
+      </div>
+      <div className="lamp-fg" aria-hidden="true" />
+    </>
   );
 }

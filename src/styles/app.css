@@ -1,13 +1,24 @@
 /* ─── The page ─────────────────────────────────────────────────────────────
-   One continuous ground with a hairline grid drawn across it, and nothing
-   else. There are no coloured panels and no section backgrounds: structure
-   comes from rules, space and the crosshair field, and the only thing that
-   changes down the page is the time of day.
+   Nine rooms, five of them full-bleed. Each differs from its neighbour on at
+   least two of ground / alignment / density / scale, because a page whose
+   every section is the same object — eyebrow, rule, heading, content — is a
+   layout with one argument, and the eye reads one repeated structure as no
+   structure at all.
+
+   Every animated element is written here at its FINAL state. GSAP moves it
+   away and back, so the prerendered HTML, a crawler, and a reader with
+   reduced motion all get the finished page.
    ────────────────────────────────────────────────────────────────────────── */
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; overflow-x: clip; scroll-behavior: smooth; }
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  font-optical-sizing: auto;
+  font-variant-numeric: tabular-nums;
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -15,9 +26,10 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--sans);
+  font-weight: 400;
   font-size: var(--t-body);
-  line-height: 1.62;
-  font-synthesis-weight: none;
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -30,464 +42,462 @@ img { max-width: 100%; }
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
 
 /* ─── The field ────────────────────────────────────────────────────────────
-   Because the whole page shares one background, the crosshairs can be a
-   single fixed layer behind the content rather than something each section
-   has to paint for itself. The pointer lamp repaints the same marks in ember
-   inside a disc that follows the cursor; both are fixed, so they share a
-   phase by construction.
+   Behind everything: the sun, the horizon it sits on, the crosshair grid, and
+   the pointer lamp. The sun is the point — the sunset was an inference drawn
+   from the beige getting darker, and nothing on screen was lit by it.
    ────────────────────────────────────────────────────────────────────────── */
 .field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-/* The sky sits behind the crosshairs, because it is behind everything. */
 .stars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.reticle, .lamp {
-  position: absolute; inset: 0;
+
+.sun {
+  position: absolute; left: 50%; bottom: -8vh; width: 180vw; height: 120vh;
+  translate: -50% 0; opacity: var(--sun-op, 0.3);
+  background: radial-gradient(ellipse at 50% 100%,
+    color-mix(in srgb, var(--accent) 34%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 20%, transparent) 26%,
+    color-mix(in srgb, var(--accent)  8%, transparent) 48%,
+    transparent 70%);
+}
+/* One fixed horizontal rule at the sun's centre: the only fixed line on the
+   site, and the thing everything else scrolls past. */
+.horizon {
+  position: absolute; left: 0; right: 0; bottom: 52vh; height: 1px;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  /* Only once the sun is low enough for a horizon to mean anything. A fixed
+     rule across the hero reads as a rendering fault, not as a horizon. */
+  opacity: calc(max(var(--sun-op, 0) - 0.45, 0) * 1.8);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sun { translate: -50% 52%; }
+  .horizon { bottom: 10vh; }
+}
+
+.reticle {
+  position: absolute; inset: 0; background: var(--cross);
   -webkit-mask-image: var(--plus); mask-image: var(--plus);
   -webkit-mask-size: var(--cell) var(--cell); mask-size: var(--cell) var(--cell);
+  -webkit-mask-position: calc(var(--edge) - var(--cell) / 2) calc(var(--cell) / -2);
+  mask-position: calc(var(--edge) - var(--cell) / 2) calc(var(--cell) / -2);
 }
-.reticle { background: var(--cross); }
 
 .lamp {
-  background: var(--accent); opacity: 0;
-  transition: opacity var(--base) var(--ease);
-  -webkit-mask-image: var(--plus),
-    radial-gradient(circle 210px at var(--mx, -999px) var(--my, -999px), #000 0 30%, transparent 72%);
-  mask-image: var(--plus),
-    radial-gradient(circle 210px at var(--mx, -999px) var(--my, -999px), #000 0 30%, transparent 72%);
-  -webkit-mask-size: var(--cell) var(--cell), 100% 100%;
-  mask-size: var(--cell) var(--cell), 100% 100%;
-  -webkit-mask-repeat: repeat, no-repeat; mask-repeat: repeat, no-repeat;
-  -webkit-mask-composite: source-in; mask-composite: intersect;
-}
-.glow {
   position: absolute; inset: 0; opacity: 0;
-  transition: opacity var(--base) var(--ease);
+  transition: opacity var(--d-block) var(--ease);
   background: radial-gradient(circle 240px at var(--mx, -999px) var(--my, -999px),
-              color-mix(in srgb, var(--accent) 13%, transparent),
+              color-mix(in srgb, var(--accent) 11%, transparent),
               color-mix(in srgb, var(--accent) 4%, transparent) 50%, transparent 76%);
 }
-.lit { opacity: 1; }
-@media (hover: none), (prefers-reduced-motion: reduce) { .lamp, .glow { display: none; } }
+/* The background lamp lights the paper. This one lights the content, and only
+   after dark, where additive blending is what a lamp actually does. */
+.lamp-fg {
+  position: fixed; inset: 0; z-index: 3; pointer-events: none;
+  mix-blend-mode: plus-lighter;
+  opacity: calc(var(--night) * 0.26);
+  background: radial-gradient(circle 260px at var(--mx, -999px) var(--my, -999px),
+              color-mix(in srgb, var(--accent) 22%, transparent),
+              color-mix(in srgb, var(--accent) 6%, transparent) 46%, transparent 74%);
+}
+.lamp.lit { opacity: 1; }
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .lamp, .lamp-fg { display: none; }
+}
 
-/* Everything readable sits above the field. */
 .page { position: relative; z-index: 1; }
 
-/* ─── Spine ────────────────────────────────────────────────────────────── */
-.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
-.sec { padding-block: clamp(76px, 12vh, 150px); }
-.sec--tight { padding-block: clamp(46px, 7vh, 86px); }
-.rule { border-top: 1px solid var(--hair); }
+/* ─── Grid ─────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  flex: 0 1 auto;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gut);
+  width: var(--content);
+  margin-inline: auto;
+}
+/* Normal flow, so it causes no containing-block surprises inside grid items. */
+.bleed { width: 100vw; margin-inline: calc(50% - 50vw); }
 
-/* ─── Labels ───────────────────────────────────────────────────────────── */
-.mono { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.06em; }
-.tag {
-  display: inline-flex; align-items: flex-start; gap: 10px; margin: 0;
-  font-family: var(--mono); font-size: var(--t-mono);
-  letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-3);
-}
-.tag::before {
-  content: ''; width: 22px; height: 1px; background: var(--accent);
-  flex: none; margin-top: 0.62em;
-}
+.room { padding-block: var(--s-5); }
+.room--flush { padding-block: 0; }
 
-/* ─── Headings ─────────────────────────────────────────────────────────── */
-.h1, .h2, .h3, .display {
-  font-family: var(--sans); font-weight: 800;
-  letter-spacing: -0.035em; text-wrap: balance; margin: 0;
+/* ─── Type ─────────────────────────────────────────────────────────────── */
+.display, .h1, .h2, .h3, .plate-t {
+  font-family: var(--display); margin: 0; text-wrap: balance;
 }
-.display { font-size: var(--t-display); line-height: 0.96; letter-spacing: -0.045em; }
-.h1 { font-size: var(--t-h1); line-height: 1.0; letter-spacing: -0.04em; }
-.h2 { font-size: var(--t-h2); line-height: 1.04; }
-.h3 { font-size: var(--t-h3); line-height: 1.16; letter-spacing: -0.025em; font-weight: 700; }
+.display {
+  font-size: var(--t-display); line-height: var(--lh-display);
+  letter-spacing: var(--ls-display); font-weight: 700;
+  font-variation-settings: 'WONK' 1;
+}
+.plate-t {
+  font-size: var(--t-plate); line-height: var(--lh-plate);
+  letter-spacing: var(--ls-plate); font-weight: 700;
+  font-variation-settings: 'WONK' 1;
+}
+.h1 { font-size: var(--t-h1); line-height: var(--lh-h1); letter-spacing: var(--ls-h1); font-weight: 700; }
+.h2 { font-size: var(--t-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); font-weight: 600; }
+.h3 { font-size: var(--t-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); font-weight: 600; }
 
-/* The single serif on the site. It appears once, in the first headline. */
-.em {
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  color: var(--accent); letter-spacing: -0.012em; padding-inline-end: 0.04em;
-}
+.lead { font-size: var(--t-lead); line-height: var(--lh-lead); letter-spacing: var(--ls-lead);
+        color: var(--fg-2); margin: 0; max-width: 24.8em; font-variant-numeric: proportional-nums; }
+.sub  { font-size: var(--t-sub); line-height: var(--lh-sub); letter-spacing: var(--ls-sub);
+        color: var(--fg-2); margin: 0; max-width: 25.2em; font-weight: 600; }
+.body { margin: 0; max-width: 22.1em; color: var(--fg-2); font-variant-numeric: proportional-nums; }
+.fine { font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: var(--ls-fine);
+        color: var(--fg-3); font-weight: 500; }
+.mono { font-family: var(--mono); font-size: var(--t-mono); line-height: var(--lh-mono);
+        letter-spacing: var(--ls-mono); color: var(--fg-3); font-weight: 400; }
 
-.lead { font-size: var(--t-lead); line-height: 1.52; color: var(--fg-2); margin: 0; max-width: 54ch; }
-.body { color: var(--fg-2); margin: 0; max-width: 66ch; }
+/* ─── Masked display lines ─────────────────────────────────────────────────
+   The padding/negative-margin pair is load-bearing: without it the mask crops
+   the descender of a g or a y, and Fraunces' descender is 0.255em.
+   ────────────────────────────────────────────────────────────────────────── */
+/* JSX strips whitespace containing a newline between sibling elements, so
+   these masks butt together without a margin. 0.26em is the word space. */
+.w { display: inline-block; overflow: hidden; vertical-align: top;
+     margin-right: 0.26em; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.g { display: block; }
+@media (max-width: 599px) { .display .w { display: block; margin-right: 0; } }
 
-/* ─── Section header ───────────────────────────────────────────────────── */
-.shead { margin-bottom: clamp(44px, 7vh, 82px); }
-.shead-row {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 20px; flex-wrap: wrap;
-  padding-bottom: 14px; border-bottom: 1px solid var(--hair);
+/* ─── Action ───────────────────────────────────────────────────────────────
+   Replaces two pills. The page is built on hairlines and right angles; a
+   fully rounded object was the only thing in the system that was not.
+   ────────────────────────────────────────────────────────────────────────── */
+.act {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  font-size: var(--t-lead); line-height: var(--lh-lead); letter-spacing: var(--ls-lead);
+  font-weight: 600; color: var(--accent);
+  border-bottom: 2px solid currentColor; padding-bottom: 0.12em;
 }
-.shead .h2 { max-width: 18ch; margin-top: clamp(20px, 3vh, 34px); }
-.shead .lead { margin-top: 18px; }
-
-/* ─── Buttons ──────────────────────────────────────────────────────────── */
-.btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 15px 26px; border-radius: 999px;
-  font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.14em;
-  text-transform: uppercase; white-space: nowrap;
-  background: var(--accent); color: var(--on-accent);
-  transition: transform var(--fast) var(--out), filter var(--fast) var(--ease),
-              background-color var(--base) linear, color var(--base) linear;
-}
-.btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-.btn:active { transform: none; }
-.btn--ghost {
-  background: transparent; color: var(--fg);
-  box-shadow: inset 0 0 0 1px var(--hair-2);
-}
-.btn--ghost:hover { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); filter: none; }
-.arr { transition: transform var(--fast) var(--out); }
-.btn:hover .arr { transform: translateX(4px); }
+.act--sm { font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: 0.02em;
+           border-bottom-width: 1px; }
+.arr { flex: none; transition: transform var(--d-micro) var(--out); }
+.act:hover .arr, a:hover > .arr { transform: translateX(4px); }
 
 .lnk {
   color: var(--accent);
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 0% 1px; background-position: 0 100%; background-repeat: no-repeat;
-  transition: background-size var(--fast) var(--ease);
+  transition: background-size var(--d-micro) var(--ease);
 }
 .lnk:hover { background-size: 100% 1px; }
 
 /* ─── Nav ──────────────────────────────────────────────────────────────── */
 .nav {
-  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
-  padding-block: clamp(20px, 3vh, 32px);
+  display: flex; align-items: baseline; gap: var(--s-3);
+  padding-block: var(--s-3); position: relative; z-index: 4;
 }
-.nav-brand {
-  font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.18em;
-  text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px;
-}
-.nav-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 999px; flex: none; }
-.nav-links { margin-left: auto; display: flex; gap: clamp(16px, 2.4vw, 30px); align-items: center; }
+.nav-brand { font-weight: 600; font-size: var(--t-fine); letter-spacing: 0.01em; color: var(--fg); }
+.nav-links { margin-left: auto; display: flex; gap: var(--s-3); align-items: baseline; }
 .nav-links a {
-  font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--fg-3);
-  transition: color var(--fast) var(--ease);
+  font-size: var(--t-fine); font-weight: 500; color: var(--fg-3);
+  transition: color var(--d-micro) var(--ease);
 }
 .nav-links a:hover, .nav-links a[aria-current='page'] { color: var(--accent); }
-.nav-clock {
-  font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.1em;
-  color: var(--fg-3); font-variant-numeric: tabular-nums;
-}
-@media (max-width: 620px) {
-  .nav { gap: 12px; }
-  .nav-clock { display: none; }
-  .nav-links { margin-left: 0; width: 100%; gap: 20px; }
+.nav-clock { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: var(--ls-mono);
+             color: var(--fg-3); }
+@media (max-width: 599px) {
+  .nav { flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
+  .nav-links { margin-left: 0; width: 100%; }
 }
 
-/* ─── Hero ─────────────────────────────────────────────────────────────── */
-.hero { padding-block: clamp(32px, 7vh, 86px) clamp(56px, 10vh, 120px); }
-.hero .display { max-width: 15ch; margin-top: clamp(22px, 3.4vh, 38px); }
-.hero .lead { margin-top: clamp(26px, 4vh, 42px); }
-.hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: clamp(30px, 4.6vh, 48px); }
+/* ─── R1 Hero ──────────────────────────────────────────────────────────── */
+.hero { padding-block: var(--s-5) var(--s-0); }
+.hero .display { grid-column: 1 / -1; max-width: 9.2em; }
+.hero-eyebrow { grid-column: 1 / -1; margin: 0 0 var(--s-3); }
+.hero .sub { grid-column: 1 / span min(6, var(--cols)); margin-top: var(--s-4); }
+.hero-act  { grid-column: 1 / -1; margin-top: var(--s-4); }
 
-/* Dotted leaders tie each label to its value the way a printed index does. */
-.facts { margin: clamp(46px, 7vh, 82px) 0 0; padding: 0; border-top: 1px solid var(--hair); }
-.fact {
-  display: flex; align-items: baseline; gap: 14px;
-  padding: 15px 0 13px; border-bottom: 1px solid var(--hair);
-}
-.fact dt {
-  flex: none; font-family: var(--mono); font-size: var(--t-mono-s);
-  letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-3);
-}
-.fact-dots {
-  flex: 1 1 auto; min-width: 20px; align-self: center; height: 1px;
-  background-image: radial-gradient(circle, var(--hair-2) 1px, transparent 1px);
-  background-size: 6px 1px; background-repeat: repeat-x;
-}
-.fact dd { margin: 0; flex: none; font-size: var(--t-small); color: var(--fg);
-           text-align: right; max-width: 60%; }
-
-/* ─── Marks row ────────────────────────────────────────────────────────────
-   Where a studio would run client logos. These are the places the work has
-   actually landed, set as text because inventing logo lockups for them would
-   be dressing up.
+/* ─── R2 Proof ─────────────────────────────────────────────────────────────
+   The most restrained room on the site and the loudest. The numerals are
+   Archivo 700 at wdth 88 — semi-condensed tabular figures are the entire
+   reason for having a width axis, and they remove two monospace uses.
    ────────────────────────────────────────────────────────────────────────── */
-.marks {
-  list-style: none; margin: 0; padding: clamp(24px, 4vh, 44px) 0;
-  display: flex; flex-wrap: wrap; align-items: center;
-  gap: 14px clamp(22px, 4vw, 56px);
+.proof {
+  background: var(--panel);
   border-block: 1px solid var(--hair);
-  font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--fg-3);
+  padding-block: var(--s-5);
 }
-.marks li { display: inline-flex; align-items: center; gap: clamp(22px, 4vw, 56px); }
-.marks li:not(:last-child)::after { content: ''; width: 5px; height: 5px;
-  border-radius: 999px; background: var(--accent); opacity: 0.6; }
+.proof-grid { row-gap: var(--s-4); }
+.proof-cell { grid-column: span 3; }
+.proof-cell:empty { display: none; }
+.proof-v {
+  display: block; font-size: var(--t-figure); line-height: var(--lh-figure);
+  letter-spacing: var(--ls-figure); font-weight: 700; font-stretch: 88%;
+  color: var(--accent); min-width: 3.3em;
+}
+.proof-l {
+  display: block; margin-top: var(--s-2); max-width: 13em;
+  font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: 0.06em;
+  text-transform: uppercase; font-weight: 500; color: var(--fg-3);
+}
+@media (max-width: 1079px) { .proof-cell { grid-column: span 4; } }
+@media (max-width: 599px)  { .proof-cell { grid-column: 1 / -1; } }
 
-/* ─── Work tiles ───────────────────────────────────────────────────────────
-   Two up, each one a framed plate with corner marks, the index and year on a
-   rule above it and the title beneath. A grid rather than a list because the
-   work has pictures and a list throws them away.
-   ────────────────────────────────────────────────────────────────────────── */
-.tiles {
-  list-style: none; margin: 0; padding: 0;
-  display: grid; gap: clamp(34px, 5vw, 70px) clamp(20px, 3vw, 44px);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-@media (max-width: 760px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+/* ─── R3 Experience — the dense room ───────────────────────────────────── */
+.room-head { grid-column: 1 / -1; border-top: 1px solid var(--hair); padding-top: var(--s-3); }
+.room-head-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+.room-head .h2 { margin-top: var(--s-3); max-width: 16em; }
 
-/* The first one runs the full width. A grid where every cell is the same size
-   is a spreadsheet; giving the lead project more room is the whole reason to
-   have an order. */
-@media (min-width: 761px) {
-  .tiles > li:first-child { grid-column: 1 / -1; }
-  .tiles > li:first-child .tile-media { aspect-ratio: 2 / 1; }
-  .tiles > li:first-child .tile-ttl h3 { font-size: clamp(24px, 2.6vw, 38px); }
-  .tiles > li:first-child .tile-blurb { max-width: 62ch; font-size: var(--t-body); }
-}
-
-.tile { display: flex; flex-direction: column; height: 100%; }
-.tile-top {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
-  padding-bottom: 11px; border-bottom: 1px solid var(--hair);
-  font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--fg-3);
-}
-.tile-media {
-  position: relative; margin-top: 14px; aspect-ratio: 4 / 3; overflow: hidden;
-  background: var(--shade);
-}
-.tile-media img, .tile-media svg {
-  display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center;
-  transition: transform var(--slow) var(--out);
-}
-@media (hover: hover) { .tile:hover .tile-media img { transform: scale(1.035); } }
-
-/* A project with no picture gets its name set large instead of a placeholder. */
-.tile-plate {
-  display: grid; place-content: center; height: 100%; padding: 10%;
-  text-align: center; font-family: var(--sans); font-weight: 800;
-  font-size: clamp(26px, 3.4vw, 44px); line-height: 1.02; letter-spacing: -0.04em;
-  color: var(--fg); filter: none;
-}
-
-/* Corner marks, drawn as four L's rather than a box: a border closes a shape,
-   corner marks register it against the grid the page is already drawing. */
-.brk::before, .brk::after {
-  content: ''; position: absolute; width: 13px; height: 13px;
-  border: 1px solid var(--accent); pointer-events: none; z-index: 1;
-}
-.brk::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
-.brk::after { bottom: 0; right: 0; border-left: 0; border-top: 0; }
-
-.tile-body { display: flex; align-items: flex-start; gap: 18px; margin-top: 16px; }
-.tile-ttl { flex: 1 1 auto; }
-.tile-ttl h3 { margin: 0; }
-.tile-blurb { margin: 9px 0 0; color: var(--fg-2); font-size: var(--t-small);
-              line-height: 1.5; max-width: 46ch; }
-.tile-stack { display: block; margin-top: 11px; font-family: var(--mono);
-              font-size: var(--t-mono-s); letter-spacing: 0.08em;
-              text-transform: uppercase; color: var(--fg-3); }
-.tile-go {
-  flex: none; display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--accent); white-space: nowrap;
-  padding-top: 0.35em;
-}
-.tile:hover .tile-go .arr { transform: translateX(4px); }
-
-/* ─── Work index rows ──────────────────────────────────────────────────── */
-.rows { list-style: none; margin: 0; padding: 0; }
-.rows > li { border-top: 1px solid var(--hair); }
-.rows > li:last-child { border-bottom: 1px solid var(--hair); }
-.row {
-  display: grid; align-items: start; gap: 4px clamp(14px, 2.4vw, 30px);
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  padding: clamp(22px, 3.2vh, 34px) 0;
-}
-.row-n { font-family: var(--mono); font-size: var(--t-mono); color: var(--fg-3); padding-top: 0.5em; }
-.row-title {
-  display: block; font-weight: 800; font-size: clamp(20px, 2vw, 29px);
-  line-height: 1.1; letter-spacing: -0.035em;
-  transition: transform var(--base) var(--out);
-}
-.row-blurb { display: block; margin-top: 9px; color: var(--fg-2);
-             font-size: var(--t-small); line-height: 1.5; max-width: 60ch; }
-.row-stack { display: block; margin-top: 11px; font-family: var(--mono);
-             font-size: var(--t-mono-s); letter-spacing: 0.08em;
-             text-transform: uppercase; color: var(--fg-3); }
-.row-right { display: flex; align-items: center; gap: 14px; padding-top: 0.4em; }
-.row-year { font-family: var(--mono); font-size: var(--t-mono-s); color: var(--fg-3); white-space: nowrap; }
-@media (hover: hover) { .row:hover .row-title { transform: translateX(9px); } }
-@media (max-width: 680px) {
-  .row { grid-template-columns: 32px minmax(0, 1fr); }
-  .row-right { grid-column: 2; padding-top: 13px; }
-}
-
-/* ─── Experience ───────────────────────────────────────────────────────── */
-.jobs { list-style: none; margin: 0; padding: 0; }
+.jobs { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1; }
 .job {
-  display: grid; gap: 12px clamp(28px, 5vw, 80px);
-  grid-template-columns: minmax(0, 1fr);
-  padding: clamp(30px, 4.6vh, 52px) 0; border-top: 1px solid var(--hair);
+  display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
+  column-gap: var(--gut); padding-block: var(--s-4);
+  border-top: 1px solid var(--hair);
 }
 .job:last-child { border-bottom: 1px solid var(--hair); }
-@media (min-width: 880px) {
-  .job { grid-template-columns: 230px minmax(0, 1fr); }
-  .job-aside { position: sticky; top: 34px; align-self: start; }
+.job-rail { grid-column: span 3; }
+.job-main { grid-column: span 8; }
+@media (max-width: 767px) {
+  .job-rail, .job-main { grid-column: 1 / -1; }
+  .job-main { margin-top: var(--s-3); }
 }
-.job-when { margin: 0; font-family: var(--mono); font-size: var(--t-mono);
-            letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.job-where { margin: 11px 0 0; }
-.job-role { display: block; margin-top: 6px; font-size: var(--t-small); color: var(--fg-3); }
-.job-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
-.job-points li {
-  position: relative; padding-left: 26px; color: var(--fg-2);
-  font-size: var(--t-small); line-height: 1.55; max-width: 76ch;
-}
+@media (min-width: 768px) { .job-rail { position: sticky; top: var(--s-4); align-self: start; } }
+.job-when { font-family: var(--mono); font-size: var(--t-mono); line-height: var(--lh-mono);
+            letter-spacing: var(--ls-mono); color: var(--accent); margin: 0; }
+.job-co { display: block; margin-top: var(--s-2); }
+.job-role { display: block; margin-top: var(--s-1); font-size: var(--t-fine);
+            line-height: var(--lh-fine); color: var(--fg-3); font-weight: 500; }
+.job-claim { margin: 0 0 var(--s-3); font-size: var(--t-sub); line-height: var(--lh-sub);
+             letter-spacing: var(--ls-sub); font-weight: 600; color: var(--fg); max-width: 25.2em; }
+.job-points { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+.job-points li { position: relative; padding-left: 1.6em; color: var(--fg-2); max-width: 22.1em; }
 .job-points li::before {
   content: ''; position: absolute; left: 0; top: 0.62em;
-  width: 11px; height: 1px; background: var(--accent);
+  width: 0.75em; height: 1px; background: var(--accent);
 }
-.chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 20px 0 0; padding: 0; list-style: none; }
-.chip {
-  font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.08em;
-  padding: 5px 11px; border-radius: 999px; color: var(--fg-3);
-  box-shadow: inset 0 0 0 1px var(--hair-2);
+.job-stack { margin: var(--s-3) 0 0; }
+
+/* ─── R4 Lead project — full bleed ─────────────────────────────────────── */
+.lead-room {
+  position: relative; background: var(--panel-2);
+  min-height: clamp(62vh, 56vw, 86vh); display: flex; align-items: flex-end;
+  overflow: hidden; isolation: isolate;
+}
+.lead-media { position: absolute; inset: 0; z-index: -1; }
+.lead-media svg, .lead-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lead-over { padding-block: var(--s-5); }
+.lead-over > * { grid-column: 1 / span min(7, var(--cols)); }
+.lead-over .h1 { margin-top: var(--s-2); max-width: 14em; }
+.lead-over .lead { margin-top: var(--s-3); max-width: 27.4em; }
+.lead-over .act { margin-top: var(--s-3); }
+@media (max-width: 767px) {
+  .lead-room { min-height: 0; display: block; }
+  .lead-media { position: relative; inset: auto; z-index: auto; aspect-ratio: 4 / 3; }
+  .lead-over > * { grid-column: 1 / -1; }
 }
 
-/* ─── Photo strip ──────────────────────────────────────────────────────── */
-.strip {
-  list-style: none; margin: 0; padding: 0 0 12px;
-  display: flex; gap: clamp(10px, 1.3vw, 18px); overflow-x: auto;
-  scroll-snap-type: x proximity; scrollbar-width: thin;
+/* Corner marks on the full-bleed rooms only, at 32px and all four corners.
+   13px ticks on a 1216px plate were lint. */
+.marks-c::before, .marks-c::after,
+.marks-c > .mk1, .marks-c > .mk2 {
+  content: ''; position: absolute; width: 32px; height: 32px;
+  border: 1px solid var(--accent); pointer-events: none; z-index: 2;
 }
-.strip li { flex: 0 0 auto; scroll-snap-align: start; }
-.strip img {
-  display: block; height: clamp(200px, 30vh, 300px); width: auto; max-width: none;
-  filter: grayscale(1) contrast(1.04);
-  transition: filter var(--base) var(--ease), transform var(--base) var(--out);
+.marks-c::before { top: var(--s-3); left: var(--edge); border-right: 0; border-bottom: 0; }
+.marks-c::after  { bottom: var(--s-3); right: var(--edge); border-left: 0; border-top: 0; }
+.marks-c > .mk1  { top: var(--s-3); right: var(--edge); border-left: 0; border-bottom: 0; }
+.marks-c > .mk2  { bottom: var(--s-3); left: var(--edge); border-right: 0; border-top: 0; }
+@media (max-width: 767px) {
+  .marks-c::before, .marks-c::after, .marks-c > .mk1, .marks-c > .mk2 { width: 20px; height: 20px; }
 }
-@media (hover: hover) { .strip li:hover img { filter: none; transform: translateY(-5px); } }
-@media (hover: none) { .strip img { filter: none; } }
 
-/* ─── Sundown ──────────────────────────────────────────────────────────────
-   The band where the light goes. It is deliberately almost empty: between the
-   golden stop and the dusk stop the ground passes through a mid tone where
-   neither black nor white can hold 4.5:1, so the palette switches in one step
-   at the measured midpoint and this is the only thing on screen when it does.
-   What is here fades with --dim and comes back on the other side.
+/* ─── R5 Projects ──────────────────────────────────────────────────────── */
+.tiles { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1;
+         display: grid; grid-template-columns: subgrid; row-gap: var(--s-5); }
+.tile-a { grid-column: span 7; }
+.tile-b { grid-column: span 5; }
+@media (max-width: 767px) { .tile-a, .tile-b { grid-column: 1 / -1; } }
+.tile { display: block; }
+.tile-top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2);
+  padding-bottom: var(--s-2); border-bottom: 1px solid var(--hair);
+}
+.tile-media { margin-top: var(--s-3); overflow: hidden; background: var(--panel); }
+.tile-a .tile-media { aspect-ratio: 4 / 3; }
+.tile-b .tile-media { aspect-ratio: 3 / 4; }
+.tile-media > * { width: 100%; height: 100%; object-fit: cover; display: block;
+                  transition: transform 0.9s var(--out); }
+@media (hover: hover) { .tile:hover .tile-media > * { transform: scale(1.035); } }
+.tile .h3 { margin-top: var(--s-3); }
+.tile-blurb { display: block; margin-top: var(--s-2); max-width: 21.2em; color: var(--fg-2); }
+.tile-stack { display: block; margin-top: var(--s-2); }
+.tile-go { display: inline-flex; align-items: center; gap: 0.5em; margin-top: var(--s-2); }
+
+.rows { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1;
+        display: grid; grid-template-columns: subgrid; }
+.rows > li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid;
+             border-top: 1px solid var(--hair); }
+.rows > li:last-child { border-bottom: 1px solid var(--hair); }
+.row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid;
+       padding-block: var(--s-3); align-items: start; }
+.row-n { grid-column: span 1; }
+.row-main { grid-column: span 7; }
+.row-stack { grid-column: span 3; }
+.row-end { grid-column: span 1; text-align: end; }
+@media (max-width: 767px) {
+  .row-n { grid-column: span 1; }
+  .row-main { grid-column: 2 / -1; }
+  .row-stack, .row-end { grid-column: 2 / -1; margin-top: var(--s-2); text-align: start; }
+}
+.row-main .h3 { transition: transform var(--d-block) var(--out); }
+@media (hover: hover) { .row:hover .row-main .h3 { transform: translateX(8px); } }
+.row-blurb { display: block; margin-top: var(--s-2); max-width: 21.2em; color: var(--fg-2); }
+
+/* ─── R6 Photographs — full bleed, in colour ───────────────────────────────
+   The photographs are the palette. They were shot in the light the whole page
+   ramps toward, and desaturating them removed the only evidence on the site
+   that the sunset is a real place rather than a CSS gradient.
    ────────────────────────────────────────────────────────────────────────── */
-.band {
-  min-height: 128vh; display: grid; align-content: center; justify-items: center;
-  gap: clamp(30px, 5vh, 56px); padding-block: 26vh;
-  text-align: center;
+.photo-room { position: relative; min-height: 78vh; max-height: 96vh; overflow: hidden;
+              display: flex; align-items: center; isolation: isolate; }
+.photo-room img {
+  position: absolute; inset: -6% 0 auto 0; width: 100%; height: 112%;
+  object-fit: cover; z-index: -2; display: block;
 }
-.band-inner { opacity: calc(1 - var(--dim) * 0.78); }
-.band-arrow { width: clamp(54px, 7vw, 96px); height: auto; color: var(--fg); display: block; }
-.band-line {
-  margin: 0; font-weight: 800; letter-spacing: -0.035em;
-  font-size: clamp(24px, 3vw, 42px); line-height: 1.08; max-width: 16ch;
-}
-.band-sub {
-  margin: 18px 0 0; font-family: var(--mono); font-size: var(--t-mono);
-  letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-3);
+.photo-room::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to left, rgb(0 0 0 / 0.60) 0%, rgb(0 0 0 / 0.20) 46%, transparent 72%);
 }
 
-/* ─── Contact ──────────────────────────────────────────────────────────── */
-.contact .display { max-width: 13ch; }
-.contact-mail {
-  display: inline-block; margin-top: clamp(24px, 3.6vh, 40px);
-  font-weight: 800; font-size: clamp(20px, 2.5vw, 34px); letter-spacing: -0.035em;
-  color: var(--accent); border-bottom: 2px solid currentColor; padding-bottom: 3px;
-}
-.sendoff {
-  margin: clamp(30px, 5vh, 56px) 0 0; text-align: center;
-  font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--fg-3);
+.photo-over > * { grid-column: span 6 / -1; text-align: end; color: var(--on-photo); }
+.photo-over .lead { color: color-mix(in srgb, var(--on-photo) 82%, transparent);
+                    margin-left: auto; margin-top: var(--s-3); }
+.photo-over .act { margin-top: var(--s-3); color: var(--on-photo); }
+@media (max-width: 767px) {
+  .photo-room { min-height: 62vh; align-items: flex-end; padding-bottom: var(--s-5); }
+  .photo-room::before { background: linear-gradient(to top, rgb(0 0 0 / 0.66) 0%, transparent 70%); }
+  .photo-over > * { grid-column: 1 / -1; text-align: start; }
+  .photo-over .lead { margin-left: 0; }
 }
 
-/* ─── Footer ───────────────────────────────────────────────────────────────
-   The last horizon: a warm band low on the screen with the name running the
-   full width and cropped by the bottom edge.
+/* Bleeds right on purpose, rather than clipping by accident at a wrap edge. */
+.strip-wrap { margin-left: var(--edge); width: calc(100vw - var(--edge)); }
+.strip { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--gut);
+         overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+         height: clamp(300px, 42vh, 460px); cursor: grab; }
+.strip::-webkit-scrollbar { display: none; }
+.strip.dragging { cursor: grabbing; scroll-snap-type: none; }
+.strip li { flex: 0 0 auto; scroll-snap-align: start; height: 100%; }
+.strip img { height: 100%; width: auto; max-width: none; display: block; user-select: none; }
+.strip-meter { display: flex; align-items: center; gap: var(--s-3); margin-top: var(--s-2);
+               padding-right: var(--pad); }
+.strip-bar { flex: 1 1 auto; height: 1px; background: var(--hair); position: relative; }
+.strip-bar span { position: absolute; inset: 0; background: var(--accent);
+                  transform-origin: left center; transform: scaleX(0.1); }
+
+/* ─── R7 Band — the crossover ──────────────────────────────────────────────
+   The palette's hard flip happens here, over a photograph that emerges from
+   the golden ground, is clearest at the exact scroll position where the
+   switch lands, then recedes into the night as the stars come out above it.
+   No text is ever inside the ambiguous luminance band.
    ────────────────────────────────────────────────────────────────────────── */
-.foot { position: relative; overflow: hidden; border-top: 1px solid var(--hair); }
-.foot::before {
-  content: ''; position: absolute; z-index: -1; left: 50%; bottom: -46%;
-  width: min(1100px, 130vw); aspect-ratio: 1; translate: -50% 0; border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%,
-    color-mix(in srgb, var(--accent) 42%, transparent) 0%,
-    color-mix(in srgb, var(--accent) 26%, transparent) 40%,
-    color-mix(in srgb, var(--accent) 10%, transparent) 64%, transparent 82%);
-  filter: blur(16px);
+.band { position: relative; }
+.band-head { min-height: 56vh; display: grid; place-content: center; text-align: center;
+             padding-inline: var(--pad); }
+.band-head .plate-t { max-width: 9.2em; }
+.band-body { height: 204vh; position: relative; }
+.band-sticky { position: sticky; top: 0; height: 100vh; width: 100vw;
+               overflow: hidden; display: flex; align-items: flex-end; }
+.band-photo { position: absolute; inset: 0; width: 100%; height: 100%;
+              object-fit: cover; z-index: -2; display: block; }
+.band-veil { position: absolute; inset: 0; z-index: -1; background: var(--bg); opacity: 0.4; }
+.band-cap { padding-bottom: var(--s-5); }
+.band-cap > * { grid-column: 1 / -1; color: color-mix(in srgb, #F7EBDD 70%, transparent); }
+@media (max-width: 767px) {
+  .band-head { min-height: 48vh; }
+  .band-body { height: 170vh; }
 }
-.foot-meta {
-  display: flex; flex-wrap: wrap; gap: 10px 26px; justify-content: space-between;
-  padding-block: 22px;
-  font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--fg-3);
+
+/* ─── R8 Contact ───────────────────────────────────────────────────────── */
+.contact-main { grid-column: 1 / span min(8, var(--cols)); }
+.contact-side { grid-column: span min(4, var(--cols)) / -1; }
+@media (max-width: 767px) {
+  .contact-main, .contact-side { grid-column: 1 / -1; }
+  .contact-side { margin-top: var(--s-5); }
 }
+.mail {
+  display: inline-block; font-weight: 700; font-stretch: 88%;
+  font-size: clamp(32px, 3.1vw, 46px); line-height: 1.06; letter-spacing: -0.03em;
+  color: var(--accent); border-bottom: 2px solid currentColor; padding-bottom: 0.06em;
+  overflow-wrap: break-word;
+}
+.mail span { display: inline; }
+@media (max-width: 599px) { .mail span { display: block; } }
+.contact-main .lead { margin-top: var(--s-4); max-width: 22.1em; }
+.tagline { margin: var(--s-5) 0 0; grid-column: 1 / -1; color: var(--fg-3);
+           display: inline-flex; align-items: center; gap: 0.5em; flex-wrap: wrap; }
+
+.kv { margin: 0; }
+.kv > div { padding-block: var(--s-2); border-top: 1px solid var(--hair); }
+.kv > div:last-child { border-bottom: 1px solid var(--hair); }
+.kv dt { font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: 0.06em;
+         text-transform: uppercase; font-weight: 500; color: var(--fg-3); }
+.kv dd { margin: var(--s-1) 0 0; font-weight: 500; color: var(--accent); }
+
+/* ─── R9 Footer — the horizon ──────────────────────────────────────────────
+   The glow starts above the footer's top edge and is clipped by the document,
+   not by a 1px rule, which is what produced a hard tonal seam across the full
+   viewport width.
+   ────────────────────────────────────────────────────────────────────────── */
+.foot { position: relative; overflow: visible; padding-top: var(--s-4); }
+.foot-glow {
+  position: absolute; inset: -260px 0 0 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 120% 80% at 50% 100%,
+    color-mix(in srgb, var(--accent) 30%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 12%, transparent) 42%, transparent 72%);
+}
+.foot-meta > * { grid-column: span min(6, var(--cols)); }
+.foot-meta > *:last-child { text-align: end; }
+@media (max-width: 599px) {
+  .foot-meta > *, .foot-meta > *:last-child { grid-column: 1 / -1; text-align: start; }
+  .foot-meta > *:last-child { margin-top: var(--s-2); }
+}
+/* 8.277em at -0.04em tracking, so dividing the available width by that fills
+   the line edge to edge at every viewport. Full name, full opacity. */
 .wordmark {
-  display: block; margin: 0 0 -0.165em; padding: 0; text-align: center;
-  font-family: var(--sans); font-weight: 800;
-  font-size: 21vw; line-height: 0.78; letter-spacing: -0.05em;
-  color: color-mix(in srgb, var(--fg) 13%, transparent);
-  white-space: nowrap; user-select: none;
+  display: block; margin: var(--s-4) 0 -0.14em; padding: 0; white-space: nowrap;
+  font-family: var(--display); font-weight: 700; font-variation-settings: 'WONK' 1;
+  font-size: min(calc((100vw - 2 * var(--pad)) / 8.277), 240px);
+  line-height: 0.78; letter-spacing: -0.04em; color: var(--fg); user-select: none;
+  padding-inline: var(--pad);
 }
 
 /* ─── Case study ───────────────────────────────────────────────────────── */
-.prose { max-width: 66ch; }
-.kv { margin: 0; border-top: 1px solid var(--hair); }
-.kv > div {
-  display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 16px;
-  padding: 13px 0; border-bottom: 1px solid var(--hair); align-items: baseline;
-}
-.kv dt { font-family: var(--mono); font-size: var(--t-mono-s); letter-spacing: 0.16em;
-         text-transform: uppercase; color: var(--fg-3); }
-.kv dd { margin: 0; font-size: var(--t-small); color: var(--fg); }
-@media (max-width: 680px) { .kv > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
-
-.decisions { list-style: none; margin: 0; padding: 0; counter-reset: dec; }
-.decisions li {
-  counter-increment: dec; padding: clamp(22px, 3vh, 34px) 0;
-  border-top: 1px solid var(--hair); display: grid; gap: 10px clamp(20px, 3.4vw, 44px);
-}
-@media (min-width: 820px) { .decisions li { grid-template-columns: 44px minmax(0, 1fr); } }
-.decisions li::before {
-  content: '0' counter(dec); font-family: var(--mono); font-size: var(--t-mono);
-  color: var(--accent); padding-top: 0.42em;
-}
-.dec-claim { margin: 0; font-weight: 700; font-size: var(--t-h3);
-             line-height: 1.16; letter-spacing: -0.025em; }
-.dec-why { margin: 10px 0 0; color: var(--fg-2); font-size: var(--t-small); max-width: 66ch; }
-
-.stats { list-style: none; margin: 0; padding: 0; display: grid;
-         grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
-         border-top: 1px solid var(--hair); }
-.stats li { padding: clamp(20px, 3vh, 30px) clamp(16px, 2vw, 26px) clamp(20px, 3vh, 30px) 0;
-            border-bottom: 1px solid var(--hair); }
-.stat-v { display: block; font-weight: 800; font-size: var(--t-h2);
-          line-height: 1; letter-spacing: -0.045em; color: var(--accent); }
-.stat-l { display: block; margin-top: 10px; font-size: var(--t-small);
-          color: var(--fg-2); max-width: 34ch; line-height: 1.45; }
-
-.figure { position: relative; margin: clamp(34px, 5vh, 64px) 0 0; padding: 10px;
-          background: var(--shade); }
+.prose { max-width: 27.4em; }
+.figure { position: relative; margin: var(--s-4) 0 0; background: var(--panel); padding: var(--s-2); }
 .figure img, .figure svg { display: block; width: 100%; height: auto; }
-/* A drawn plate is a diagram, not a photograph: blown up to the full column
-   its 8.5px labels become headlines. */
 .figure--plate { max-width: 780px; }
-.figcap { display: block; margin-top: 10px; font-family: var(--mono);
-          font-size: var(--t-mono-s); letter-spacing: 0.12em; text-transform: uppercase;
-          color: var(--fg-3); }
+.figcap { display: block; margin-top: var(--s-2); }
 
-/* ─── Pitch ────────────────────────────────────────────────────────────── */
-.seal {
-  display: inline-flex; align-items: center; gap: 9px; padding: 8px 16px;
-  border-radius: 999px; font-family: var(--mono); font-size: var(--t-mono-s);
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--on-accent); background: var(--accent);
+.decisions { list-style: none; margin: var(--s-5) 0 0; padding: 0; counter-reset: dec;
+             grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.decisions > li { counter-increment: dec; grid-column: 1 / -1;
+                  display: grid; grid-template-columns: subgrid;
+                  padding-block: var(--s-4); border-top: 1px solid var(--hair); }
+.decisions > li::before {
+  content: '0' counter(dec); grid-column: span 1;
+  font-family: var(--mono); font-size: var(--t-mono); letter-spacing: var(--ls-mono);
+  color: var(--accent); padding-top: 0.5em;
 }
+.dec-body { grid-column: span 9; }
+@media (max-width: 767px) { .dec-body { grid-column: 2 / -1; } }
+.dec-why { margin: var(--s-2) 0 0; color: var(--fg-2); max-width: 27.4em; }
 
-/* ─── Reveal ───────────────────────────────────────────────────────────── */
-.rv { opacity: 0; transform: translateY(18px); }
-.rv.in {
-  opacity: 1; transform: none;
-  transition: opacity var(--slow) var(--ease) var(--rv-d, 0ms),
-              transform var(--slow) var(--out) var(--rv-d, 0ms);
+.stats { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1;
+         display: grid; grid-template-columns: subgrid; row-gap: var(--s-4); }
+.stats > li { grid-column: span 4; }
+@media (max-width: 767px) { .stats > li { grid-column: 1 / -1; } }
+
+/* ─── Reveal resting states ────────────────────────────────────────────────
+   GSAP animates away from these and back. Nothing here hides content: a
+   reader with reduced motion or no JavaScript sees the finished page.
+   ────────────────────────────────────────────────────────────────────────── */
+[data-rv] { opacity: 1; transform: none; }
+
+@media (max-width: 599px) {
+  .hero .sub .sub-rest { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { .rv, .rv.in { opacity: 1; transform: none; } }

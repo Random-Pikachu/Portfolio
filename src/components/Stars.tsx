@@ -23,6 +23,7 @@ precision highp float;
 uniform vec2  uRes;
 uniform float uTime;
 uniform float uReveal;
+uniform vec2  uMouse;
 
 float hash21(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -33,12 +34,15 @@ float hash21(vec2 p) {
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
   float ar = uRes.x / uRes.y;
-  vec2 g = vec2(uv.x * ar, uv.y) * 32.0;
+  vec2 g = vec2(uv.x * ar, uv.y) * 38.0;
   vec2 cell = floor(g);
   float h = hash21(cell);
 
-  // The threshold walks down as the page darkens, so the sky fills in.
-  float thresh = mix(0.993, 0.908, uReveal);
+  // The threshold walks down as the page darkens, so the sky fills in. The
+  // extra term thins the field toward the bottom of the frame: a real sky is
+  // emptier at the horizon, and it is what makes the horizon rule read as a
+  // horizon rather than as a stray line.
+  float thresh = mix(0.995, 0.918, uReveal) + (1.0 - uv.y) * 0.020;
   float a = 0.0;
 
   if (h > thresh) {
@@ -49,6 +53,11 @@ void main() {
     float core = 1.0 - smoothstep(0.0, size, d);
     float halo = (1.0 - smoothstep(0.0, size * 5.0, d)) * 0.18;
     float tw = 0.55 + 0.45 * sin(uTime * (0.35 + h2 * 1.6) + h * 31.4);
+    // Stars near the pointer twinkle harder. Costs nothing, and it makes the
+    // night half feel inhabited rather than printed.
+    float near = 1.0 - smoothstep(0.0, 0.18,
+      length(vec2((uv.x - uMouse.x) * ar, uv.y - uMouse.y)));
+    tw *= 1.0 + 0.25 * near;
     // Each star has its own moment of arrival inside the reveal.
     float born = smoothstep(0.0, 0.45, uReveal - (h - thresh) * 2.0);
     a = (core + halo) * tw * born;
@@ -107,6 +116,7 @@ export default function Stars() {
     const uRes = gl.getUniformLocation(prog, 'uRes');
     const uTime = gl.getUniformLocation(prog, 'uTime');
     const uReveal = gl.getUniformLocation(prog, 'uReveal');
+    const uMouse = gl.getUniformLocation(prog, 'uMouse');
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -146,6 +156,12 @@ export default function Stars() {
       gl.uniform2f(uRes, w, h);
       gl.uniform1f(uTime, still ? 12.5 : (now - start) / 1000);
       gl.uniform1f(uReveal, reveal);
+      // Read from the same lerped pointer position the field already writes,
+      // so there is no second listener.
+      const cs = document.documentElement.style;
+      const mx = parseFloat(cs.getPropertyValue('--mx')) || -9999;
+      const my = parseFloat(cs.getPropertyValue('--my')) || -9999;
+      gl.uniform2f(uMouse, mx / window.innerWidth, 1 - my / window.innerHeight);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);

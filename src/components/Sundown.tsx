@@ -91,12 +91,20 @@ export default function Sundown() {
         ? noon.getBoundingClientRect().top + window.scrollY
         : bandTop * 0.45;
 
+      // GOLDEN is anchored at bandTop + 0.18 x bandH so the palette's hard
+      // flip lands exactly where the band's photograph is at its clearest.
+      // Derivation, so the constant survives a height change:
+      //   goldenFrac = (F + 50 - FLIP_AT x bandH) / (bandH x (1 - FLIP_AT))
+      // with F the target flip scroll position in vh from bandTop. For
+      // F = 104.1, bandH = 260, FLIP_AT = 0.503 that is 0.180.
+      const bandH = band.offsetHeight;
+      const golden = bandTop + bandH * 0.18;
       anchors = [
         0,
         Math.max(noonTop, 1),
-        bandTop + vh * 0.26,
-        bandTop + vh * 0.94,
-        bandTop + vh * 1.5,
+        golden,
+        golden + (bandTop + bandH - golden),
+        bandTop + bandH + vh * 0.5,
       ];
     };
 
@@ -130,13 +138,28 @@ export default function Sundown() {
       // the palette flips, not before: stars over a sunlit page would be a
       // decoration rather than a time of day.
       const from = anchors[FLIP_SEGMENT] +
-        (anchors[FLIP_SEGMENT + 1] - anchors[FLIP_SEGMENT]) * FLIP_AT;
+        (anchors[FLIP_SEGMENT + 1] - anchors[FLIP_SEGMENT]) * (FLIP_AT - 0.08);
       const to = anchors[anchors.length - 1];
       sun.night = smooth(clamp((y - from) / Math.max(to - from, 1), 0, 1));
+      // Published so CSS can use it: the foreground lamp is absent by day and
+      // a light source after dark.
+      root.style.setProperty('--night', sun.night.toFixed(3));
+
+      // How present the sun itself is. A single hump: a faint haze at noon,
+      // widest and warmest through the golden stop, gone once it is down. A
+      // constant-strength radial sitting over the hero reads as a gradient
+      // artefact rather than as a sun.
+      const whole = clamp((y - anchors[0]) / Math.max(to - anchors[0], 1), 0, 1);
+      const bell = Math.sin(Math.PI * Math.min(whole * 1.18, 1)) ** 1.4;
+      root.style.setProperty('--sun-op', (0.12 + bell * 0.88).toFixed(3));
     };
 
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(paint); };
     const onResize = () => { measure(); onScroll(); };
+
+    // ScrollTrigger refreshes after images settle; without re-measuring here
+    // the palette stays anchored to stale positions.
+    sun.remeasure = () => { measure(); paint(); };
 
     measure();
     paint();
@@ -162,7 +185,10 @@ export default function Sundown() {
       ro.disconnect();
       for (const k of KEYS) root.style.removeProperty(VAR[k]);
       root.style.removeProperty('--dim');
+      root.style.removeProperty('--night');
+      root.style.removeProperty('--sun-op');
       sun.night = 0;
+      sun.remeasure = () => {};
     };
   }, []);
 

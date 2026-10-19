@@ -1,21 +1,21 @@
 import { Link } from 'react-router-dom';
+import { Arrow } from '../components/Icon';
 
 export default function NotFound() {
   return (
-    <section className="sec" aria-labelledby="nf">
-      <div className="wrap">
-        <p className="tag">404</p>
-        <h1 className="display" id="nf" style={{ marginTop: 20, maxWidth: '12ch' }}>
+    <section className="room grid" aria-labelledby="nf-h">
+      <div style={{ gridColumn: '1 / -1' }}>
+        <p className="mono">404</p>
+        <h1 className="h1" id="nf-h" style={{ marginTop: 'var(--s-3)', maxWidth: '12em' }}>
           Nothing at this address.
         </h1>
-        <p className="lead" style={{ marginTop: 24 }}>
-          The link is either old or mistyped. Everything that does exist is one
-          of these two.
+        <p className="lead" style={{ marginTop: 'var(--s-3)' }}>
+          The link is either old or mistyped.
         </p>
-        <div className="hero-cta">
-          <Link className="btn" to="/">Home <span className="arr" aria-hidden="true">→</span></Link>
-          <Link className="btn btn--ghost" to="/work">The index</Link>
-        </div>
+        <p style={{ marginTop: 'var(--s-4)', display: 'flex', gap: 'var(--s-4)', flexWrap: 'wrap' }}>
+          <Link className="act" to="/">Home <Arrow /></Link>
+          <Link className="act" to="/work">The work <Arrow /></Link>
+        </p>
       </div>
     </section>
   );

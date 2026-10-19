@@ -1,19 +1,139 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   One ground, one accent, one hairline grid — and the whole palette moves as
-   you scroll, from a bright late-October afternoon down to after dark.
+   One ground that moves from a late-October afternoon down to after dark, a
+   grid whose column pitch IS the crosshair pitch, and a type ladder of eleven
+   consecutive steps on the cube root of two.
 
-   Every colour on the page is one of six custom properties that
-   src/components/Sundown.tsx interpolates between five measured stops. Tints
-   and hairlines are derived from --fg with color-mix rather than interpolated
-   separately, so they follow the ramp for free and can never fall out of step
-   with it.
+   Two rules this file exists to enforce:
+
+   1. Nothing is a fixed number across a size range. Every type token carries
+      three clamps on the same viewport term — size, line-height and tracking —
+      so leading and tracking are outputs of the size rather than inputs fixed
+      at one width. A single `line-height: 0.96` held from 44px to 115px is
+      what put a descender into the cap-height of the line below at 390px.
+
+   2. `ch` is never used. Measured against the real woff2 files, 1ch holds
+      1.296 real characters in Archivo and 1.551 in Fraunces display, so every
+      `ch` measure in the old stylesheet was ~30% too wide. Measures here are
+      in `em` of the element's own size, derived from mean glyph advance.
    ────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Faces ────────────────────────────────────────────────────────────────
+   Self-hosted, axis-limited and subset to Latin-1 with pyftsubset: 104.8 KB
+   for all three, against 111.6 KB for the Manrope + Geist Mono + Instrument
+   Serif set they replace, and with no cross-origin round trip in the critical
+   path. Arrows and ✦ are inline SVG because Google's Latin subsets carry
+   neither glyph in any of these faces.
+   ────────────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-stretch: 88% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Mono';
+  src: url('/fonts/dmmono.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   color-scheme: light;
 
-  /* Stop 0 — DAY. The values Sundown overwrites; also what a reader with no
-     JavaScript gets, which is why they are the most legible set. */
+  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans:    'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:    'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── Type: size ───────────────────────────────────────────────────────
+     Eleven steps on 1.26 (the cube root of 2, so every third step doubles).
+     All clamps interpolate 390px → 1680px; above that the margins take the
+     extra. Measured step ratios at 1920 run 1.233–1.261 against the old
+     build's 1.09 / 1.17 / 1.11 / 1.30 / 1.25 / 1.75 / 2.62. */
+  --t-mono:    12px;
+  --t-fine:    clamp(14px,   13.698px + 0.078vw, 15px);
+  --t-body:    clamp(16.5px, 15.895px + 0.155vw, 18.5px);
+  --t-lead:    clamp(20px,   19.093px + 0.233vw, 23px);
+  --t-sub:     clamp(24px,   22.488px + 0.388vw, 29px);
+  --t-h3:      clamp(28px,   25.430px + 0.659vw, 36.5px);
+  --t-h2:      clamp(33px,   29.070px + 1.008vw, 46px);
+  --t-h1:      clamp(39px,   33.256px + 1.473vw, 58px);
+  --t-figure:  clamp(45px,   36.535px + 2.171vw, 73px);
+  --t-plate:   clamp(51px,   38.605px + 3.178vw, 92px);
+  --t-display: clamp(56px,   37.860px + 4.651vw, 116px);
+
+  /* ── Type: line-height, as a length ───────────────────────────────────
+     A length does not inherit proportionally, which is wanted: a block of
+     body copy inheriting one fixed leading is the vertical rhythm this page
+     has never had. The curve crosses 1.0 between --t-figure and --t-plate at
+     every breakpoint, which is where type stops being read and starts being
+     looked at. */
+  --lh-mono:    17.4px;
+  --lh-fine:    clamp(20.7px, 20.337px + 0.093vw, 21.9px);
+  --lh-body:    clamp(25.7px, 24.914px + 0.202vw, 28.3px);
+  --lh-lead:    clamp(30px,   28.972px + 0.264vw, 33.4px);
+  --lh-sub:     clamp(33.1px, 31.528px + 0.403vw, 38.3px);
+  --lh-h3:      clamp(35px,   32.460px + 0.651vw, 43.4px);
+  --lh-h2:      clamp(37.9px, 34.212px + 0.946vw, 50.1px);
+  --lh-h1:      clamp(42.5px, 37.300px + 1.333vw, 59.7px);
+  --lh-figure:  clamp(45.9px, 38.584px + 1.876vw, 70.1px);
+  --lh-plate:   clamp(51px,   40.267px + 2.752vw, 86.5px);
+  --lh-display: clamp(55.4px, 39.891px + 3.977vw, 106.7px);
+
+  /* ── Type: tracking, as a length ──────────────────────────────────────
+     Tracking tightens as size grows; a fixed em value cannot do that. The
+     whole system is four registers plus this ramp, against fifteen
+     hand-set values in the stylesheet it replaces. */
+  --ls-mono:     0.96px;
+  --ls-fine:    clamp(-0.06px, -0.021px + -0.002vw, -0.03px);
+  --ls-body:    clamp(-0.11px, -0.058px + -0.003vw, -0.07px);
+  --ls-lead:    clamp(-0.25px, -0.133px + -0.007vw, -0.16px);
+  --ls-sub:     clamp(-0.46px, -0.265px + -0.012vw, -0.31px);
+  --ls-h3:      clamp(-0.69px, -0.377px + -0.019vw, -0.45px);
+  --ls-h2:      clamp(-1.06px, -0.500px + -0.033vw, -0.63px);
+  --ls-h1:      clamp(-1.51px, -0.663px + -0.050vw, -0.86px);
+  --ls-figure:  clamp(-2.34px, -0.816px + -0.091vw, -1.17px);
+  --ls-plate:   clamp(-3.13px, -0.916px + -0.132vw, -1.43px);
+  --ls-display: clamp(-4.41px, -0.855px + -0.212vw, -1.68px);
+
+  /* ── Space ────────────────────────────────────────────────────────────
+     1 : 28 between tightest and loosest. Even spacing is the defect, so the
+     answer is to over-correct: --s-6 appears exactly four times on the home
+     page and --s-0 exactly four times, and no two room boundaries in a row
+     are the same height. */
+  --s-0: 0px;
+  --s-1: clamp(6px,   0.50vw,   9px);
+  --s-2: clamp(12px,  1.10vw,  18px);
+  --s-3: clamp(22px,  2.00vw,  32px);
+  --s-4: clamp(44px,  4.00vw,  64px);
+  --s-5: clamp(88px,  8.00vw, 128px);
+  --s-6: clamp(140px, 14.0vw, 232px);
+
+  /* ── Grid ─────────────────────────────────────────────────────────────
+     --cell is derived from the columns, so every column edge lands on a
+     crosshair by construction at every width. The old field sat 2px off the
+     wrap edge and 6px off the text edge on a column 17.89 cells wide, and a
+     near miss reads as an error rather than as an independent system. */
+  --cols: 4;
+  --gut:  16px;
+  --pad:  clamp(20px, 4.2vw, 72px);
+  --maxw: 1440px;
+  --content: min(100vw - 2 * var(--pad), var(--maxw));
+  --edge:    calc((100vw - var(--content)) / 2);
+  --cell:    calc((var(--content) + var(--gut)) / var(--cols));
+
+  /* ── Colour: stop 0, DAY ──────────────────────────────────────────────
+     Sundown.tsx overwrites these six on scroll. They are also what a reader
+     with no JavaScript gets, which is why they are the most legible set. */
   --bg:        #F4F1EA;
   --fg:        #131210;  /* 16.6:1 */
   --fg-2:      #4A443A;  /*  8.5:1 */
@@ -21,52 +141,39 @@
   --accent:    #B5390F;  /*  5.2:1 */
   --on-accent: #F4F1EA;
 
-  /* Derived. These track --fg, so they flip with it at the sunset crossover
-     instead of drifting across it. */
-  --hair:   color-mix(in srgb, var(--fg) 15%, transparent);
-  --hair-2: color-mix(in srgb, var(--fg) 30%, transparent);
-  --shade:  color-mix(in srgb, var(--fg)  6%, transparent);
-  --cross:  color-mix(in srgb, var(--fg) 15%, transparent);
+  /* How far into the night, 0..1, written by Sundown. Drives the foreground
+     lamp, which is absent by day and a real light source after dark. */
+  --night: 0;
+  --sun-op: 0.3;
 
-  /* ── Type ──
-     A geometric sans doing everything, a grid mono for every label, and one
-     italic serif that appears exactly once on the site. */
-  --sans:  'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  /* Derived, so they follow the ramp and cannot fall out of step with it. */
+  --hair:    color-mix(in srgb, var(--fg) 15%, transparent);
+  --hair-2:  color-mix(in srgb, var(--fg) 30%, transparent);
+  --panel:   color-mix(in srgb, var(--fg)  5%, var(--bg));
+  --panel-2: color-mix(in srgb, var(--fg)  8%, var(--bg));
+  --cross:   color-mix(in srgb, var(--fg) 13%, transparent);
 
-  --t-display: clamp(44px, 8vw, 118px);
-  --t-h1:      clamp(32px, 4.8vw, 68px);
-  --t-h2:      clamp(26px, 3.2vw, 44px);
-  --t-h3:      clamp(19px, 1.75vw, 26px);
-  --t-lead:    clamp(17px, 1.4vw, 21px);
-  --t-body:    clamp(15.5px, 1.05vw, 17px);
-  --t-small:   14px;
-  --t-mono:    12px;
-  --t-mono-s:  11px;
+  /* Knocked out of a photograph rather than off --bg, so it must not flip
+     with the palette. 11.2:1 against the scrimmed region. */
+  --on-photo: #FBF6EE;
 
-  /* ── Space ── */
-  --pad:  clamp(20px, 5vw, 80px);
-  --maxw: 1360px;
-  --cell: 76px;   /* the crosshair pitch */
+  /* ── Motion ───────────────────────────────────────────────────────────
+     Six durations and four eases, fixed. Nothing is 760ms with 18px of
+     travel; the eye reads that as lag rather than as motion. */
+  --d-micro: 0.22s;
+  --d-text:  0.34s;
+  --d-block: 0.42s;
+  --ease:    cubic-bezier(0.22, 1, 0.36, 1);
+  --out:     cubic-bezier(0.33, 1, 0.68, 1);
 
-  /* ── Motion ── */
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --out:  cubic-bezier(0.33, 1, 0.68, 1);
-  --fast: 170ms;
-  --base: 420ms;
-  --slow: 760ms;
-
-  /* How far through the sunset crossover the page is: 0 at either end, 1 at
-     the moment the palette flips. The only thing on screen there fades with
-     it, which is what turns an unavoidable contrast dip into the point. */
-  --dim: 0;
-
-  --plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='black' stroke-width='1.1' fill='none'/></svg>");
+  --plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><path d='M50 44.5v11M44.5 50h11' stroke='black' stroke-width='.9' fill='none'/></svg>");
 }
 
-@media (prefers-reduced-motion: reduce) {
-  :root { --fast: 0ms; --base: 0ms; --slow: 0ms; }
-}
+@media (min-width: 560px)  { :root { --cols: 6;  --gut: 18px; } }
+@media (min-width: 768px)  { :root { --cols: 8;  --gut: 20px; } }
+@media (min-width: 1080px) { :root { --cols: 10; --gut: 22px; } }
+@media (min-width: 1280px) { :root { --cols: 12; --gut: 24px; } }
 
-@media (max-width: 680px) { :root { --cell: 62px; } }
+/* A field you read through is texture; a field you read around is noise. At
+   the old 62px mobile pitch the crosshairs landed inside words. */
+@media (max-width: 679px) { :root { --cross: color-mix(in srgb, var(--fg) 8%, transparent); } }

@@ -504,3 +504,29 @@ export const PHOTOS: Photo[] = [
     lqip: 'data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAAAwAwCdASoQABQAPwForE6rJaQiMAgBYCAJZwAASeVizdmAAP7SASa58pGZi/qpuj6R7FiSeqkAAA==',
   },
 ];
+
+/**
+ * The two frames the design is built around, named here so the page never
+ * reaches into the array by index.
+ *
+ * ROOM_SLUG is the full-bleed photograph: evening sun through a mango tree on
+ * the ABV-IIITM campus, a globe lamp post, long shadows across the path. It is
+ * the late-October brief, and it was previously a 300px greyscale thumbnail.
+ *
+ * BENCH_SLUG is what the crossover happens over. The brief asks for two or
+ * three friends on a bench; there is no such frame in this set, and inventing
+ * one is not an option, so the slot holds the closest true thing — a lamp
+ * pooling light on an empty path after dark. Drop a bench frame into this
+ * constant and it takes the most important position on the site.
+ */
+export const ROOM_SLUG = '1742934048623';
+export const BENCH_SLUG = 'img-20250912-012013602';
+
+/** The nine that still read at strip size, by measured mean luminance. */
+export const STRIP_SLUGS = [
+  '1742934048623', 'img-20240903-160828459', 'img-20251223-163648962',
+  'img-20240902-182059705', 'img-20241031-222139440', 'img-20250208-162232949',
+  'img-20260721-182117987', 'img-20230907-163714349', 'img-20230820-103003746',
+];
+
+export const PHOTO_BY_SLUG = Object.fromEntries(PHOTOS.map((p) => [p.slug, p]));

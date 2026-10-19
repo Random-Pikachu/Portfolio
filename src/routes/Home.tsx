@@ -1,207 +1,217 @@
 import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal';
-import Board, { type Scrap } from '../components/Board';
-import { Underline, Circled, Arrow, Star, Highlight, Tape } from '../components/Doodle';
-import { PROJECTS } from '../data/work';
-import { SITE } from '../data/site';
+import Plate from '../components/Plate';
+import { EXPERIENCES, SITE } from '../data/site';
+import { DRAWN, PROJECTS } from '../data/work';
 import { PHOTOS } from '../data/photos';
 
-/** Clipped screenshots and polaroids, scattered across the cutting board. */
-function boardScraps(): Scrap[] {
-  const shots = PROJECTS.filter((p) => p.shot).slice(0, 4);
-  const photos = PHOTOS.slice(0, 3);
-  return [
-    ...shots.map((p, i) => ({
-      id: p.slug,
-      x: [4, 38, 13, 52][i] ?? 20,
-      y: [8, 4, 46, 44][i] ?? 30,
-      rotate: [-3.5, 2.4, 1.8, -2.2][i] ?? 0,
-      node: (
-        <figure className="cut">
-          <Tape className="cut-tape" rotate={[-6, 5, -3, 7][i] ?? 0} />
-          <img src={p.shot!} alt={p.title} draggable={false} />
-          <figcaption>{p.title}</figcaption>
-        </figure>
-      ),
-    })),
-    ...photos.map((ph, i) => ({
-      id: `pl-${ph.slug}`,
-      x: [74, 66, 82][i] ?? 70,
-      y: [10, 52, 32][i] ?? 40,
-      rotate: [4.2, -5, 2][i] ?? 0,
-      node: (
-        <figure className="polaroid">
-          <img src={`/photos/${ph.slug}-400.webp`} alt={ph.alt} draggable={false} />
-          <figcaption>Nothing Phone (1)</figcaption>
-        </figure>
-      ),
-    })),
-  ];
-}
+const PROOF = [
+  'Five patches merged into KDE Plasma',
+  'Featured in This Week in Plasma',
+  'SSR path, 2s → 150ms',
+  'B.Tech IT + MBA, ABV-IIITM Gwalior',
+];
+
+const FACTS = [
+  { k: 'Now', v: 'Founding engineer at Retsguide, Copenhagen' },
+  { k: 'Before', v: 'KDE Plasma · OpenSphere, San Francisco' },
+  { k: 'Works in', v: 'TypeScript · Go · C++ · Python' },
+  { k: 'Open to', v: 'Founding and AI engineering roles' },
+];
+
+/** The first six, in the order they deserve to be read. */
+const SHOWN = PROJECTS.slice(0, 6);
+
+/**
+ * The strip runs small, and Sangam shoots almost everything after sunset, so
+ * the frames here are the ones that still read at 300px tall — picked by
+ * measured mean luminance, not by taste. The full set is on /photography,
+ * where each one gets the room to be dark.
+ */
+const STRIP_SLUGS = [
+  'img-20240903-160828459', 'img-20251223-163648962', 'img-20250208-162232949',
+  'img-20240902-182059705', 'img-20241031-222139440', 'img-20250208-175800220-1',
+  '1740158674579-2', 'img-20260721-182117987', '1742934048623',
+];
+const STRIP = STRIP_SLUGS
+  .map((slug) => PHOTOS.find((p) => p.slug === slug))
+  .filter((p): p is (typeof PHOTOS)[number] => Boolean(p));
 
 export default function Home() {
   return (
     <>
-      {/* ─── Hero ─────────────────────────────────────────────────────── */}
-      <header className="hero">
-        <Reveal>
-          <p className="kicker">
-            <Star className="kicker-star" />
-            Hi, I&rsquo;m Sangam &mdash; from Gwalior, building for Copenhagen
-          </p>
-        </Reveal>
-
-        <Reveal delay={60}>
-          <h1 className="mega">
-            I build AI systems<br />
-            you can actually{' '}
-            <span className="mark">
-              check
-              <Underline className="mark-u" />
-            </span>
-          </h1>
-        </Reveal>
-
-        <Reveal delay={140}>
-          <div className="hero-note">
-            <Arrow className="hero-arrow" />
-            <p>
-              The model reads and ranks. <strong>The code decides.</strong> Anything
-              a model decides on its own, you can&rsquo;t defend to a customer, a
-              regulator, or yourself at two in the morning.
+      {/* ── Who ──────────────────────────────────────────────────────── */}
+      <section className="slab hero" aria-labelledby="who">
+        <div className="wrap">
+          <Reveal>
+            <p className="tag">Software engineer · AI systems · Gwalior, India</p>
+            <h1 className="display" id="who">
+              I build AI systems that aren’t allowed to be <span className="em">wrong</span>.
+            </h1>
+            <p className="lead">
+              Legal technology, where a confident hallucination is a liability
+              rather than a bug report. I am the founding engineer at Retsguide
+              in Copenhagen: three customer-facing flows shipped end to end, and
+              the knowledge graph underneath the product’s reports — which no
+              model is permitted to write to, so every claim traces back to the
+              provision it rests on.
             </p>
-          </div>
-        </Reveal>
-      </header>
-
-      {/* ─── The board ────────────────────────────────────────────────── */}
-      <section className="sec board-sec" aria-labelledby="board-h">
-        <Reveal>
-          <h2 id="board-h" className="sec-h">
-            Stuff I&rsquo;ve made
-            <span className="sec-sub">(go on, move them)</span>
-          </h2>
-        </Reveal>
-        <Reveal delay={60}>
-          <Board scraps={boardScraps()} label="Draggable screenshots and photographs" />
-        </Reveal>
+            <div className="hero-cta">
+              <Link className="btn" to="/work">
+                Read the work <span className="arr" aria-hidden="true">→</span>
+              </Link>
+              <a className="btn btn--ghost" href={`mailto:${SITE.email}`}>Email me</a>
+            </div>
+            <dl className="facts">
+              {FACTS.map((f) => (
+                <div className="fact" key={f.k}>
+                  <dt>{f.k}</dt>
+                  <dd>{f.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
       </section>
 
-      {/* ─── The void ─────────────────────────────────────────────────── */}
-      <section className="void" aria-labelledby="void-h">
-        <Reveal>
-          <h2 id="void-h" className="void-h">
-            Right now I&rsquo;m the{' '}
-            <span className="mark">
-              founding engineer
-              <Circled className="mark-c" color="var(--coral-lt)" />
-            </span>{' '}
-            at Retsguide, Copenhagen.
-          </h2>
-        </Reveal>
-        <Reveal delay={80}>
-          <p className="void-p">
-            I built the product end to end and I&rsquo;m building its legal brain &mdash;
-            a knowledge graph no model writes into, so every claim in a report traces
-            back to the law it rests on. Before that: real-time systems at a San
-            Francisco startup, and five patches merged into KDE Plasma that now ship
-            to millions of desktops.
-          </p>
-        </Reveal>
-      </section>
+      {/* ── Proof ────────────────────────────────────────────────────── */}
+      <div className="proof">
+        <div className="wrap">
+          <ul>
+            {PROOF.map((p) => <li key={p}>{p}</li>)}
+          </ul>
+        </div>
+      </div>
 
-      {/* ─── Work ─────────────────────────────────────────────────────── */}
-      <section className="sec" aria-labelledby="work-h">
-        <Reveal>
-          <h2 id="work-h" className="sec-h">
-            Everything else
-            <Link className="sec-link" to="/work">the full list &rarr;</Link>
-          </h2>
-        </Reveal>
-        <ul className="notes">
-          {PROJECTS.map((p, i) => (
-            <Reveal as="li" key={p.slug} delay={Math.min(i, 6) * 45}>
-              <article className="note" style={{
-                '--tilt': `${[-1.4, 1.1, -0.7, 1.6, -1.2, 0.8, -1.6, 1.3, -0.9, 1.5][i] ?? 0}deg`,
-              } as React.CSSProperties}>
-                <p className="note-top">
-                  <span>{String(i + 1).padStart(2, '0')}</span>
-                  <span>{p.year}</span>
-                </p>
-                <h3>
-                  {p.featured ? <Link to={`/work/${p.slug}`}>{p.title}</Link> : p.title}
-                </h3>
-                <p className="note-body">{p.blurb}</p>
-                <p className="note-stack">{p.stack.join(' · ')}</p>
-                <p className="note-links">
-                  {p.featured && <Link to={`/work/${p.slug}`}>case study</Link>}
-                  {p.github && <a href={p.github} target="_blank" rel="noopener">source</a>}
-                  {p.live && <a href={p.live} target="_blank" rel="noopener">live</a>}
-                  {p.video && <a href={p.video} target="_blank" rel="noopener">demo</a>}
-                </p>
-              </article>
-            </Reveal>
-          ))}
-        </ul>
-      </section>
+      {/* ── Experience ───────────────────────────────────────────────── */}
+      <section className="slab slab--ink" aria-labelledby="exp">
+        <div className="wrap">
+          <Reveal as="header" className="shead">
+            <div className="shead-row">
+              <p className="tag">01 — Where I have worked</p>
+              <span className="mono" style={{ color: 'var(--fg-3)' }}>2025 — now</span>
+            </div>
+            <h2 className="h2" id="exp">Three jobs, one habit: own it end to end.</h2>
+          </Reveal>
 
-      {/* ─── Plates ───────────────────────────────────────────────────── */}
-      <section className="sec" aria-labelledby="ph-h">
-        <Reveal>
-          <h2 id="ph-h" className="sec-h">
-            <span className="mark">
-              Photographs
-              <Highlight className="mark-h" />
-            </span>
-            <Link className="sec-link" to="/photography">all {PHOTOS.length} &rarr;</Link>
-          </h2>
-        </Reveal>
-        <Reveal delay={60}>
-          <p className="lede">
-            All of it on a Nothing Phone&nbsp;(1), mostly the hour before the light goes.
-          </p>
-        </Reveal>
-        <Reveal delay={100}>
-          <ul className="strip">
-            {PHOTOS.slice(0, 10).map((ph, i) => (
-              <li key={ph.slug} style={{ '--tilt': `${(i % 2 ? 1.6 : -1.8)}deg` } as React.CSSProperties}>
-                <img src={`/photos/${ph.slug}-400.webp`} alt={ph.alt}
-                     width={ph.width} height={ph.height} loading="lazy" decoding="async" />
-              </li>
+          <ul className="jobs">
+            {EXPERIENCES.map((job, i) => (
+              <Reveal as="li" className="job" key={job.company} delay={i * 70}>
+                <div className="job-aside">
+                  <p className="job-when">{job.period}</p>
+                  <p className="job-where">
+                    <a className="h3 lnk" href={job.companyUrl} target="_blank" rel="noopener"
+                       style={{ color: 'var(--fg)' }}>
+                      {job.company}
+                    </a>
+                    <span className="job-role">
+                      {job.role}{job.location ? ` · ${job.location}` : ''}
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <ul className="job-points">
+                    {job.points.map((pt) => (
+                      <li key={pt.text}>
+                        {pt.href
+                          ? <><a className="lnk" href={pt.href} target="_blank" rel="noopener">{pt.label}</a> — {pt.text}</>
+                          : pt.text}
+                      </li>
+                    ))}
+                  </ul>
+                  <ul className="chips">
+                    {job.stack.map((s) => <li className="chip" key={s}>{s}</li>)}
+                  </ul>
+                </div>
+              </Reveal>
             ))}
           </ul>
-        </Reveal>
+        </div>
       </section>
 
-      {/* ─── Contact ──────────────────────────────────────────────────── */}
-      <section className="contact" aria-labelledby="c-h">
-        <Reveal>
-          <h2 id="c-h" className="contact-h">
-            Say hi
-            <Star className="contact-star" />
-          </h2>
-        </Reveal>
-        <Reveal delay={60}>
-          <p className="contact-mail">
-            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-          </p>
-        </Reveal>
-        <Reveal delay={110}>
-          <nav className="contact-links" aria-label="Elsewhere">
-            <a href={SITE.profiles.github} target="_blank" rel="me noopener">GitHub</a>
-            <a href={SITE.profiles.linkedin} target="_blank" rel="me noopener">LinkedIn</a>
-            <a href={SITE.profiles.kde} target="_blank" rel="noopener">KDE</a>
-            <a href={SITE.resume}>Résumé</a>
-            <a href={SITE.calendar} target="_blank" rel="noopener">Book a call</a>
-          </nav>
-        </Reveal>
-        <Reveal delay={160}>
-          <p className="colophon">
-            Every mark on this page is SVG, drawn by hand and roughened with a
-            turbulence filter &mdash; no stock illustration anywhere.
-            &copy; {new Date().getFullYear()} {SITE.handle} &middot; #025
-          </p>
-        </Reveal>
+      {/* ── Work ─────────────────────────────────────────────────────── */}
+      <section className="slab" aria-labelledby="work">
+        <div className="wrap">
+          <Reveal as="header" className="shead">
+            <div className="shead-row">
+              <p className="tag">02 — Selected work</p>
+              <Link className="mono lnk" to="/work">All {PROJECTS.length} →</Link>
+            </div>
+            <h2 className="h2" id="work">Things I built, and still run.</h2>
+          </Reveal>
+
+          <ul className="work">
+            {SHOWN.map((p, i) => {
+              const to = p.featured ? `/work/${p.slug}` : (p.live || p.github || '/work');
+              const external = !p.featured;
+              const Row = (
+                <>
+                  <span className="row-n">{String(i + 1).padStart(2, '0')}</span>
+                  <span>
+                    <span className="row-title">{p.title}</span>
+                    <span className="row-blurb">{p.blurb}</span>
+                    <span className="row-stack">{p.stack.join(' · ')}</span>
+                  </span>
+                  {(p.shot || DRAWN.has(p.slug)) && (
+                    <span className="peek">
+                      <span className="peek-frame brk">
+                        {p.shot
+                          ? <img src={p.shot} alt="" loading="lazy" width="700" height="440" />
+                          : <Plate slug={p.slug} />}
+                      </span>
+                      <span className="peek-cap">{p.year}</span>
+                    </span>
+                  )}
+                  <span className="row-right">
+                    {p.featured && <span className="row-case">Case study</span>}
+                    <span className="row-year">{p.year}</span>
+                    <span className="row-go" aria-hidden="true">↗</span>
+                  </span>
+                </>
+              );
+              return (
+                <Reveal as="li" key={p.slug} delay={Math.min(i, 5) * 50}>
+                  {external
+                    ? <a className="row" href={to} target="_blank" rel="noopener">{Row}</a>
+                    : <Link className="row" to={to}>{Row}</Link>}
+                </Reveal>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── Photography ──────────────────────────────────────────────── */}
+      <section className="slab slab--raise" aria-labelledby="photos">
+        <div className="wrap">
+          <Reveal>
+            <div className="plates-head">
+              <div>
+                <p className="tag">03 — Away from the editor</p>
+                <h2 className="h2" id="photos" style={{ marginTop: 16, maxWidth: '16ch' }}>
+                  The hour before the light goes.
+                </h2>
+              </div>
+              <Link className="btn btn--ghost" to="/photography">
+                All frames <span className="arr" aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </Reveal>
+          <Reveal>
+            <ul className="strip">
+              {STRIP.map((ph) => (
+                <li key={ph.slug}>
+                  <img
+                    src={`/photos/${ph.slug}-400.webp`}
+                    alt={ph.alt || 'Photograph by Sangam Pratap Singh'}
+                    width={ph.width} height={ph.height} loading="lazy" decoding="async"
+                    style={{ aspectRatio: `${ph.width} / ${ph.height}` }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
       </section>
     </>
   );

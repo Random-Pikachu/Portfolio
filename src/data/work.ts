@@ -226,5 +226,13 @@ export const PROJECTS: Project[] = [
   },
 ];
 
+/**
+ * Projects whose work-list preview is a hand-drawn diagram rather than a
+ * screenshot, because neither has a UI worth showing. Drawn in
+ * src/components/Plate.tsx; kept here so the routes can ask without importing
+ * a constant out of a component module.
+ */
+export const DRAWN = new Set(['load-forecasting', 'review-agent']);
+
 export const FEATURED = PROJECTS.filter((p) => p.featured);
 export const PROJECT_BY_SLUG = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));

@@ -4,21 +4,27 @@ import { PHOTOS } from '../data/photos';
 
 export default function Photography() {
   const years = PHOTOS.map((p) => p.date.slice(0, 4)).filter(Boolean).map(Number);
-  const span = years.length ? `${Math.min(...years)}–${Math.max(...years)}` : '';
+  const span = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
+
   return (
-    <section className="sec" style={{ paddingTop: 'clamp(110px, 18vh, 200px)' }}>
-      <Reveal as="header" className="sec-head">
-        <h2>Plates</h2>
-        <span className="mono">{PHOTOS.length} frames{span && ` / ${span}`}</span>
-      </Reveal>
-      <Reveal>
-        <p style={{ color: 'var(--muted)', maxWidth: '52ch', margin: '0 0 clamp(28px,5vh,56px)' }}>
-          All of it on a Nothing Phone&nbsp;(1), mostly the hour before the light
-          goes. Hover for colour, click to open.
-        </p>
-      </Reveal>
-      <h3 className="sr-only">Gallery</h3>
-      <PhotoGrid />
+    <section className="slab" aria-labelledby="ph">
+      <div className="wrap">
+        <Reveal as="header" className="shead">
+          <div className="shead-row">
+            <p className="tag">Plates</p>
+            <span className="mono" style={{ color: 'var(--fg-3)' }}>
+              {PHOTOS.length} frames{span && ` · ${span}`}
+            </span>
+          </div>
+          <h1 className="h1" id="ph">The hour before the light goes.</h1>
+          <p className="lead">
+            All of it on a Nothing Phone&nbsp;(1), mostly late October, mostly
+            walking back across campus. Hover for colour, click to open.
+          </p>
+        </Reveal>
+        <h2 className="sr-only">Gallery</h2>
+        <PhotoGrid />
+      </div>
     </section>
   );
 }

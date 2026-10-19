@@ -1,55 +1,130 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   A scrapbook. Cream stock with a graph-paper grid, charcoal voids for
-   contrast, coral marker for every hand-drawn mark, and yellow highlighter
-   used sparingly. Every ornament on the page is SVG authored by hand and run
-   through a turbulence displacement filter — that wobble is what separates an
-   inked line from a plotted one, and it is why none of this reads as clip art.
+   Minimal ground, one accent, and a visible structure.
+
+   The page is a stack of full-bleed slabs that alternate between warm paper
+   and near-black, laid under a fixed reticle of crosshairs. Everything else —
+   type scale, spacing, the chamfer on a button — is derived from that, so the
+   site reads as drawn on a grid rather than assembled from components.
+
+   Contrast ratios in the comments are measured against the ground they sit
+   on, computed, not estimated.
    ────────────────────────────────────────────────────────────────────────── */
 
 :root {
   color-scheme: light;
 
-  --paper:    #F2EDE0;
-  --paper-2:  #EAE3D2;   /* taped cutouts, raised scraps */
-  --grid:     #DCD4C1;
-  --char:     #23201A;   /* the voids */
-  --char-2:   #302C24;
+  /* ── Ground ── */
+  --paper:    #F3F0E9;
+  --paper-2:  #E9E5DB;   /* raised panels, inputs, chips */
+  --rule:     #D8D3C6;   /* hairlines on paper */
+  --rule-2:   #CFC9BA;   /* hairlines that need to be seen */
 
-  --ink:      #23201A;   /* 14.0:1 on paper */
-  --ink-2:    #544C3E;   /*  7.3:1 */
-  --ink-3:    #7A7160;   /*  4.1:1 — captions only */
-  --on-char:  #F2EDE0;   /* 13.9:1 on charcoal */
-  --on-char-2:#B4AB98;   /*  7.1:1 */
+  --slab:     #15130F;   /* the dark slabs — 16.3:1 against paper */
+  --slab-2:   #1D1A15;
+  --rule-ink: #302B24;   /* hairlines on the slab */
 
-  --coral:    #C8441F;   /*  5.6:1 on paper — marker */
-  --coral-lt: #E6603A;   /*  on charcoal */
-  --yellow:   #E8B84B;   /* highlighter, never for text */
+  /* ── Ink on paper ── */
+  --ink:      #141210;   /* 16.4:1 */
+  --ink-2:    #4A443A;   /*  8.5:1 — body copy */
+  --ink-3:    #6E6659;   /*  5.0:1 — labels, captions */
 
-  --hand:  'Shantell Sans', 'Comic Sans MS', cursive;
-  --sans:  'Instrument Sans', system-ui, sans-serif;
-  --mono:  'JetBrains Mono', ui-monospace, monospace;
+  /* ── Ink on slab ── */
+  --on-ink:   #EFEBE2;   /* 15.6:1 */
+  --on-ink-2: #A49C8D;   /*  6.8:1 */
+  --on-ink-3: #8A8273;   /*  4.9:1 */
 
-  --t-mega: clamp(42px, 8.5vw, 116px);
-  --t-big:  clamp(28px, 4.4vw, 62px);
-  --t-mid:  clamp(20px, 2.3vw, 30px);
-  --t-body: clamp(15px, 1.1vw, 17px);
-  --t-note: 13px;
-  --t-meta: 11px;
+  /* ── The one accent ── */
+  --ember:     #B5390F;  /*  5.2:1 on paper */
+  --ember-ink: #F2763C;  /*  6.6:1 on slab */
+  --ember-dk:  #8F2B08;  /*  5.1:1 on the deepest stop of the dusk gradient */
+  --ember-dim: rgb(181 57 15 / 0.14);
 
-  --pad: clamp(18px, 4vw, 64px);
-  --tilt-a: -1.6deg;
-  --tilt-b: 1.2deg;
+  /* Last light. The page descends into this: paper at the top of the final
+     slab, October sun at the bottom. Every stop was measured, which is why the
+     gradient stops where it does — one step warmer and --fg-3 falls under 4.5. */
+  --dusk-1: #F3F0E9;
+  --dusk-2: #F7E7CE;
+  --dusk-3: #F2D5A8;
+  --dusk-4: #EBC489;
+  --sun:    #E8853C;
 
+  /* Resolved per-surface, so a component never has to know which slab it is
+     sitting on. Overridden once, on .slab--ink. */
+  --fg:      var(--ink);
+  --fg-2:    var(--ink-2);
+  --fg-3:    var(--ink-3);
+  --bg:      var(--paper);
+  --hair:    var(--rule);
+  --hair-2:  var(--rule-2);
+  --accent:  var(--ember);
+
+  /* ── Type ── */
+  --display: 'Bricolage Grotesque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --sans:    'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif:   'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* One scale, used everywhere. Nothing is sized ad hoc. */
+  --t-display: clamp(44px, 8.4vw, 124px);
+  --t-h1:      clamp(32px, 5vw, 72px);
+  --t-h2:      clamp(26px, 3.3vw, 46px);
+  --t-h3:      clamp(19px, 1.8vw, 27px);
+  --t-lead:    clamp(17px, 1.45vw, 21px);
+  --t-body:    clamp(15.5px, 1.05vw, 17px);
+  --t-small:   14px;
+  --t-mono:    12px;
+  --t-mono-s:  11px;
+
+  /* ── Space ── */
+  --pad:  clamp(20px, 5vw, 80px);
+  --maxw: 1320px;
+  --cell: 76px;          /* the reticle pitch; corner brackets echo it */
+  --chamf: 11px;         /* the corner cut on every button and framed tile */
+
+  /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --pop:  cubic-bezier(0.34, 1.56, 0.64, 1);
-  --fast: 160ms;
-  --base: 380ms;
+  --out:  cubic-bezier(0.33, 1, 0.68, 1);
+  --fast: 170ms;
+  --base: 420ms;
+  --slow: 760ms;
+
+  /* The crosshair glyph, in three forms.
+     --plus is an alpha mask, used by the pointer lamp, which needs to paint
+     the mark in ember. The two tinted copies are ordinary backgrounds, laid on
+     each slab with background-attachment:fixed so every slab shares one phase
+     with the viewport-fixed lamp. They sit behind the text rather than over
+     it, which the mask version could not do without the dark slabs covering
+     it up. */
+  --plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='black' stroke-width='1.1' fill='none'/></svg>");
+  --plus-dark: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='black' stroke-opacity='0.14' stroke-width='1.1' fill='none'/></svg>");
+  --plus-light: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='white' stroke-opacity='0.15' stroke-width='1.1' fill='none'/></svg>");
+  --plus-img: var(--plus-dark);
+}
+
+.slab--ink {
+  --fg:     var(--on-ink);
+  --fg-2:   var(--on-ink-2);
+  --fg-3:   var(--on-ink-3);
+  --bg:     var(--slab);
+  --hair:   var(--rule-ink);
+  --hair-2: #3A342B;
+  --accent: var(--ember-ink);
+  --plus-img: var(--plus-light);
+  color-scheme: dark;
+}
+
+/* The golden-hour slab. Text tones step darker to hold 4.5:1 against the
+   warmest stop rather than against the paper the rest of the site uses. */
+.slab--dusk {
+  --fg:     var(--ink);
+  --fg-2:   #4A443A;   /* 5.9:1 at the warmest stop */
+  --fg-3:   #4A443A;
+  --bg:     transparent;
+  --hair:   rgb(20 18 16 / 0.15);
+  --hair-2: rgb(20 18 16 / 0.28);
+  --accent: var(--ember-dk);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root { --fast: 0ms; --base: 0ms; }
+  :root { --fast: 0ms; --base: 0ms; --slow: 0ms; }
 }
-
-/* The board needs a fixed aspect so percentage-positioned scraps land the same
-   way at every width. */
-:root { --board-ratio: 16 / 10; }

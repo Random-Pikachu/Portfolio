@@ -2,12 +2,21 @@ import { Link } from 'react-router-dom';
 
 export default function NotFound() {
   return (
-    <section className="contact">
-      <h1 className="contact-cta">404</h1>
-      <p className="colophon mono">
-        Nothing here. <Link to="/">Back to the start</Link> or{' '}
-        <Link to="/work">the index</Link>.
-      </p>
+    <section className="slab" aria-labelledby="nf">
+      <div className="wrap">
+        <p className="tag">404</p>
+        <h1 className="display" id="nf" style={{ marginTop: 20, maxWidth: '12ch' }}>
+          Nothing at this <span className="em">address</span>.
+        </h1>
+        <p className="lead" style={{ marginTop: 24 }}>
+          The link is either old or mistyped. Everything that does exist is one
+          of these two.
+        </p>
+        <div className="hero-cta">
+          <Link className="btn" to="/">Home <span className="arr" aria-hidden="true">→</span></Link>
+          <Link className="btn btn--ghost" to="/work">The index</Link>
+        </div>
+      </div>
     </section>
   );
 }

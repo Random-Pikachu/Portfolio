@@ -67,6 +67,8 @@ export interface Experience {
   company: string;
   companyUrl: string;
   role: string;
+  /** City, where it is worth naming. */
+  location?: string;
   points: ExperiencePoint[];
   stack: string[];
 }
@@ -78,12 +80,14 @@ export const EXPERIENCES: Experience[] = [
     endDate: null,
     company: 'Retsguide',
     companyUrl: 'https://retsguide.dk/',
-    role: 'Software Engineer Intern (Full Stack)',
+    role: 'Software Engineer Intern (Founding Engineer)',
+    location: 'Copenhagen',
     points: [
-      { href: null, label: null, text: 'Owned three customer-facing application flows end-to-end, from design to deployment' },
-      { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations on production' },
-      { href: null, label: null, text: 'Built modular REST services with state-machine transitions and an AI-assisted document-classification pipeline' },
-      { href: null, label: null, text: 'Cut server response time from 2s+ to 150ms by restructuring the SSR data path' },
+      { href: null, label: null, text: 'Shipped three customer-facing flows end to end — research and schema design through production' },
+      { href: null, label: null, text: 'Building the legal knowledge graph the product’s reports rest on, with no model permitted to write to it, so every claim traces back to the provision version it stands on' },
+      { href: null, label: null, text: 'Built the document pipeline behind eligibility checks: OCR reads the PDF, a model classifies and extracts, and code — not the model — applies the statutory formula' },
+      { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations against production' },
+      { href: null, label: null, text: 'Cut server response time from over 2s to 150ms by restructuring the SSR data path' },
     ],
     stack: ['TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Prisma', 'Azure'],
   },
@@ -135,6 +139,7 @@ export const EXPERIENCES: Experience[] = [
     company: 'OpenSphere',
     companyUrl: 'https://opensphere.ai/',
     role: 'Software Development Intern',
+    location: 'San Francisco',
     points: [
       { href: null, label: null, text: 'Built concurrent WebSocket service powering real-time threaded commenting in the text editor' },
       { href: null, label: null, text: 'Reworked drafting workflow, removing a redundant data-filing stage and doubling throughput' },

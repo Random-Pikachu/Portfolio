@@ -1,0 +1,503 @@
+/* ─── The page ─────────────────────────────────────────────────────────────
+   Nine rooms, five of them full-bleed. Each differs from its neighbour on at
+   least two of ground / alignment / density / scale, because a page whose
+   every section is the same object — eyebrow, rule, heading, content — is a
+   layout with one argument, and the eye reads one repeated structure as no
+   structure at all.
+
+   Every animated element is written here at its FINAL state. GSAP moves it
+   away and back, so the prerendered HTML, a crawler, and a reader with
+   reduced motion all get the finished page.
+   ────────────────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  font-optical-sizing: auto;
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--accent); color: var(--on-accent); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* ─── The field ────────────────────────────────────────────────────────────
+   Behind everything: the sun, the horizon it sits on, the crosshair grid, and
+   the pointer lamp. The sun is the point — the sunset was an inference drawn
+   from the beige getting darker, and nothing on screen was lit by it.
+   ────────────────────────────────────────────────────────────────────────── */
+.field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.stars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.sun {
+  position: absolute; left: 50%; bottom: -8vh; width: 180vw; height: 120vh;
+  translate: -50% 0; opacity: var(--sun-op, 0.3);
+  background: radial-gradient(ellipse at 50% 100%,
+    color-mix(in srgb, var(--accent) 34%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 20%, transparent) 26%,
+    color-mix(in srgb, var(--accent)  8%, transparent) 48%,
+    transparent 70%);
+}
+/* One fixed horizontal rule at the sun's centre: the only fixed line on the
+   site, and the thing everything else scrolls past. */
+.horizon {
+  position: absolute; left: 0; right: 0; bottom: 52vh; height: 1px;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  /* Only once the sun is low enough for a horizon to mean anything. A fixed
+     rule across the hero reads as a rendering fault, not as a horizon. */
+  opacity: calc(max(var(--sun-op, 0) - 0.45, 0) * 1.8);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sun { translate: -50% 52%; }
+  .horizon { bottom: 10vh; }
+}
+
+.reticle {
+  position: absolute; inset: 0; background: var(--cross);
+  -webkit-mask-image: var(--plus); mask-image: var(--plus);
+  -webkit-mask-size: var(--cell) var(--cell); mask-size: var(--cell) var(--cell);
+  -webkit-mask-position: calc(var(--edge) - var(--cell) / 2) calc(var(--cell) / -2);
+  mask-position: calc(var(--edge) - var(--cell) / 2) calc(var(--cell) / -2);
+}
+
+.lamp {
+  position: absolute; inset: 0; opacity: 0;
+  transition: opacity var(--d-block) var(--ease);
+  background: radial-gradient(circle 240px at var(--mx, -999px) var(--my, -999px),
+              color-mix(in srgb, var(--accent) 11%, transparent),
+              color-mix(in srgb, var(--accent) 4%, transparent) 50%, transparent 76%);
+}
+/* The background lamp lights the paper. This one lights the content, and only
+   after dark, where additive blending is what a lamp actually does. */
+.lamp-fg {
+  position: fixed; inset: 0; z-index: 3; pointer-events: none;
+  mix-blend-mode: plus-lighter;
+  opacity: calc(var(--night) * 0.26);
+  background: radial-gradient(circle 260px at var(--mx, -999px) var(--my, -999px),
+              color-mix(in srgb, var(--accent) 22%, transparent),
+              color-mix(in srgb, var(--accent) 6%, transparent) 46%, transparent 74%);
+}
+.lamp.lit { opacity: 1; }
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .lamp, .lamp-fg { display: none; }
+}
+
+.page { position: relative; z-index: 1; }
+
+/* ─── Grid ─────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  flex: 0 1 auto;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gut);
+  width: var(--content);
+  margin-inline: auto;
+}
+/* Normal flow, so it causes no containing-block surprises inside grid items. */
+.bleed { width: 100vw; margin-inline: calc(50% - 50vw); }
+
+.room { padding-block: var(--s-5); }
+.room--flush { padding-block: 0; }
+
+/* ─── Type ─────────────────────────────────────────────────────────────── */
+.display, .h1, .h2, .h3, .plate-t {
+  font-family: var(--display); margin: 0; text-wrap: balance;
+}
+.display {
+  font-size: var(--t-display); line-height: var(--lh-display);
+  letter-spacing: var(--ls-display); font-weight: 700;
+  font-variation-settings: 'WONK' 1;
+}
+.plate-t {
+  font-size: var(--t-plate); line-height: var(--lh-plate);
+  letter-spacing: var(--ls-plate); font-weight: 700;
+  font-variation-settings: 'WONK' 1;
+}
+.h1 { font-size: var(--t-h1); line-height: var(--lh-h1); letter-spacing: var(--ls-h1); font-weight: 700; }
+.h2 { font-size: var(--t-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); font-weight: 600; }
+.h3 { font-size: var(--t-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); font-weight: 600; }
+
+.lead { font-size: var(--t-lead); line-height: var(--lh-lead); letter-spacing: var(--ls-lead);
+        color: var(--fg-2); margin: 0; max-width: 24.8em; font-variant-numeric: proportional-nums; }
+.sub  { font-size: var(--t-sub); line-height: var(--lh-sub); letter-spacing: var(--ls-sub);
+        color: var(--fg-2); margin: 0; max-width: 25.2em; font-weight: 600; }
+.body { margin: 0; max-width: 22.1em; color: var(--fg-2); font-variant-numeric: proportional-nums; }
+.fine { font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: var(--ls-fine);
+        color: var(--fg-3); font-weight: 500; }
+.mono { font-family: var(--mono); font-size: var(--t-mono); line-height: var(--lh-mono);
+        letter-spacing: var(--ls-mono); color: var(--fg-3); font-weight: 400; }
+
+/* ─── Masked display lines ─────────────────────────────────────────────────
+   The padding/negative-margin pair is load-bearing: without it the mask crops
+   the descender of a g or a y, and Fraunces' descender is 0.255em.
+   ────────────────────────────────────────────────────────────────────────── */
+/* JSX strips whitespace containing a newline between sibling elements, so
+   these masks butt together without a margin. 0.26em is the word space. */
+.w { display: inline-block; overflow: hidden; vertical-align: top;
+     margin-right: 0.26em; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.g { display: block; }
+@media (max-width: 599px) { .display .w { display: block; margin-right: 0; } }
+
+/* ─── Action ───────────────────────────────────────────────────────────────
+   Replaces two pills. The page is built on hairlines and right angles; a
+   fully rounded object was the only thing in the system that was not.
+   ────────────────────────────────────────────────────────────────────────── */
+.act {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  font-size: var(--t-lead); line-height: var(--lh-lead); letter-spacing: var(--ls-lead);
+  font-weight: 600; color: var(--accent);
+  border-bottom: 2px solid currentColor; padding-bottom: 0.12em;
+}
+.act--sm { font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: 0.02em;
+           border-bottom-width: 1px; }
+.arr { flex: none; transition: transform var(--d-micro) var(--out); }
+.act:hover .arr, a:hover > .arr { transform: translateX(4px); }
+
+.lnk {
+  color: var(--accent);
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px; background-position: 0 100%; background-repeat: no-repeat;
+  transition: background-size var(--d-micro) var(--ease);
+}
+.lnk:hover { background-size: 100% 1px; }
+
+/* ─── Nav ──────────────────────────────────────────────────────────────── */
+.nav {
+  display: flex; align-items: baseline; gap: var(--s-3);
+  padding-block: var(--s-3); position: relative; z-index: 4;
+}
+.nav-brand { font-weight: 600; font-size: var(--t-fine); letter-spacing: 0.01em; color: var(--fg); }
+.nav-links { margin-left: auto; display: flex; gap: var(--s-3); align-items: baseline; }
+.nav-links a {
+  font-size: var(--t-fine); font-weight: 500; color: var(--fg-3);
+  transition: color var(--d-micro) var(--ease);
+}
+.nav-links a:hover, .nav-links a[aria-current='page'] { color: var(--accent); }
+.nav-clock { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: var(--ls-mono);
+             color: var(--fg-3); }
+@media (max-width: 599px) {
+  .nav { flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
+  .nav-links { margin-left: 0; width: 100%; }
+}
+
+/* ─── R1 Hero ──────────────────────────────────────────────────────────── */
+.hero { padding-block: var(--s-5) var(--s-0); }
+.hero .display { grid-column: 1 / -1; max-width: 9.2em; }
+.hero-eyebrow { grid-column: 1 / -1; margin: 0 0 var(--s-3); }
+.hero .sub { grid-column: 1 / span min(6, var(--cols)); margin-top: var(--s-4); }
+.hero-act  { grid-column: 1 / -1; margin-top: var(--s-4); }
+
+/* ─── R2 Proof ─────────────────────────────────────────────────────────────
+   The most restrained room on the site and the loudest. The numerals are
+   Archivo 700 at wdth 88 — semi-condensed tabular figures are the entire
+   reason for having a width axis, and they remove two monospace uses.
+   ────────────────────────────────────────────────────────────────────────── */
+.proof {
+  background: var(--panel);
+  border-block: 1px solid var(--hair);
+  padding-block: var(--s-5);
+}
+.proof-grid { row-gap: var(--s-4); }
+.proof-cell { grid-column: span 3; }
+.proof-cell:empty { display: none; }
+.proof-v {
+  display: block; font-size: var(--t-figure); line-height: var(--lh-figure);
+  letter-spacing: var(--ls-figure); font-weight: 700; font-stretch: 88%;
+  color: var(--accent); min-width: 3.3em;
+}
+.proof-l {
+  display: block; margin-top: var(--s-2); max-width: 13em;
+  font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: 0.06em;
+  text-transform: uppercase; font-weight: 500; color: var(--fg-3);
+}
+@media (max-width: 1079px) { .proof-cell { grid-column: span 4; } }
+@media (max-width: 599px)  { .proof-cell { grid-column: 1 / -1; } }
+
+/* ─── R3 Experience — the dense room ───────────────────────────────────── */
+.room-head { grid-column: 1 / -1; border-top: 1px solid var(--hair); padding-top: var(--s-3); }
+.room-head-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+.room-head .h2 { margin-top: var(--s-3); max-width: 16em; }
+
+.jobs { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1; }
+.job {
+  display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
+  column-gap: var(--gut); padding-block: var(--s-4);
+  border-top: 1px solid var(--hair);
+}
+.job:last-child { border-bottom: 1px solid var(--hair); }
+.job-rail { grid-column: span 3; }
+.job-main { grid-column: span 8; }
+@media (max-width: 767px) {
+  .job-rail, .job-main { grid-column: 1 / -1; }
+  .job-main { margin-top: var(--s-3); }
+}
+@media (min-width: 768px) { .job-rail { position: sticky; top: var(--s-4); align-self: start; } }
+.job-when { font-family: var(--mono); font-size: var(--t-mono); line-height: var(--lh-mono);
+            letter-spacing: var(--ls-mono); color: var(--accent); margin: 0; }
+.job-co { display: block; margin-top: var(--s-2); }
+.job-role { display: block; margin-top: var(--s-1); font-size: var(--t-fine);
+            line-height: var(--lh-fine); color: var(--fg-3); font-weight: 500; }
+.job-claim { margin: 0 0 var(--s-3); font-size: var(--t-sub); line-height: var(--lh-sub);
+             letter-spacing: var(--ls-sub); font-weight: 600; color: var(--fg); max-width: 25.2em; }
+.job-points { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+.job-points li { position: relative; padding-left: 1.6em; color: var(--fg-2); max-width: 22.1em; }
+.job-points li::before {
+  content: ''; position: absolute; left: 0; top: 0.62em;
+  width: 0.75em; height: 1px; background: var(--accent);
+}
+.job-stack { margin: var(--s-3) 0 0; }
+
+/* ─── R4 Lead project — full bleed ─────────────────────────────────────── */
+.lead-room {
+  position: relative; background: var(--panel-2);
+  min-height: clamp(62vh, 56vw, 86vh); display: flex; align-items: flex-end;
+  overflow: hidden; isolation: isolate;
+}
+.lead-media { position: absolute; inset: 0; z-index: -1; }
+.lead-media svg, .lead-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lead-over { padding-block: var(--s-5); }
+.lead-over > * { grid-column: 1 / span min(7, var(--cols)); }
+.lead-over .h1 { margin-top: var(--s-2); max-width: 14em; }
+.lead-over .lead { margin-top: var(--s-3); max-width: 27.4em; }
+.lead-over .act { margin-top: var(--s-3); }
+@media (max-width: 767px) {
+  .lead-room { min-height: 0; display: block; }
+  .lead-media { position: relative; inset: auto; z-index: auto; aspect-ratio: 4 / 3; }
+  .lead-over > * { grid-column: 1 / -1; }
+}
+
+/* Corner marks on the full-bleed rooms only, at 32px and all four corners.
+   13px ticks on a 1216px plate were lint. */
+.marks-c::before, .marks-c::after,
+.marks-c > .mk1, .marks-c > .mk2 {
+  content: ''; position: absolute; width: 32px; height: 32px;
+  border: 1px solid var(--accent); pointer-events: none; z-index: 2;
+}
+.marks-c::before { top: var(--s-3); left: var(--edge); border-right: 0; border-bottom: 0; }
+.marks-c::after  { bottom: var(--s-3); right: var(--edge); border-left: 0; border-top: 0; }
+.marks-c > .mk1  { top: var(--s-3); right: var(--edge); border-left: 0; border-bottom: 0; }
+.marks-c > .mk2  { bottom: var(--s-3); left: var(--edge); border-right: 0; border-top: 0; }
+@media (max-width: 767px) {
+  .marks-c::before, .marks-c::after, .marks-c > .mk1, .marks-c > .mk2 { width: 20px; height: 20px; }
+}
+
+/* ─── R5 Projects ──────────────────────────────────────────────────────── */
+.tiles { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1;
+         display: grid; grid-template-columns: subgrid; row-gap: var(--s-5); }
+.tile-a { grid-column: span 7; }
+.tile-b { grid-column: span 5; }
+@media (max-width: 767px) { .tile-a, .tile-b { grid-column: 1 / -1; } }
+.tile { display: block; }
+.tile-top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2);
+  padding-bottom: var(--s-2); border-bottom: 1px solid var(--hair);
+}
+.tile-media { margin-top: var(--s-3); overflow: hidden; background: var(--panel); }
+.tile-a .tile-media { aspect-ratio: 4 / 3; }
+.tile-b .tile-media { aspect-ratio: 3 / 4; }
+.tile-media > * { width: 100%; height: 100%; object-fit: cover; display: block;
+                  transition: transform 0.9s var(--out); }
+@media (hover: hover) { .tile:hover .tile-media > * { transform: scale(1.035); } }
+.tile .h3 { margin-top: var(--s-3); }
+.tile-blurb { display: block; margin-top: var(--s-2); max-width: 21.2em; color: var(--fg-2); }
+.tile-stack { display: block; margin-top: var(--s-2); }
+.tile-go { display: inline-flex; align-items: center; gap: 0.5em; margin-top: var(--s-2); }
+
+.rows { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1;
+        display: grid; grid-template-columns: subgrid; }
+.rows > li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid;
+             border-top: 1px solid var(--hair); }
+.rows > li:last-child { border-bottom: 1px solid var(--hair); }
+.row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid;
+       padding-block: var(--s-3); align-items: start; }
+.row-n { grid-column: span 1; }
+.row-main { grid-column: span 7; }
+.row-stack { grid-column: span 3; }
+.row-end { grid-column: span 1; text-align: end; }
+@media (max-width: 767px) {
+  .row-n { grid-column: span 1; }
+  .row-main { grid-column: 2 / -1; }
+  .row-stack, .row-end { grid-column: 2 / -1; margin-top: var(--s-2); text-align: start; }
+}
+.row-main .h3 { transition: transform var(--d-block) var(--out); }
+@media (hover: hover) { .row:hover .row-main .h3 { transform: translateX(8px); } }
+.row-blurb { display: block; margin-top: var(--s-2); max-width: 21.2em; color: var(--fg-2); }
+
+/* ─── R6 Photographs — full bleed, in colour ───────────────────────────────
+   The photographs are the palette. They were shot in the light the whole page
+   ramps toward, and desaturating them removed the only evidence on the site
+   that the sunset is a real place rather than a CSS gradient.
+   ────────────────────────────────────────────────────────────────────────── */
+.photo-room { position: relative; min-height: 78vh; max-height: 96vh; overflow: hidden;
+              display: flex; align-items: center; isolation: isolate; }
+.photo-room img {
+  position: absolute; inset: -6% 0 auto 0; width: 100%; height: 112%;
+  object-fit: cover; z-index: -2; display: block;
+}
+.photo-room::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to left, rgb(0 0 0 / 0.60) 0%, rgb(0 0 0 / 0.20) 46%, transparent 72%);
+}
+
+.photo-over > * { grid-column: span 6 / -1; text-align: end; color: var(--on-photo); }
+.photo-over .lead { color: color-mix(in srgb, var(--on-photo) 82%, transparent);
+                    margin-left: auto; margin-top: var(--s-3); }
+.photo-over .act { margin-top: var(--s-3); color: var(--on-photo); }
+@media (max-width: 767px) {
+  .photo-room { min-height: 62vh; align-items: flex-end; padding-bottom: var(--s-5); }
+  .photo-room::before { background: linear-gradient(to top, rgb(0 0 0 / 0.66) 0%, transparent 70%); }
+  .photo-over > * { grid-column: 1 / -1; text-align: start; }
+  .photo-over .lead { margin-left: 0; }
+}
+
+/* Bleeds right on purpose, rather than clipping by accident at a wrap edge. */
+.strip-wrap { margin-left: var(--edge); width: calc(100vw - var(--edge)); }
+.strip { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--gut);
+         overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+         height: clamp(300px, 42vh, 460px); cursor: grab; }
+.strip::-webkit-scrollbar { display: none; }
+.strip.dragging { cursor: grabbing; scroll-snap-type: none; }
+.strip li { flex: 0 0 auto; scroll-snap-align: start; height: 100%; }
+.strip img { height: 100%; width: auto; max-width: none; display: block; user-select: none; }
+.strip-meter { display: flex; align-items: center; gap: var(--s-3); margin-top: var(--s-2);
+               padding-right: var(--pad); }
+.strip-bar { flex: 1 1 auto; height: 1px; background: var(--hair); position: relative; }
+.strip-bar span { position: absolute; inset: 0; background: var(--accent);
+                  transform-origin: left center; transform: scaleX(0.1); }
+
+/* ─── R7 Band — the crossover ──────────────────────────────────────────────
+   The palette's hard flip happens here, over a photograph that emerges from
+   the golden ground, is clearest at the exact scroll position where the
+   switch lands, then recedes into the night as the stars come out above it.
+   No text is ever inside the ambiguous luminance band.
+   ────────────────────────────────────────────────────────────────────────── */
+.band { position: relative; }
+.band-head { min-height: 56vh; display: grid; place-content: center; text-align: center;
+             padding-inline: var(--pad); }
+.band-head .plate-t { max-width: 9.2em; }
+.band-body { height: 204vh; position: relative; }
+.band-sticky { position: sticky; top: 0; height: 100vh; width: 100vw;
+               overflow: hidden; display: flex; align-items: flex-end; }
+.band-photo { position: absolute; inset: 0; width: 100%; height: 100%;
+              object-fit: cover; z-index: -2; display: block; }
+.band-veil { position: absolute; inset: 0; z-index: -1; background: var(--bg); opacity: 0.4; }
+.band-cap { padding-bottom: var(--s-5); }
+.band-cap > * { grid-column: 1 / -1; color: color-mix(in srgb, #F7EBDD 70%, transparent); }
+@media (max-width: 767px) {
+  .band-head { min-height: 48vh; }
+  .band-body { height: 170vh; }
+}
+
+/* ─── R8 Contact ───────────────────────────────────────────────────────── */
+.contact-main { grid-column: 1 / span min(8, var(--cols)); }
+.contact-side { grid-column: span min(4, var(--cols)) / -1; }
+@media (max-width: 767px) {
+  .contact-main, .contact-side { grid-column: 1 / -1; }
+  .contact-side { margin-top: var(--s-5); }
+}
+.mail {
+  display: inline-block; font-weight: 700; font-stretch: 88%;
+  font-size: clamp(32px, 3.1vw, 46px); line-height: 1.06; letter-spacing: -0.03em;
+  color: var(--accent); border-bottom: 2px solid currentColor; padding-bottom: 0.06em;
+  overflow-wrap: break-word;
+}
+.mail span { display: inline; }
+@media (max-width: 599px) { .mail span { display: block; } }
+.contact-main .lead { margin-top: var(--s-4); max-width: 22.1em; }
+.tagline { margin: var(--s-5) 0 0; grid-column: 1 / -1; color: var(--fg-3);
+           display: inline-flex; align-items: center; gap: 0.5em; flex-wrap: wrap; }
+
+.kv { margin: 0; }
+.kv > div { padding-block: var(--s-2); border-top: 1px solid var(--hair); }
+.kv > div:last-child { border-bottom: 1px solid var(--hair); }
+.kv dt { font-size: var(--t-fine); line-height: var(--lh-fine); letter-spacing: 0.06em;
+         text-transform: uppercase; font-weight: 500; color: var(--fg-3); }
+.kv dd { margin: var(--s-1) 0 0; font-weight: 500; color: var(--accent); }
+
+/* ─── R9 Footer — the horizon ──────────────────────────────────────────────
+   The glow starts above the footer's top edge and is clipped by the document,
+   not by a 1px rule, which is what produced a hard tonal seam across the full
+   viewport width.
+   ────────────────────────────────────────────────────────────────────────── */
+.foot { position: relative; overflow: visible; padding-top: var(--s-4); }
+.foot-glow {
+  position: absolute; inset: -260px 0 0 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 120% 80% at 50% 100%,
+    color-mix(in srgb, var(--accent) 30%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 12%, transparent) 42%, transparent 72%);
+}
+.foot-meta > * { grid-column: span min(6, var(--cols)); }
+.foot-meta > *:last-child { text-align: end; }
+@media (max-width: 599px) {
+  .foot-meta > *, .foot-meta > *:last-child { grid-column: 1 / -1; text-align: start; }
+  .foot-meta > *:last-child { margin-top: var(--s-2); }
+}
+/* 8.277em at -0.04em tracking, so dividing the available width by that fills
+   the line edge to edge at every viewport. Full name, full opacity. */
+.wordmark {
+  display: block; margin: var(--s-4) 0 -0.14em; padding: 0; white-space: nowrap;
+  font-family: var(--display); font-weight: 700; font-variation-settings: 'WONK' 1;
+  font-size: min(calc((100vw - 2 * var(--pad)) / 8.277), 240px);
+  line-height: 0.78; letter-spacing: -0.04em; color: var(--fg); user-select: none;
+  padding-inline: var(--pad);
+}
+
+/* ─── Case study ───────────────────────────────────────────────────────── */
+.prose { max-width: 27.4em; }
+.figure { position: relative; margin: var(--s-4) 0 0; background: var(--panel); padding: var(--s-2); }
+.figure img, .figure svg { display: block; width: 100%; height: auto; }
+.figure--plate { max-width: 780px; }
+.figcap { display: block; margin-top: var(--s-2); }
+
+.decisions { list-style: none; margin: var(--s-5) 0 0; padding: 0; counter-reset: dec;
+             grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.decisions > li { counter-increment: dec; grid-column: 1 / -1;
+                  display: grid; grid-template-columns: subgrid;
+                  padding-block: var(--s-4); border-top: 1px solid var(--hair); }
+.decisions > li::before {
+  content: '0' counter(dec); grid-column: span 1;
+  font-family: var(--mono); font-size: var(--t-mono); letter-spacing: var(--ls-mono);
+  color: var(--accent); padding-top: 0.5em;
+}
+.dec-body { grid-column: span 9; }
+@media (max-width: 767px) { .dec-body { grid-column: 2 / -1; } }
+.dec-why { margin: var(--s-2) 0 0; color: var(--fg-2); max-width: 27.4em; }
+
+.stats { list-style: none; margin: var(--s-5) 0 0; padding: 0; grid-column: 1 / -1;
+         display: grid; grid-template-columns: subgrid; row-gap: var(--s-4); }
+.stats > li { grid-column: span 4; }
+@media (max-width: 767px) { .stats > li { grid-column: 1 / -1; } }
+
+/* ─── Reveal resting states ────────────────────────────────────────────────
+   GSAP animates away from these and back. Nothing here hides content: a
+   reader with reduced motion or no JavaScript sees the finished page.
+   ────────────────────────────────────────────────────────────────────────── */
+[data-rv] { opacity: 1; transform: none; }
+
+@media (max-width: 599px) {
+  .hero .sub .sub-rest { display: none; }
+}

@@ -66,3 +66,8 @@ User-agent: DotBot
 Disallow: /
 
 Sitemap: https://random-pikachu.dev/sitemap.xml
+
+# The Phase 1 design lab. noindex in the page too; this is belt and braces.
+User-agent: *
+Disallow: /lab
+Disallow: /lab.html

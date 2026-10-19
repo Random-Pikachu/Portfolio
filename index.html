@@ -7,18 +7,18 @@
 
   <!-- Resource hints: font CSS and the analytics/heatmap origins are all
        cross-origin, so warming the connections early removes a full RTT each. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://cloud.umami.is" />
   <link rel="dns-prefetch" href="https://devtrackr-backend-84jw.onrender.com" />
   <link rel="preconnect" href="https://devtrackr-backend-84jw.onrender.com" crossorigin />
 
   <!-- Loaded from HTML rather than @import in CSS: an @import puts the font
        request behind the stylesheet in the critical chain instead of beside it. -->
-  <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+
+  <!-- Fonts are self-hosted, axis-limited and Latin-1 subset: 104.8 KB for all
+       three, against 111.6 KB for the Google-served set they replace, and with
+       no cross-origin round trip in the critical path. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/archivo.woff2" crossorigin />
 
   <!-- Icons -->
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -28,9 +28,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)" />
-  <meta name="color-scheme" content="dark light" />
+  
+  <meta name="theme-color" content="#F4F1EA" />
+  <meta name="color-scheme" content="light" />
 
   <!-- Primary SEO -->
   <title>Sangam Pratap Singh — Software Engineer & Open Source Contributor</title>
@@ -95,18 +95,6 @@
 
   <script defer src="https://cloud.umami.is/script.js" data-website-id="6b32c0a9-7f49-481a-8fc1-a95133286f30"></script>
 
-  <!-- Applies the saved theme before first paint so there is no flash. Must stay
-       inline and blocking; the same class drives the nav's theme icons. -->
-  <script>
-    try {
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    } catch (_) { }
-  </script>
-
   <!-- The prerendered markup carries Framer Motion's initial opacity:0. Without
        JS those elements would never animate in, so force them visible. -->
   <noscript>
@@ -120,6 +108,7 @@
 </head>
 
 <body>
+
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>

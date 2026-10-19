@@ -40,12 +40,18 @@ export const SITE = {
   },
 } as const;
 
-/** Ordered list of in-page sections. Drives nav, anchors and the sitemap. */
+/**
+ * The home page's sections, in order. This is the ONLY place these ids are
+ * written: Home.tsx renders them and structuredData.ts emits them as jump
+ * links, so the two cannot drift. They did drift — the graph advertised
+ * #about, #experience, #projects and #contact while the DOM had none of them.
+ */
 export const SECTIONS = [
-  { id: 'about', label: 'about', heading: 'About Sangam Pratap Singh', num: '00' },
-  { id: 'experience', label: 'experience', heading: 'Work experience', num: '01' },
-  { id: 'projects', label: 'projects', heading: 'Selected projects', num: '02' },
-  { id: 'contact', label: 'contact', heading: 'Contact', num: '03' },
+  { id: 'who', label: 'intro', heading: 'Sangam Pratap Singh' },
+  { id: 'exp', label: 'experience', heading: 'Experience' },
+  { id: 'work', label: 'work', heading: 'Selected projects' },
+  { id: 'photos', label: 'photos', heading: 'Photography' },
+  { id: 'say-hi', label: 'contact', heading: 'Contact' },
 ] as const;
 
 export const SKILLS = [
@@ -67,6 +73,10 @@ export interface Experience {
   company: string;
   companyUrl: string;
   role: string;
+  /** City, where it is worth naming. */
+  location?: string;
+  /** The one line from this job that is worth setting at scale. */
+  claim: string;
   points: ExperiencePoint[];
   stack: string[];
 }
@@ -78,12 +88,15 @@ export const EXPERIENCES: Experience[] = [
     endDate: null,
     company: 'Retsguide',
     companyUrl: 'https://retsguide.dk/',
-    role: 'Software Engineer Intern (Full Stack)',
+    role: 'Software Engineer Intern (Founding Engineer)',
+    location: 'Copenhagen',
+    claim: 'I build the legal knowledge graph the reports rest on, and no model is allowed to write to it.',
     points: [
-      { href: null, label: null, text: 'Owned three customer-facing application flows end-to-end, from design to deployment' },
-      { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations on production' },
-      { href: null, label: null, text: 'Built modular REST services with state-machine transitions and an AI-assisted document-classification pipeline' },
-      { href: null, label: null, text: 'Cut server response time from 2s+ to 150ms by restructuring the SSR data path' },
+      { href: null, label: null, text: 'Shipped three customer-facing flows end to end — research and schema design through production' },
+      { href: null, label: null, text: 'Building the legal knowledge graph the product’s reports rest on, with no model permitted to write to it, so every claim traces back to the provision version it stands on' },
+      { href: null, label: null, text: 'Built the document pipeline behind eligibility checks: OCR reads the PDF, a model classifies and extracts, and code — not the model — applies the statutory formula' },
+      { href: null, label: null, text: 'Designed the Prisma/PostgreSQL schema and ran live-data-preserving migrations against production' },
+      { href: null, label: null, text: 'Cut server response time from over 2s to 150ms by restructuring the SSR data path' },
     ],
     stack: ['TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Prisma', 'Azure'],
   },
@@ -94,6 +107,7 @@ export const EXPERIENCES: Experience[] = [
     company: 'KDE Plasma',
     companyUrl: 'https://kde.org/',
     role: 'Open Source Contributor',
+    claim: 'Five patches merged into Plasma, and the work was picked up in This Week in Plasma.',
     points: [
       {
         href: 'https://invent.kde.org/plasma/plasma-workspace/-/merge_requests/6280',
@@ -135,6 +149,8 @@ export const EXPERIENCES: Experience[] = [
     company: 'OpenSphere',
     companyUrl: 'https://opensphere.ai/',
     role: 'Software Development Intern',
+    location: 'San Francisco',
+    claim: 'Built the concurrent WebSocket service behind real-time threaded commenting in the editor.',
     points: [
       { href: null, label: null, text: 'Built concurrent WebSocket service powering real-time threaded commenting in the text editor' },
       { href: null, label: null, text: 'Reworked drafting workflow, removing a redundant data-filing stage and doubling throughput' },
@@ -145,108 +161,6 @@ export const EXPERIENCES: Experience[] = [
   },
 ];
 
-export interface Project {
-  index: string;
-  title: string;
-  description: string;
-  stack: string[];
-  github: string;
-  live: string;
-  youtube: string;
-  /** Bento column span on the 5-column desktop grid. */
-  span: 2 | 3 | 5;
-}
-
-export const PROJECTS: Project[] = [
-  {
-    index: '01',
-    title: 'Ephemeris',
-    description:
-      'A daily planner, habit tracker and journal that asks for thirty seconds an evening. Name the blocks of a good day, record which ones happened, keep a streak and a Markdown diary, and get one email at dusk in your own time zone. Gemini summarises a day or reviews a week from your own entries.',
-    stack: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Gemini', 'Resend'],
-    github: 'https://github.com/Random-Pikachu/ephemeris-client',
-    live: 'https://ephemeris.random-pikachu.dev/',
-    youtube: '',
-    span: 5,
-  },
-  {
-    index: '02',
-    title: 'CodeRivals',
-    description:
-      'A real-time 1v1 competitive coding platform where players duel in live matches and strategically deploy power cards to influence round outcomes.',
-    stack: ['React', 'SpacetimeDB', 'AWS EC2', 'Monaco Editor'],
-    github: 'https://github.com/Sypher845/code-rivals',
-    live: 'https://code-rivals-six.vercel.app/',
-    youtube: 'https://www.youtube.com/watch?v=mmFpLflQln4',
-    span: 3,
-  },
-  {
-    index: '03',
-    title: 'Astra',
-    description:
-      'A desktop tool that scans your code for security risks. It checks your project dependencies against vulnerability databases and uses AI to automatically suggest fixes, saving you from manual patching.',
-    stack: ['Electron', 'React', 'Gemini CLI', 'Tree-Sitter', 'Socket.io'],
-    github: 'https://github.com/Random-Pikachu/Astra',
-    live: '',
-    youtube: 'https://youtu.be/XFiMSWMZ4KU',
-    span: 2,
-  },
-  {
-    index: '04',
-    title: 'DevTrackr',
-    description:
-      'Go service with PostgreSQL and REST APIs that aggregates user activity from platforms like GitHub, LeetCode, and Codeforces, and delivers daily digests.',
-    stack: ['Go', 'PostgreSQL', 'React', 'Github/LC/CF APIs'],
-    github: 'https://github.com/Random-Pikachu/DevTrackr-Backend',
-    live: 'https://devtrackr-hci.vercel.app/',
-    youtube: 'https://youtu.be/kUKd9O6k4Zg',
-    span: 2,
-  },
-  {
-    index: '05',
-    title: 'GitStory',
-    description:
-      'AI-powered tool designed to visualize and analyze GitHub repositories through a conversational interface. It renders rich, interactive components such as commit timelines, pull request summaries, diff viewers, and risk heatmaps.',
-    stack: ['React', 'TamboAI', 'Tailwind'],
-    github: 'https://github.com/Random-Pikachu/GitStory',
-    live: 'https://git-story-tan.vercel.app/',
-    youtube: '',
-    span: 3,
-  },
-  {
-    index: '06',
-    title: 'SecurePDF',
-    description:
-      "An offline desktop tool that locks PDFs to a specific computer so they can't be shared. It uses hardware binding and time limits to control access, while completely disabling printing and copying to prevent leaks.",
-    stack: ['Python', 'Fernet', 'PyMuPDF', 'CustomTkinter'],
-    github: 'https://github.com/Random-Pikachu/SecurePDF',
-    live: 'https://secure-pdf-five.vercel.app/',
-    youtube: '',
-    span: 3,
-  },
-  {
-    index: '07',
-    title: 'Code-Sync',
-    description:
-      'A collaborative code editor that works like Google Docs for developers. It lets you write code with friends in real-time, see their cursor position in the editor, and run code using Judge0.',
-    stack: ['React', 'Socket.io', 'Node.js', 'MongoDB', 'Monaco Editor'],
-    github: 'https://github.com/Random-Pikachu/Code-Sync',
-    live: 'https://codesync-v8bl.onrender.com/',
-    youtube: '',
-    span: 2,
-  },
-  {
-    index: '08',
-    title: 'Sorting Visualizer',
-    description:
-      'Interactive visualizer for sorting algorithms. Watch Merge Sort, Quick Sort and more in real-time.',
-    stack: ['React'],
-    github: 'https://github.com/Random-Pikachu/Sorting-Visualizer-v2',
-    live: 'https://random-pikachu.github.io/Sorting-Visualizer-v2/',
-    youtube: '',
-    span: 5,
-  },
-];
 
 /** Everything the Person entity claims expertise in, deduped across sections. */
 export const KNOWS_ABOUT = [

@@ -26,3 +26,9 @@ dist-ssr
 # Raw photography originals — derivatives in public/photos are what ship.
 # NOTE: these are NOT backed up by git. Keep your own copy.
 photos-raw
+
+# Local-only working notes (never committed)
+docs/PRIVATE-NOTES.md
+
+# Phase 1 lab build output
+dist-ssr

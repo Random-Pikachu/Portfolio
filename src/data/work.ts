@@ -30,6 +30,9 @@ export interface Project {
   video?: string;
   featured?: boolean;
 
+  /** Hover preview on the work list. Absent where there is no screenshot. */
+  shot?: string;
+
   /** Case-study body. Present only on featured entries. */
   role?: string;
   problem?: string;
@@ -114,6 +117,7 @@ export const PROJECTS: Project[] = [
 
   {
     slug: 'astra',
+    shot: '/work/astra-700.webp',
     title: 'Astra',
     blurb:
       'Parses a repository with Tree-sitter, matches its dependencies against OSV.dev, and uses Gemini to write remediation patches that open as pull requests.',
@@ -167,6 +171,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'devtrackr',
+    shot: '/work/devtrackr-700.webp',
     title: 'DevTrackr',
     blurb:
       'A Go service that unifies the GitHub, LeetCode and Codeforces APIs into one normalised schema and mails a daily digest. Released to real users.',
@@ -178,6 +183,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'gitstory',
+    shot: '/work/gitstory-700.webp',
     title: 'GitStory',
     blurb:
       'A conversational interface over a GitHub repository that answers with commit timelines, diff viewers and risk heatmaps rather than paragraphs.',
@@ -188,6 +194,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'securepdf',
+    shot: '/work/securepdf-700.webp',
     title: 'SecurePDF',
     blurb:
       'An offline tool that binds a PDF to one machine with hardware fingerprinting and time limits, with printing and copying disabled.',
@@ -198,6 +205,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'code-sync',
+    shot: '/work/code-sync-700.webp',
     title: 'Code-Sync',
     blurb:
       'A collaborative editor with live cursors and Judge0 execution. Google Docs, for code.',
@@ -208,6 +216,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'sorting-visualizer',
+    shot: '/work/sorting-visualizer-700.webp',
     title: 'Sorting Visualizer',
     blurb: 'Merge, quick and the rest, animated step by step.',
     year: '2024',

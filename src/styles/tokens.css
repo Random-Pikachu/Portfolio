@@ -1,86 +1,39 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   The site is one document set as a technical paper: numbered sections, a
-   live margin carrying citations and figures, and line numbers down the left
-   edge — which is both legal pleading paper and a code listing, the two
-   things this work sits between.
-
-   Dark by default. Ratios computed, not estimated.
+   Creative portfolio. Near-black, one amber, oversized type, and every
+   interaction doing something. Single theme on purpose: this look commits,
+   and a light variant would halve the contrast the whole thing runs on.
    ────────────────────────────────────────────────────────────────────────── */
 
-:root,
-:root[data-theme='dusk'] {
+:root {
   color-scheme: dark;
-  --bg:     #0B0B0C;
-  --raised: #131315;
-  --text:   #E8E6E1;  /* 15.8:1 — warm white, paper rather than screen */
-  --muted:  #A3A099;  /*  7.5:1 */
-  --faint:  #767269;  /*  4.1:1 — metadata only */
-  --accent: #E8A34D;  /*  9.2:1 */
-  --gutter: #45423D;  /*  2.0:1 — line numbers, decorative by design */
-  --rule:   #1E1E20;
-  --rule-2: #161618;
-  --mark:   #1A1713;  /* cited-passage highlight */
-}
 
-:root[data-theme='lastlight'] {
-  color-scheme: light;
-  --bg:     #FAF9F6;
-  --raised: #FFFFFF;
-  --text:   #15140F;  /* 17.5:1 */
-  --muted:  #4F4C44;  /*  8.1:1 */
-  --faint:  #737068;  /*  4.7:1 */
-  --accent: #A8520E;  /*  5.1:1 */
-  --gutter: #B8B4AA;  /*  2.0:1 */
-  --rule:   #E4E1DA;
-  --rule-2: #EFEDE7;
-  --mark:   #F5EEE2;
-}
+  --ink:    #0A0A0A;
+  --ink-2:  #121211;
+  --ink-3:  #1C1B19;
+  --paper:  #F2F0EB;   /* 17.0:1 on ink */
+  --muted:  #A8A49B;   /*  8.0:1 */
+  --faint:  #6E6A62;   /*  3.6:1 — decorative and large only */
+  --accent: #E3B23C;   /* 10.6:1 */
+  --line:   #232220;
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme='dusk']) {
-    color-scheme: light;
-    --bg: #FAF9F6; --raised: #FFFFFF; --text: #15140F; --muted: #4F4C44;
-    --faint: #737068; --accent: #A8520E; --gutter: #B8B4AA;
-    --rule: #E4E1DA; --rule-2: #EFEDE7; --mark: #F5EEE2;
-  }
-}
+  --display: 'Bricolage Grotesque', 'Arial Black', sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-/* ─── Type ─────────────────────────────────────────────────────────────────
-   Source Serif 4 sets the prose: it was drawn for long-form technical reading
-   on screen, which is exactly what this is. Everything structural — section
-   numbers, line numbers, citations, data, captions — is JetBrains Mono, so
-   the apparatus is always visibly distinct from the argument.
-   ────────────────────────────────────────────────────────────────────────── */
-:root {
-  --serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
-  --mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Display sizes are viewport-relative on purpose: the type is the layout. */
+  --t-mega:  clamp(54px, 13.5vw, 230px);
+  --t-huge:  clamp(40px, 8.5vw, 140px);
+  --t-big:   clamp(28px, 4.6vw, 76px);
+  --t-mid:   clamp(20px, 2.2vw, 32px);
+  --t-body:  clamp(15px, 1.15vw, 18px);
+  --t-meta:  12px;
 
-  --t-body:    16.5px;
-  --t-lead:    19px;    /* the one sentence each section opens on */
-  --t-abstract: 20px;
-  --t-small:   14px;
-  --t-note:    11.5px;  /* margin notes, captions */
-  --t-label:   11px;    /* section labels, running head */
-  --t-num:     10.5px;  /* the gutter */
+  --pad: clamp(18px, 4vw, 56px);
 
-  /* Line height is load-bearing: the gutter numbers are spaced to exactly
-     this, which is what makes them line up with the prose. */
-  --lh: 1.75;
-  --lh-px: 28.875px;    /* 16.5 × 1.75, kept in sync by the gutter component */
-
-  --col-gutter: 46px;
-  --col-body:   560px;
-  --col-margin: 210px;
-  --gap:        34px;
-
-  --s1: 4px; --s2: 8px; --s3: 14px; --s4: 22px; --s5: 34px; --s6: 56px; --s7: 88px;
-}
-
-:root {
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --fast: 110ms;
-  --base: 220ms;
-  --slow: 420ms;
+  --ease:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:  cubic-bezier(0.7, 0, 0.84, 0);
+  --fast: 180ms;
+  --base: 420ms;
+  --slow: 900ms;
 }
 
 @media (prefers-reduced-motion: reduce) {

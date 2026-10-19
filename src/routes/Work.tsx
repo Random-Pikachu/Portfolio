@@ -9,15 +9,15 @@ export default function Work() {
       <div className="wrap">
         <Reveal as="header" className="shead">
           <div className="shead-row">
-            <p className="tag">Index</p>
+            <p className="tag">All projects</p>
             <span className="mono" style={{ color: 'var(--fg-3)' }}>
-              {PROJECTS.length} projects · 2024 — 2026
+              {PROJECTS.length} of them, 2024 to 2026
             </span>
           </div>
-          <h1 className="h1" id="idx">Everything, newest first.</h1>
+          <h1 className="h1" id="idx">Ten projects.</h1>
           <p className="lead">
-            Three of these have a case study behind them. The rest are a link to
-            the source and a link to the thing running.
+            Three have a write-up behind them. The rest are a link to the source
+            and a link to the thing running.
           </p>
         </Reveal>
 

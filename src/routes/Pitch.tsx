@@ -47,7 +47,7 @@ export default function Pitch() {
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row"><p className="tag">Worth your time</p></div>
-            <h2 className="h2" id="worth">Three things, if you only read three.</h2>
+            <h2 className="h2" id="worth">Start with these three.</h2>
           </Reveal>
           <ul className="rows">
             {slugs.map((s, i) => {
@@ -77,7 +77,7 @@ export default function Pitch() {
       <section className="sec sec--tight" aria-labelledby="refs">
         <div className="wrap">
           <Reveal>
-            <div className="shead-row"><p className="tag" id="refs">Where to find the rest</p></div>
+            <div className="shead-row"><p className="tag" id="refs">Everything else</p></div>
             <dl className="kv" style={{ borderTop: 0 }}>
               <div><dt>Email</dt><dd><a className="lnk" href={`mailto:${SITE.email}`}>{SITE.email}</a></dd></div>
               <div><dt>Calendar</dt><dd><a className="lnk" href={SITE.calendar} target="_blank" rel="noopener">Fifteen minutes, any time</a></dd></div>

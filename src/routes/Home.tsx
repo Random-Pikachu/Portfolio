@@ -6,10 +6,10 @@ import { PROJECTS } from '../data/work';
 import { PHOTOS } from '../data/photos';
 
 const FACTS = [
-  { k: 'Now', v: 'Founding engineer, Retsguide — Copenhagen' },
-  { k: 'Before', v: 'KDE Plasma · OpenSphere, San Francisco' },
-  { k: 'Works in', v: 'TypeScript · Go · C++ · Python' },
-  { k: 'Open to', v: 'Founding and AI engineering roles' },
+  { k: 'Right now', v: 'Founding engineer at Retsguide, Copenhagen' },
+  { k: 'Before that', v: 'KDE Plasma. OpenSphere, San Francisco.' },
+  { k: 'I write', v: 'TypeScript, Go, C++, Python' },
+  { k: 'Looking for', v: 'Founding and AI engineering roles' },
 ];
 
 /** Where the work actually landed. Set as text; inventing logos would be dress-up. */
@@ -39,17 +39,17 @@ export default function Home() {
       <section className="sec hero" aria-labelledby="who">
         <div className="wrap">
           <Reveal>
-            <p className="tag">Founding engineer · AI systems · Gwalior, India</p>
+            <p className="tag">Sangam Pratap Singh, Gwalior</p>
             <h1 className="display" id="who">
-              I build AI systems that aren’t allowed to be <span className="em">wrong</span>.
+              I build AI for legal work, so it has to be <span className="em">right</span>.
             </h1>
             <p className="lead">
-              Legal technology, where a confident hallucination is a liability
-              rather than a bug report. I am the founding engineer at Retsguide
-              in Copenhagen: three customer-facing flows shipped end to end, and
-              the knowledge graph underneath the product’s reports — which no
-              model is permitted to write to, so every claim traces back to the
-              provision it rests on.
+              The hard part was never the AI. It’s that a model which makes
+              things up is worse than no model at all. I’m the founding engineer
+              at Retsguide in Copenhagen: three customer-facing flows shipped
+              end to end, and the knowledge graph their reports sit on. Nothing
+              generated writes to that graph, so every claim points back at the
+              law it came from.
             </p>
             <div className="hero-cta">
               <Link className="btn" to="/work">
@@ -82,10 +82,10 @@ export default function Home() {
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row">
-              <p className="tag">01 — Where I have worked</p>
-              <span className="mono" style={{ color: 'var(--fg-3)' }}>2025 — now</span>
+              <p className="tag">Where I’ve worked</p>
+              <span className="mono" style={{ color: 'var(--fg-3)' }}>2025 to now</span>
             </div>
-            <h2 className="h2" id="exp">Three jobs, one habit: own it end to end.</h2>
+            <h2 className="h2" id="exp">Three places so far.</h2>
           </Reveal>
 
           <ul className="jobs">
@@ -127,10 +127,10 @@ export default function Home() {
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row">
-              <p className="tag">02 — Selected work</p>
+              <p className="tag">Projects</p>
               <Link className="mono lnk" to="/work">All {PROJECTS.length} →</Link>
             </div>
-            <h2 className="h2" id="work">Things I built, and still run.</h2>
+            <h2 className="h2" id="work">Stuff I’ve built.</h2>
           </Reveal>
 
           <ul className="tiles">
@@ -148,10 +148,10 @@ export default function Home() {
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row">
-              <p className="tag">03 — Away from the editor</p>
-              <Link className="mono lnk" to="/photography">All frames →</Link>
+              <p className="tag">Photos</p>
+              <Link className="mono lnk" to="/photography">All of them →</Link>
             </div>
-            <h2 className="h2" id="photos">The hour before the light goes.</h2>
+            <h2 className="h2" id="photos">Shot on a phone, mostly after five.</h2>
           </Reveal>
           <Reveal>
             <ul className="strip">

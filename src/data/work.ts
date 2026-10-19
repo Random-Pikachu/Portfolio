@@ -52,7 +52,7 @@ export const PROJECTS: Project[] = [
     featured: true,
     role: 'Sole author',
     problem:
-      'Forecasting a building’s electricity demand is two problems wearing one coat. There is a short, local pattern — a lift running, a floor switching its lights on — and a long, periodic one, the daily and weekly rhythm of a working building. A convolutional model reads the first well and loses the second. A plain Transformer attends across the whole window and smears the first. Most published hybrids claim to fix this and then compare themselves against baselines trained under different budgets, which proves nothing.',
+      'Forecasting a building’s electricity demand is two problems wearing one coat. There’s a short, local pattern — a lift running, a floor switching its lights on — and a long, periodic one, the daily and weekly rhythm of a working building. A convolutional model reads the first well and loses the second. A plain Transformer attends across the whole window and smears the first. Most published hybrids claim to fix this and then compare themselves against baselines trained under different budgets, which proves nothing.',
     built:
       'A multi-scale convolutional front end with four kernel widths reads local structure. A parallel FFT branch supplies the daily and weekly cycle directly in the frequency domain rather than asking attention to rediscover it. Cross-attention fuses the two before a Transformer encoder makes the prediction. The whole thing is trained on CU-BEMS: 11,486 hourly readings from a seven-storey office building.',
     decisions: [
@@ -87,7 +87,7 @@ export const PROJECTS: Project[] = [
     featured: true,
     role: 'Built it, run it on four repositories',
     problem:
-      'Paid PR review tools bill per seat and per repository, and the useful part of what they do is a diff, a prompt and somewhere to put the output. The hard part is not the review. It is that a free model tier will rate-limit you, go down, or quietly truncate a large diff and hand back a confident review of the half it managed to read.',
+      'Paid PR review tools bill per seat and per repository, and the useful part of what they do is a diff, a prompt and somewhere to put the output. The hard part is not the review. It’s that a free model tier will rate-limit you, go down, or quietly truncate a large diff and hand back a confident review of the half it managed to read.',
     built:
       'A GitHub Actions workflow triggered by a /review comment. It resolves a model from the command, then hands the job an ordered chain of fallbacks: free OpenRouter models first, then Groq, and paid Azure OpenAI only once everything above it has failed. The token budget is raised well past the default so a large diff is never silently pruned, and findings are capped and posted as one persistent comment rather than a new thread per run.',
     decisions: [
@@ -105,7 +105,7 @@ export const PROJECTS: Project[] = [
       },
       {
         claim: 'The token budget is raised rather than left at the default.',
-        why: 'The failure mode that matters is not an error. It is a review that silently covered sixty percent of the diff and said nothing about the rest.',
+        why: 'The failure mode that matters isn’t an error. It’s a review that silently covered sixty percent of the diff and said nothing about the rest.',
       },
     ],
     stats: [

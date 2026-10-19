@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { sun } from '../lib/sunState';
 
 /**
  * The time of day, driven by scroll position.
@@ -124,6 +125,14 @@ export default function Sundown() {
         '--dim',
         flip ? String(smooth(1 - Math.min(Math.abs(t - FLIP_AT) / 0.26, 1))) : '0',
       );
+
+      // How far into the night, for the star field. It starts at the moment
+      // the palette flips, not before: stars over a sunlit page would be a
+      // decoration rather than a time of day.
+      const from = anchors[FLIP_SEGMENT] +
+        (anchors[FLIP_SEGMENT + 1] - anchors[FLIP_SEGMENT]) * FLIP_AT;
+      const to = anchors[anchors.length - 1];
+      sun.night = smooth(clamp((y - from) / Math.max(to - from, 1), 0, 1));
     };
 
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(paint); };
@@ -153,6 +162,7 @@ export default function Sundown() {
       ro.disconnect();
       for (const k of KEYS) root.style.removeProperty(VAR[k]);
       root.style.removeProperty('--dim');
+      sun.night = 0;
     };
   }, []);
 

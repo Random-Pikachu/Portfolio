@@ -4,7 +4,7 @@ import { PHOTOS } from '../data/photos';
 
 export default function Photography() {
   const years = PHOTOS.map((p) => p.date.slice(0, 4)).filter(Boolean).map(Number);
-  const span = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
+  const span = years.length ? `${Math.min(...years)} to ${Math.max(...years)}` : '';
 
   return (
     <section className="sec" aria-labelledby="ph" data-sun="noon">
@@ -13,13 +13,13 @@ export default function Photography() {
           <div className="shead-row">
             <p className="tag">Plates</p>
             <span className="mono" style={{ color: 'var(--fg-3)' }}>
-              {PHOTOS.length} frames{span && ` · ${span}`}
+              {PHOTOS.length} frames{span && `, ${span}`}
             </span>
           </div>
-          <h1 className="h1" id="ph">The hour before the light goes.</h1>
+          <h1 className="h1" id="ph">Shot on a phone, mostly after five.</h1>
           <p className="lead">
-            All of it on a Nothing Phone&nbsp;(1), mostly late October, mostly
-            walking back across campus. Hover for colour, click to open.
+            All of it on a Nothing Phone&nbsp;(1), a lot of it walking back
+            across campus. Hover for colour, click to open.
           </p>
         </Reveal>
         <h2 className="sr-only">Gallery</h2>

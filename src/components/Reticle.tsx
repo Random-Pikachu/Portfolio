@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import Stars from './Stars';
 
 /**
  * The crosshair field, and the pointer lamp that relights it.
@@ -61,6 +62,7 @@ export default function Reticle() {
 
   return (
     <div className="field" aria-hidden="true">
+      <Stars />
       <div className="reticle" />
       <div className="glow" ref={glow} />
       <div className="lamp" ref={lamp} />

@@ -41,6 +41,8 @@ img { max-width: 100%; }
    phase by construction.
    ────────────────────────────────────────────────────────────────────────── */
 .field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+/* The sky sits behind the crosshairs, because it is behind everything. */
+.stars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .reticle, .lamp {
   position: absolute; inset: 0;
   -webkit-mask-image: var(--plus); mask-image: var(--plus);
@@ -227,6 +229,16 @@ img { max-width: 100%; }
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 @media (max-width: 760px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+
+/* The first one runs the full width. A grid where every cell is the same size
+   is a spreadsheet; giving the lead project more room is the whole reason to
+   have an order. */
+@media (min-width: 761px) {
+  .tiles > li:first-child { grid-column: 1 / -1; }
+  .tiles > li:first-child .tile-media { aspect-ratio: 2 / 1; }
+  .tiles > li:first-child .tile-ttl h3 { font-size: clamp(24px, 2.6vw, 38px); }
+  .tiles > li:first-child .tile-blurb { max-width: 62ch; font-size: var(--t-body); }
+}
 
 .tile { display: flex; flex-direction: column; height: 100%; }
 .tile-top {

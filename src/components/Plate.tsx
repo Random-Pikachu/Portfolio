@@ -30,7 +30,6 @@ function Forecast() {
   return (
     <svg viewBox="0 0 300 225" role="img"
          aria-label="Forty-eight hours of building load with the forecast horizon marked">
-      <rect width="300" height="225" fill="var(--shade)" />
       <g transform="translate(0 22.5)">
         {[45, 80, 115].map((y) => (
           <line key={y} x1="10" y1={y} x2="290" y2={y} stroke="var(--hair)" strokeWidth="1" />
@@ -61,7 +60,6 @@ function Chain() {
   return (
     <svg viewBox="0 0 300 225" role="img"
          aria-label="Eight model providers tried in order, the paid one last">
-      <rect width="300" height="225" fill="var(--shade)" />
       {CHAIN.map((label, i) => {
         const y = 20 + i * 24;
         const last = i === CHAIN.length - 1;

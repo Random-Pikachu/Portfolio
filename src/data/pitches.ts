@@ -51,8 +51,8 @@ export const PITCHES: Pitch[] = [
     note:
       "Documenso's whole point is that a signature can be proven rather than " +
       'asserted. I work from the same instinct on the other side of the ' +
-      'problem: I am a founding engineer at a Danish legal-tech startup where ' +
-      'I have built the product end to end, and the AI layer I am building now ' +
+      'problem: I’m a founding engineer at a Danish legal-tech startup where ' +
+      'I’ve built the product end to end, and the AI layer I’m building now ' +
       'is arranged so the model never gets the final say. Before that I landed ' +
       'five patches in KDE Plasma and shipped real-time collaborative editing ' +
       'at a startup in San Francisco, so open source and documents with many ' +

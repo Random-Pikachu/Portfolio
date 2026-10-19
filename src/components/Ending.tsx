@@ -14,23 +14,23 @@ export default function Ending() {
     <>
       <section className="band" data-sun="band" aria-hidden="true">
         <div className="band-inner">
-          <p className="band-line">And then the light goes.</p>
-          <p className="band-sub">Gwalior · Late October</p>
+          <p className="band-line">It gets dark around six.</p>
+          <p className="band-sub">Gwalior, late October</p>
         </div>
         <Arrow className="band-arrow" />
       </section>
 
       <section className="sec contact" aria-labelledby="say-hi">
         <div className="wrap">
-          <p className="tag">Say hello</p>
+          <p className="tag">Contact</p>
           <h2 className="display" id="say-hi" style={{ marginTop: 20 }}>
-            Let’s build the good version.
+            Email me.
           </h2>
           <p className="lead" style={{ marginTop: 26 }}>
-            Email is the fastest way to reach me and I answer the same day. If
-            you are hiring a founding or AI engineer, bring the hardest part of
-            the problem. If you just want to argue about retrieval, or show me
-            something you shot at golden hour, that works too.
+            I reply the same day, usually sooner. If you’re hiring a founding
+            or AI engineer, send me the worst part of the problem rather than
+            the job description. If you just want to argue about retrieval, or
+            show me something you shot, that’s fine too.
           </p>
 
           <a className="contact-mail" href={`mailto:${SITE.email}`}>{SITE.email}</a>
@@ -55,7 +55,7 @@ export default function Ending() {
           </dl>
 
           <p className="sendoff">
-            Thanks for coming this far — hope the light was good where you are.
+            That’s the whole site. Thanks for scrolling.
           </p>
         </div>
       </section>
@@ -64,7 +64,7 @@ export default function Ending() {
         <div className="wrap">
           <div className="foot-meta">
             <span>© {new Date().getFullYear()} Sangam Pratap Singh</span>
-            <span>Gwalior, India · Built in the open</span>
+            <span>Gwalior, India. Source on GitHub.</span>
           </div>
         </div>
         <p className="wordmark" aria-hidden="true">Sangam</p>

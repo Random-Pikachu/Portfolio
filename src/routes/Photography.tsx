@@ -7,7 +7,7 @@ export default function Photography() {
   const span = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
 
   return (
-    <section className="slab" aria-labelledby="ph">
+    <section className="sec" aria-labelledby="ph" data-sun="noon">
       <div className="wrap">
         <Reveal as="header" className="shead">
           <div className="shead-row">

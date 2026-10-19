@@ -1,75 +1,45 @@
 /* ─── Tokens ───────────────────────────────────────────────────────────────
-   Minimal ground, one accent, and a visible structure.
+   One ground, one accent, one hairline grid — and the whole palette moves as
+   you scroll, from a bright late-October afternoon down to after dark.
 
-   The page is a stack of full-bleed slabs that alternate between warm paper
-   and near-black, laid under a fixed reticle of crosshairs. Everything else —
-   type scale, spacing, the chamfer on a button — is derived from that, so the
-   site reads as drawn on a grid rather than assembled from components.
-
-   Contrast ratios in the comments are measured against the ground they sit
-   on, computed, not estimated.
+   Every colour on the page is one of six custom properties that
+   src/components/Sundown.tsx interpolates between five measured stops. Tints
+   and hairlines are derived from --fg with color-mix rather than interpolated
+   separately, so they follow the ramp for free and can never fall out of step
+   with it.
    ────────────────────────────────────────────────────────────────────────── */
 
 :root {
   color-scheme: light;
 
-  /* ── Ground ── */
-  --paper:    #F3F0E9;
-  --paper-2:  #E9E5DB;   /* raised panels, inputs, chips */
-  --rule:     #D8D3C6;   /* hairlines on paper */
-  --rule-2:   #CFC9BA;   /* hairlines that need to be seen */
+  /* Stop 0 — DAY. The values Sundown overwrites; also what a reader with no
+     JavaScript gets, which is why they are the most legible set. */
+  --bg:        #F4F1EA;
+  --fg:        #131210;  /* 16.6:1 */
+  --fg-2:      #4A443A;  /*  8.5:1 */
+  --fg-3:      #6E6659;  /*  5.0:1 */
+  --accent:    #B5390F;  /*  5.2:1 */
+  --on-accent: #F4F1EA;
 
-  --slab:     #15130F;   /* the dark slabs — 16.3:1 against paper */
-  --slab-2:   #1D1A15;
-  --rule-ink: #302B24;   /* hairlines on the slab */
+  /* Derived. These track --fg, so they flip with it at the sunset crossover
+     instead of drifting across it. */
+  --hair:   color-mix(in srgb, var(--fg) 15%, transparent);
+  --hair-2: color-mix(in srgb, var(--fg) 30%, transparent);
+  --shade:  color-mix(in srgb, var(--fg)  6%, transparent);
+  --cross:  color-mix(in srgb, var(--fg) 15%, transparent);
 
-  /* ── Ink on paper ── */
-  --ink:      #141210;   /* 16.4:1 */
-  --ink-2:    #4A443A;   /*  8.5:1 — body copy */
-  --ink-3:    #6E6659;   /*  5.0:1 — labels, captions */
+  /* ── Type ──
+     A geometric sans doing everything, a grid mono for every label, and one
+     italic serif that appears exactly once on the site. */
+  --sans:  'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
 
-  /* ── Ink on slab ── */
-  --on-ink:   #EFEBE2;   /* 15.6:1 */
-  --on-ink-2: #A49C8D;   /*  6.8:1 */
-  --on-ink-3: #8A8273;   /*  4.9:1 */
-
-  /* ── The one accent ── */
-  --ember:     #B5390F;  /*  5.2:1 on paper */
-  --ember-ink: #F2763C;  /*  6.6:1 on slab */
-  --ember-dk:  #8F2B08;  /*  5.1:1 on the deepest stop of the dusk gradient */
-  --ember-dim: rgb(181 57 15 / 0.14);
-
-  /* Last light. The page descends into this: paper at the top of the final
-     slab, October sun at the bottom. Every stop was measured, which is why the
-     gradient stops where it does — one step warmer and --fg-3 falls under 4.5. */
-  --dusk-1: #F3F0E9;
-  --dusk-2: #F7E7CE;
-  --dusk-3: #F2D5A8;
-  --dusk-4: #EBC489;
-  --sun:    #E8853C;
-
-  /* Resolved per-surface, so a component never has to know which slab it is
-     sitting on. Overridden once, on .slab--ink. */
-  --fg:      var(--ink);
-  --fg-2:    var(--ink-2);
-  --fg-3:    var(--ink-3);
-  --bg:      var(--paper);
-  --hair:    var(--rule);
-  --hair-2:  var(--rule-2);
-  --accent:  var(--ember);
-
-  /* ── Type ── */
-  --display: 'Bricolage Grotesque', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --sans:    'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --serif:   'Instrument Serif', Georgia, 'Times New Roman', serif;
-  --mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-
-  /* One scale, used everywhere. Nothing is sized ad hoc. */
-  --t-display: clamp(44px, 8.4vw, 124px);
-  --t-h1:      clamp(32px, 5vw, 72px);
-  --t-h2:      clamp(26px, 3.3vw, 46px);
-  --t-h3:      clamp(19px, 1.8vw, 27px);
-  --t-lead:    clamp(17px, 1.45vw, 21px);
+  --t-display: clamp(44px, 8vw, 118px);
+  --t-h1:      clamp(32px, 4.8vw, 68px);
+  --t-h2:      clamp(26px, 3.2vw, 44px);
+  --t-h3:      clamp(19px, 1.75vw, 26px);
+  --t-lead:    clamp(17px, 1.4vw, 21px);
   --t-body:    clamp(15.5px, 1.05vw, 17px);
   --t-small:   14px;
   --t-mono:    12px;
@@ -77,9 +47,8 @@
 
   /* ── Space ── */
   --pad:  clamp(20px, 5vw, 80px);
-  --maxw: 1320px;
-  --cell: 76px;          /* the reticle pitch; corner brackets echo it */
-  --chamf: 11px;         /* the corner cut on every button and framed tile */
+  --maxw: 1360px;
+  --cell: 76px;   /* the crosshair pitch */
 
   /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -88,43 +57,16 @@
   --base: 420ms;
   --slow: 760ms;
 
-  /* The crosshair glyph, in three forms.
-     --plus is an alpha mask, used by the pointer lamp, which needs to paint
-     the mark in ember. The two tinted copies are ordinary backgrounds, laid on
-     each slab with background-attachment:fixed so every slab shares one phase
-     with the viewport-fixed lamp. They sit behind the text rather than over
-     it, which the mask version could not do without the dark slabs covering
-     it up. */
+  /* How far through the sunset crossover the page is: 0 at either end, 1 at
+     the moment the palette flips. The only thing on screen there fades with
+     it, which is what turns an unavoidable contrast dip into the point. */
+  --dim: 0;
+
   --plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='black' stroke-width='1.1' fill='none'/></svg>");
-  --plus-dark: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='black' stroke-opacity='0.14' stroke-width='1.1' fill='none'/></svg>");
-  --plus-light: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='76' height='76'><path d='M38 32.5v11M32.5 38h11' stroke='white' stroke-opacity='0.15' stroke-width='1.1' fill='none'/></svg>");
-  --plus-img: var(--plus-dark);
-}
-
-.slab--ink {
-  --fg:     var(--on-ink);
-  --fg-2:   var(--on-ink-2);
-  --fg-3:   var(--on-ink-3);
-  --bg:     var(--slab);
-  --hair:   var(--rule-ink);
-  --hair-2: #3A342B;
-  --accent: var(--ember-ink);
-  --plus-img: var(--plus-light);
-  color-scheme: dark;
-}
-
-/* The golden-hour slab. Text tones step darker to hold 4.5:1 against the
-   warmest stop rather than against the paper the rest of the site uses. */
-.slab--dusk {
-  --fg:     var(--ink);
-  --fg-2:   #4A443A;   /* 5.9:1 at the warmest stop */
-  --fg-3:   #4A443A;
-  --bg:     transparent;
-  --hair:   rgb(20 18 16 / 0.15);
-  --hair-2: rgb(20 18 16 / 0.28);
-  --accent: var(--ember-dk);
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root { --fast: 0ms; --base: 0ms; --slow: 0ms; }
 }
+
+@media (max-width: 680px) { :root { --cell: 62px; } }

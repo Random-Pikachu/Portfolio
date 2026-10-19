@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal';
-import Plate from '../components/Plate';
-import { DRAWN, PROJECTS } from '../data/work';
+import Tile from '../components/Tile';
+import { PROJECTS } from '../data/work';
 
 export default function Work() {
   return (
-    <section className="slab" aria-labelledby="idx">
+    <section className="sec" aria-labelledby="idx" data-sun="noon">
       <div className="wrap">
         <Reveal as="header" className="shead">
           <div className="shead-row">
@@ -21,40 +21,21 @@ export default function Work() {
           </p>
         </Reveal>
 
-        <ul className="work">
+        <ul className="tiles">
           {PROJECTS.map((p, i) => (
-            <Reveal as="li" key={p.slug} delay={Math.min(i, 6) * 40}>
-              <div className="row">
-                <span className="row-n">{String(i + 1).padStart(2, '0')}</span>
-                <span>
-                  <span className="row-title">
-                    {p.featured ? <Link className="lnk" to={`/work/${p.slug}`} style={{ color: 'inherit' }}>{p.title}</Link> : p.title}
-                  </span>
-                  <span className="row-blurb">{p.blurb}</span>
-                  <span className="row-stack">{p.stack.join(' · ')}</span>
-                  <span className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 18px', marginTop: 14 }}>
-                    {p.featured && <Link className="lnk" to={`/work/${p.slug}`}>Case study →</Link>}
-                    {p.github && <a className="lnk" href={p.github} target="_blank" rel="noopener">Source</a>}
-                    {p.live && <a className="lnk" href={p.live} target="_blank" rel="noopener">Live</a>}
-                    {p.video && <a className="lnk" href={p.video} target="_blank" rel="noopener">Demo</a>}
-                  </span>
-                </span>
-                {(p.shot || DRAWN.has(p.slug)) && (
-                  <span className="peek">
-                    <span className="peek-frame brk">
-                      {p.shot
-                        ? <img src={p.shot} alt="" loading="lazy" width="700" height="440" />
-                        : <Plate slug={p.slug} />}
-                    </span>
-                  </span>
-                )}
-                <span className="row-right">
-                  <span className="row-year">{p.year}</span>
-                </span>
-              </div>
+            <Reveal as="li" key={p.slug} delay={Math.min(i, 3) * 60}>
+              <Tile p={p} n={i + 1} />
             </Reveal>
           ))}
         </ul>
+
+        <Reveal>
+          <p className="mono" style={{ marginTop: 'clamp(34px,5vh,56px)', color: 'var(--fg-3)' }}>
+            Source for most of it is on{' '}
+            <a className="lnk" href="https://github.com/Random-Pikachu" target="_blank" rel="noopener">GitHub</a>.{' '}
+            <Link className="lnk" to="/">Back to the start</Link>.
+          </p>
+        </Reveal>
       </div>
     </section>
   );

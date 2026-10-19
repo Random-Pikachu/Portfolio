@@ -1,21 +1,30 @@
+import Arrow from './Arrow';
 import { SITE } from '../data/site';
 
 /**
- * Last light.
+ * The end of the day.
  *
- * Every page ends here: the gradient walks from the same paper the site opens
- * on down into an October evening, the sun sits on a hairline horizon, and the
- * name is cropped by the bottom of the screen. It is the one part of the site
- * that is not trying to prove anything.
+ * The band is the crossover: it is sized and spaced so that it is the only
+ * thing on screen while the palette steps from day to night, and its contents
+ * fade with `--dim` as that happens. Everything after it is lit by what is
+ * left of the sun, low behind the name.
  */
 export default function Ending() {
   return (
-    <div className="dusk">
-      <section className="slab slab--dusk contact" aria-labelledby="say-hi">
+    <>
+      <section className="band" data-sun="band" aria-hidden="true">
+        <div className="band-inner">
+          <p className="band-line">And then the light goes.</p>
+          <p className="band-sub">Gwalior · Late October</p>
+        </div>
+        <Arrow className="band-arrow" />
+      </section>
+
+      <section className="sec contact" aria-labelledby="say-hi">
         <div className="wrap">
-          <p className="tag">Last light — say hello</p>
+          <p className="tag">Say hello</p>
           <h2 className="display" id="say-hi" style={{ marginTop: 20 }}>
-            Let’s build the <span className="em">good</span> version.
+            Let’s build the good version.
           </h2>
           <p className="lead" style={{ marginTop: 26 }}>
             Email is the fastest way to reach me and I answer the same day. If
@@ -26,21 +35,21 @@ export default function Ending() {
 
           <a className="contact-mail" href={`mailto:${SITE.email}`}>{SITE.email}</a>
 
-          <dl className="contact-grid">
+          <dl className="facts">
             <div className="fact">
-              <dt>Calendar</dt>
+              <dt>Calendar</dt><span className="fact-dots" aria-hidden="true" />
               <dd><a className="lnk" href={SITE.calendar} target="_blank" rel="noopener">Fifteen minutes</a></dd>
             </div>
             <div className="fact">
-              <dt>GitHub</dt>
+              <dt>GitHub</dt><span className="fact-dots" aria-hidden="true" />
               <dd><a className="lnk" href={SITE.profiles.github} target="_blank" rel="noopener">Random-Pikachu</a></dd>
             </div>
             <div className="fact">
-              <dt>LinkedIn</dt>
+              <dt>LinkedIn</dt><span className="fact-dots" aria-hidden="true" />
               <dd><a className="lnk" href={SITE.profiles.linkedin} target="_blank" rel="noopener">sangam21</a></dd>
             </div>
             <div className="fact">
-              <dt>KDE</dt>
+              <dt>KDE</dt><span className="fact-dots" aria-hidden="true" />
               <dd><a className="lnk" href={SITE.profiles.kde} target="_blank" rel="noopener">invent.kde.org</a></dd>
             </div>
           </dl>
@@ -60,6 +69,6 @@ export default function Ending() {
         </div>
         <p className="wordmark" aria-hidden="true">Sangam</p>
       </footer>
-    </div>
+    </>
   );
 }

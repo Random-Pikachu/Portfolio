@@ -1,8 +1,11 @@
 /**
- * Hover previews for the two featured projects that have no screenshot,
- * because neither of them has a UI worth showing — one is a model, the other
- * is a workflow file. Both are drawn by hand rather than generated, so each
- * says something specific about the project instead of being texture.
+ * Hover plates for the two featured projects with no screenshot, because
+ * neither of them has an interface worth photographing — one is a model, the
+ * other is a workflow file. Both are drawn by hand so each says something
+ * specific about its project rather than being texture.
+ *
+ * The viewBox is 4:3 to match the tile frame exactly: object-fit does not
+ * apply to an inline SVG, so the aspect ratio has to be right at the source.
  */
 
 const ACTUAL =
@@ -20,23 +23,30 @@ const PRED =
   'L236.4 34.0 L242.3 24.5 L248.3 35.3 L254.3 67.9 L260.2 89.2 L266.2 92.7 L272.1 104.9 ' +
   'L278.1 123.2 L284.0 122.5 L290.0 113.8';
 
-/** 48 hours of building load, with the forecast origin marked. */
+const MONO = 'Geist Mono, ui-monospace, monospace';
+
+/** Forty-eight hours of building load, with the forecast origin marked. */
 function Forecast() {
   return (
-    <svg viewBox="0 0 300 180" role="img" aria-label="Forty-eight hours of building load with the forecast horizon marked">
-      <rect width="300" height="180" fill="var(--paper-2)" />
-      {[45, 80, 115].map((y) => (
-        <line key={y} x1="10" y1={y} x2="290" y2={y} stroke="var(--rule)" strokeWidth="1" />
-      ))}
-      <line x1="153" y1="10" x2="153" y2="170" stroke="var(--ember)" strokeWidth="1" strokeDasharray="3 3" />
-      <path d={ACTUAL} fill="none" stroke="var(--ink-2)" strokeWidth="1.5"
-            strokeLinejoin="round" strokeLinecap="round" />
-      <path d={PRED} fill="none" stroke="var(--ember)" strokeWidth="2"
-            strokeLinejoin="round" strokeLinecap="round" />
-      <text x="158" y="22" fontFamily="JetBrains Mono, monospace" fontSize="9" letterSpacing="1"
-            fill="var(--ember)">FORECAST →</text>
-      <text x="12" y="166" fontFamily="JetBrains Mono, monospace" fontSize="9" letterSpacing="1"
-            fill="var(--ink-3)">48 H</text>
+    <svg viewBox="0 0 300 225" role="img"
+         aria-label="Forty-eight hours of building load with the forecast horizon marked">
+      <rect width="300" height="225" fill="var(--shade)" />
+      <g transform="translate(0 22.5)">
+        {[45, 80, 115].map((y) => (
+          <line key={y} x1="10" y1={y} x2="290" y2={y} stroke="var(--hair)" strokeWidth="1" />
+        ))}
+        <line x1="153" y1="10" x2="153" y2="170" stroke="var(--accent)" strokeWidth="1" strokeDasharray="3 3" />
+        <path d={ACTUAL} fill="none" stroke="var(--fg-2)" strokeWidth="1.5"
+              strokeLinejoin="round" strokeLinecap="round" />
+        <path d={PRED} fill="none" stroke="var(--accent)" strokeWidth="2.2"
+              strokeLinejoin="round" strokeLinecap="round" />
+        <text x="159" y="22" fontFamily={MONO} fontSize="9" letterSpacing="1" fill="var(--accent)">
+          FORECAST →
+        </text>
+        <text x="12" y="166" fontFamily={MONO} fontSize="9" letterSpacing="1" fill="var(--fg-3)">
+          48 H
+        </text>
+      </g>
     </svg>
   );
 }
@@ -49,21 +59,25 @@ const CHAIN = [
 /** The fallback chain, with the only paid link at the bottom. */
 function Chain() {
   return (
-    <svg viewBox="0 0 300 180" role="img" aria-label="Eight model providers tried in order, the paid one last">
-      <rect width="300" height="180" fill="var(--paper-2)" />
+    <svg viewBox="0 0 300 225" role="img"
+         aria-label="Eight model providers tried in order, the paid one last">
+      <rect width="300" height="225" fill="var(--shade)" />
       {CHAIN.map((label, i) => {
-        const y = 12 + i * 20;
+        const y = 20 + i * 24;
         const last = i === CHAIN.length - 1;
         return (
           <g key={i}>
-            <rect x="46" y={y} width="208" height="14" fill={last ? 'var(--ember)' : 'none'}
-                  stroke={last ? 'var(--ember)' : 'var(--rule-2)'} strokeWidth="1" />
-            <text x="54" y={y + 10.5} fontFamily="JetBrains Mono, monospace" fontSize="8.5" letterSpacing="0.8"
-                  fill={last ? 'var(--paper)' : 'var(--ink-3)'}>{label.toUpperCase()}</text>
-            {!last && <line x1="46" y1={y + 7} x2="254" y2={y + 7}
-                            stroke="var(--rule-2)" strokeWidth="1" />}
-            <text x="26" y={y + 10.5} fontFamily="JetBrains Mono, monospace" fontSize="8.5"
-                  fill={last ? 'var(--ember)' : 'var(--rule-2)'}>{`0${i + 1}`}</text>
+            <rect x="48" y={y} width="206" height="16"
+                  fill={last ? 'var(--accent)' : 'none'}
+                  stroke={last ? 'var(--accent)' : 'var(--hair-2)'} strokeWidth="1" />
+            <text x="57" y={y + 11.5} fontFamily={MONO} fontSize="8.5" letterSpacing="0.8"
+                  fill={last ? 'var(--on-accent)' : 'var(--fg-3)'}>
+              {label.toUpperCase()}
+            </text>
+            <text x="26" y={y + 11.5} fontFamily={MONO} fontSize="8.5"
+                  fill={last ? 'var(--accent)' : 'var(--hair-2)'}>
+              {`0${i + 1}`}
+            </text>
           </g>
         );
       })}

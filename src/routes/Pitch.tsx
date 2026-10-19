@@ -24,10 +24,10 @@ export default function Pitch() {
 
   return (
     <>
-      <section className="slab" aria-labelledby="pitch">
+      <section className="sec" aria-labelledby="pitch">
         <div className="wrap">
           <Reveal>
-            <p className="pitch-seal">Written for {pitch.company}</p>
+            <p className="seal">Written for {pitch.company}</p>
             <h1 className="display" id="pitch" style={{ marginTop: 22, maxWidth: '14ch' }}>
               {greeting}
             </h1>
@@ -43,13 +43,13 @@ export default function Pitch() {
         </div>
       </section>
 
-      <section className="slab slab--ink" aria-labelledby="worth">
+      <section className="sec" aria-labelledby="worth" data-sun="noon">
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row"><p className="tag">Worth your time</p></div>
             <h2 className="h2" id="worth">Three things, if you only read three.</h2>
           </Reveal>
-          <ul className="work">
+          <ul className="rows">
             {slugs.map((s, i) => {
               const p = PROJECT_BY_SLUG[s];
               if (!p) return null;
@@ -65,8 +65,7 @@ export default function Pitch() {
                     </span>
                     <span className="row-right">
                       <span className="row-year">{p.year}</span>
-                      <span className="row-go" aria-hidden="true">↗</span>
-                    </span>
+                      </span>
                   </a>
                 </Reveal>
               );
@@ -75,7 +74,7 @@ export default function Pitch() {
         </div>
       </section>
 
-      <section className="slab slab--tight" aria-labelledby="refs">
+      <section className="sec sec--tight" aria-labelledby="refs">
         <div className="wrap">
           <Reveal>
             <div className="shead-row"><p className="tag" id="refs">Where to find the rest</p></div>

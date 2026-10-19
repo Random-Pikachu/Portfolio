@@ -1,14 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * The pointer lamp: the page's crosshair field, repainted in ember inside a
- * disc that follows the cursor, over a soft pool of warm light.
+ * The crosshair field, and the pointer lamp that relights it.
  *
- * The field itself is painted by each slab with background-attachment:fixed,
- * so it sits behind the text. This layer is fixed and uses the same pitch,
- * which is what keeps the lit crosshairs on top of the unlit ones. The pointer position is lerped on a single rAF loop and written
- * straight to two CSS custom properties — no React state is involved, because
- * a state update per pointermove would re-render the entire page tree.
+ * Both layers are fixed and share one mask pitch, so they cannot drift out of
+ * phase. The pointer position is lerped on a single rAF loop and written
+ * straight to two custom properties — a state update per pointermove would
+ * re-render the whole page.
  */
 export default function Reticle() {
   const lamp = useRef<HTMLDivElement>(null);
@@ -42,7 +40,7 @@ export default function Reticle() {
 
     const tick = () => {
       // A light trail rather than a hard lock: the lag is what makes the field
-      // read as something being lit, instead of a cursor decoration.
+      // read as something being lit instead of a cursor decoration.
       at.x += (target.x - at.x) * 0.16;
       at.y += (target.y - at.y) * 0.16;
       const s = document.documentElement.style;
@@ -62,9 +60,10 @@ export default function Reticle() {
   }, []);
 
   return (
-    <>
-      <div className="glow" ref={glow} aria-hidden="true" />
-      <div className="lamp" ref={lamp} aria-hidden="true" />
-    </>
+    <div className="field" aria-hidden="true">
+      <div className="reticle" />
+      <div className="glow" ref={glow} />
+      <div className="lamp" ref={lamp} />
+    </div>
   );
 }

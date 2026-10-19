@@ -1,32 +1,27 @@
 import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal';
-import Plate from '../components/Plate';
+import Tile from '../components/Tile';
 import { EXPERIENCES, SITE } from '../data/site';
-import { DRAWN, PROJECTS } from '../data/work';
+import { PROJECTS } from '../data/work';
 import { PHOTOS } from '../data/photos';
 
-const PROOF = [
-  'Five patches merged into KDE Plasma',
-  'Featured in This Week in Plasma',
-  'SSR path, 2s → 150ms',
-  'B.Tech IT + MBA, ABV-IIITM Gwalior',
-];
-
 const FACTS = [
-  { k: 'Now', v: 'Founding engineer at Retsguide, Copenhagen' },
+  { k: 'Now', v: 'Founding engineer, Retsguide — Copenhagen' },
   { k: 'Before', v: 'KDE Plasma · OpenSphere, San Francisco' },
   { k: 'Works in', v: 'TypeScript · Go · C++ · Python' },
   { k: 'Open to', v: 'Founding and AI engineering roles' },
 ];
 
-/** The first six, in the order they deserve to be read. */
+/** Where the work actually landed. Set as text; inventing logos would be dress-up. */
+const MARKS = ['Retsguide', 'KDE Plasma', 'OpenSphere', 'This Week in Plasma', 'ABV-IIITM Gwalior'];
+
 const SHOWN = PROJECTS.slice(0, 6);
 
 /**
- * The strip runs small, and Sangam shoots almost everything after sunset, so
- * the frames here are the ones that still read at 300px tall — picked by
- * measured mean luminance, not by taste. The full set is on /photography,
- * where each one gets the room to be dark.
+ * The strip runs small and Sangam shoots almost everything after sunset, so
+ * these are the frames that still read at 300px tall — picked by measured mean
+ * luminance, not by taste. The full set is on /photography, where each one
+ * gets the room to be dark.
  */
 const STRIP_SLUGS = [
   'img-20240903-160828459', 'img-20251223-163648962', 'img-20250208-162232949',
@@ -41,10 +36,10 @@ export default function Home() {
   return (
     <>
       {/* ── Who ──────────────────────────────────────────────────────── */}
-      <section className="slab hero" aria-labelledby="who">
+      <section className="sec hero" aria-labelledby="who">
         <div className="wrap">
           <Reveal>
-            <p className="tag">Software engineer · AI systems · Gwalior, India</p>
+            <p className="tag">Founding engineer · AI systems · Gwalior, India</p>
             <h1 className="display" id="who">
               I build AI systems that aren’t allowed to be <span className="em">wrong</span>.
             </h1>
@@ -58,7 +53,7 @@ export default function Home() {
             </p>
             <div className="hero-cta">
               <Link className="btn" to="/work">
-                Read the work <span className="arr" aria-hidden="true">→</span>
+                See the work <span className="arr" aria-hidden="true">→</span>
               </Link>
               <a className="btn btn--ghost" href={`mailto:${SITE.email}`}>Email me</a>
             </div>
@@ -66,6 +61,7 @@ export default function Home() {
               {FACTS.map((f) => (
                 <div className="fact" key={f.k}>
                   <dt>{f.k}</dt>
+                  <span className="fact-dots" aria-hidden="true" />
                   <dd>{f.v}</dd>
                 </div>
               ))}
@@ -74,17 +70,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Proof ────────────────────────────────────────────────────── */}
-      <div className="proof">
-        <div className="wrap">
-          <ul>
-            {PROOF.map((p) => <li key={p}>{p}</li>)}
-          </ul>
-        </div>
+      {/* ── Where it landed ──────────────────────────────────────────── */}
+      <div className="wrap">
+        <ul className="marks">
+          {MARKS.map((m) => <li key={m}>{m}</li>)}
+        </ul>
       </div>
 
       {/* ── Experience ───────────────────────────────────────────────── */}
-      <section className="slab slab--ink" aria-labelledby="exp">
+      <section className="sec" aria-labelledby="exp">
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row">
@@ -100,8 +94,7 @@ export default function Home() {
                 <div className="job-aside">
                   <p className="job-when">{job.period}</p>
                   <p className="job-where">
-                    <a className="h3 lnk" href={job.companyUrl} target="_blank" rel="noopener"
-                       style={{ color: 'var(--fg)' }}>
+                    <a className="h3" href={job.companyUrl} target="_blank" rel="noopener">
                       {job.company}
                     </a>
                     <span className="job-role">
@@ -130,7 +123,7 @@ export default function Home() {
       </section>
 
       {/* ── Work ─────────────────────────────────────────────────────── */}
-      <section className="slab" aria-labelledby="work">
+      <section className="sec" aria-labelledby="work" data-sun="noon">
         <div className="wrap">
           <Reveal as="header" className="shead">
             <div className="shead-row">
@@ -140,62 +133,25 @@ export default function Home() {
             <h2 className="h2" id="work">Things I built, and still run.</h2>
           </Reveal>
 
-          <ul className="work">
-            {SHOWN.map((p, i) => {
-              const to = p.featured ? `/work/${p.slug}` : (p.live || p.github || '/work');
-              const external = !p.featured;
-              const Row = (
-                <>
-                  <span className="row-n">{String(i + 1).padStart(2, '0')}</span>
-                  <span>
-                    <span className="row-title">{p.title}</span>
-                    <span className="row-blurb">{p.blurb}</span>
-                    <span className="row-stack">{p.stack.join(' · ')}</span>
-                  </span>
-                  {(p.shot || DRAWN.has(p.slug)) && (
-                    <span className="peek">
-                      <span className="peek-frame brk">
-                        {p.shot
-                          ? <img src={p.shot} alt="" loading="lazy" width="700" height="440" />
-                          : <Plate slug={p.slug} />}
-                      </span>
-                      <span className="peek-cap">{p.year}</span>
-                    </span>
-                  )}
-                  <span className="row-right">
-                    {p.featured && <span className="row-case">Case study</span>}
-                    <span className="row-year">{p.year}</span>
-                    <span className="row-go" aria-hidden="true">↗</span>
-                  </span>
-                </>
-              );
-              return (
-                <Reveal as="li" key={p.slug} delay={Math.min(i, 5) * 50}>
-                  {external
-                    ? <a className="row" href={to} target="_blank" rel="noopener">{Row}</a>
-                    : <Link className="row" to={to}>{Row}</Link>}
-                </Reveal>
-              );
-            })}
+          <ul className="tiles">
+            {SHOWN.map((p, i) => (
+              <Reveal as="li" key={p.slug} delay={Math.min(i, 3) * 60}>
+                <Tile p={p} n={i + 1} />
+              </Reveal>
+            ))}
           </ul>
         </div>
       </section>
 
       {/* ── Photography ──────────────────────────────────────────────── */}
-      <section className="slab slab--raise" aria-labelledby="photos">
+      <section className="sec" aria-labelledby="photos">
         <div className="wrap">
-          <Reveal>
-            <div className="plates-head">
-              <div>
-                <p className="tag">03 — Away from the editor</p>
-                <h2 className="h2" id="photos" style={{ marginTop: 16, maxWidth: '16ch' }}>
-                  The hour before the light goes.
-                </h2>
-              </div>
-              <Link className="btn btn--ghost" to="/photography">
-                All frames <span className="arr" aria-hidden="true">→</span>
-              </Link>
+          <Reveal as="header" className="shead">
+            <div className="shead-row">
+              <p className="tag">03 — Away from the editor</p>
+              <Link className="mono lnk" to="/photography">All frames →</Link>
             </div>
+            <h2 className="h2" id="photos">The hour before the light goes.</h2>
           </Reveal>
           <Reveal>
             <ul className="strip">
@@ -205,7 +161,6 @@ export default function Home() {
                     src={`/photos/${ph.slug}-400.webp`}
                     alt={ph.alt || 'Photograph by Sangam Pratap Singh'}
                     width={ph.width} height={ph.height} loading="lazy" decoding="async"
-                    style={{ aspectRatio: `${ph.width} / ${ph.height}` }}
                   />
                 </li>
               ))}

@@ -1,6 +1,6 @@
 # Portfolio redesign — direction & structure
 
-Working document. Not committed yet. Decisions locked here before any code is written.
+Working document. Decisions are settled here before any code is written.
 
 ---
 
@@ -23,14 +23,14 @@ producing the same reaction. The fix is to leave the genre.
 
 ## 2. The content gap
 
-`src/data/site.ts` is significantly behind the resume. The missing material is the
+`src/data/site.ts` is significantly behind the resume, and the missing material is the
 strongest material.
 
 Wrong on the site:
 
 | Field | Site says | Resume says |
 |---|---|---|
-| Retsguide role | Software Engineer Intern (Full Stack) | Software Engineer Intern (**Founding Engineer**) |
+| Retsguide role | Software Engineer Intern (Full Stack) | **Founding Engineer** |
 | Retsguide location | — | Copenhagen, Denmark |
 | Headline metric | 2s → 150ms SSR data path | **124s → 6s** triage latency under Azure OpenAI outage |
 | OpenSphere location | — | San Francisco, CA |
@@ -67,73 +67,108 @@ Absent from the site entirely:
 
 > **Systems that have to be right.**
 
-The thread through all of it: work where correctness is externally verifiable, and
-he verified it.
+Work where correctness is externally verifiable — and he verified it.
 
-- KDE — reviewed by maintainers who owe him nothing, merged, shipping to millions
 - Retsguide — a legal citation must resolve to the provision in force on the case date
+- Retrieval — a 150-question gold set, three embedders and three rerankers benchmarked
+- Forecasting — a controlled ablation: same data, same loss, same training budget, 18 settings
+- KDE — reviewed by maintainers who owe him nothing, merged, shipping to millions
 - The circuit breaker — the system holds when the model provider does not
-- The ablation — same data, same loss, same training budget, 18 settings
 
-This is the identity a recruiter should leave with. Not "developer ✦ open source ✦
-cultured," which describes several million people.
+The ML/AI lead strengthens this rather than competing with it. What separates this ML
+work from every other student who built a RAG chatbot is not novelty — it is
+**measurement**. That is the lead.
 
-## 4. Structure
+## 4. Decisions locked
 
-Evidence before projects. Third-party proof outranks self-directed work.
-Strongest first, not chronological.
+| Decision | Choice |
+|---|---|
+| Direction | Native desktop / systems software, with tactile texture |
+| Lane | Unified, **ML/AI first** |
+| Audience | Mixed — readable by a recruiter in 30s, depth underneath for engineers |
+| Palette | **Light primary, with a dark toggle.** Both hold WCAG AA |
+| Retsguide title | **Founding Engineer** |
+| Photography | Stays at `/photography` |
+| Motion | Substantial — GSAP ScrollTrigger, micro-interactions, Torph text morphing |
+| Assets | KDE (public) + own projects + original diagrams. Retsguide UI assumed NDA until confirmed |
+| Architecture | Data-driven from commit one, to support `/for/<company>/<person>` |
+
+Note on the title: "Founding Engineer" is supported by the resume, which reads
+"Software Engineer Intern (Founding Engineer)". Keep the full phrasing on LinkedIn so a
+reference check lines up.
+
+## 5. Structure
+
+Evidence before projects. Strongest first, not chronological.
 
 ```
-0  IDENTITY          Status readout: who, where, current state.
-                     Credibility in the first three seconds.
+0  IDENTITY                     Status readout. Who, where, current state.
+                                Credibility inside three seconds.
 
-1  NOW               Retsguide, founding engineer, Copenhagen.
-                     The legal knowledge graph is the best story on the site.
-                     Numbers carry it: 958 provisions, 41 typed edits,
-                     MRR 0.54→0.84, 124s→6s.
+1  LAW AS DATA                  Retsguide: the temporal knowledge graph and the
+                                retrieval pipeline. The showpiece.
+                                958 provisions · 1,292 cross-references ·
+                                41 typed edits · MRR 0.54→0.84 · recall@10 0.79→0.92
+                                "Code, not the model, decides what counts as law."
 
-2  UPSTREAM          KDE. Five merged MRs, each linked, each with what it did
-                     and why it mattered. Featured in This Week in Plasma.
-                     Externally verifiable — this is the rarest asset here.
+2  MODELS, MEASURED             Energy forecasting and the controlled ablation.
+                                15 of 18 settings · MAE −10.4% · R² 0.88–0.97
+                                Amazon ML Challenge: top 50 of 32,000+.
 
-3  SELECTED WORK     Tiered, not eight equal cards.
-                     · Research   Energy forecasting (the ablation)
-                     · Tools      Astra
-                     · Products   Ephemeris, CodeRivals
-                     · Index      the remaining five, compact
+3  THE ENGINEERING UNDERNEATH   KDE upstream — 5 MRs, 3 projects, millions of users,
+                                featured in This Week in Plasma.
+                                Production hardening — circuit breaker 124s→6s,
+                                document pipeline, AI review agent across 4 repos.
+                                Proof this is not a notebook-only engineer.
 
-4  BEFORE THIS       OpenSphere, San Francisco. Short. Two facts.
+4  SELECTED WORK                Tiered, not eight equal cards.
+                                · Astra, Ephemeris, CodeRivals in depth
+                                · the remaining five as a compact index
+                                · OpenSphere (SF) folded in as prior work
 
-5  SIGNALS           Amazon ML top 50/32,000. HackByte finalist. Education.
-                     Photography as one line linking to /photography.
-
-6  CONTACT           cal.com as the real CTA. Email, resume, GitHub, LinkedIn.
+5  CONTACT                      cal.com as the real CTA. Email, resume, GitHub,
+                                LinkedIn. Education, HackByte and the photography
+                                link fold in here.
 ```
 
 Two deliberate calls:
 
 - **No numbered section markers.** These sections are not a sequence. Numbering them
   is decoration wearing the costume of information.
-- **"Now" separated from "Before this."** A uniform reverse-chronological list flattens
-  the current role into the same weight as a 2025 internship. It is not the same weight.
+- **Current work separated from prior work.** A uniform reverse-chronological list
+  flattens the Retsguide role into the same weight as a 2025 internship. It is not the
+  same weight.
 
-## 5. Direction: native desktop / systems software
+## 6. Visual direction
 
-Not terminal cosplay. The reference is *real application design* — the visual language
-of professional desktop software and technical documentation. Precision, state,
-information density, honest chrome.
+Native desktop and systems software — *real application design*, not terminal cosplay —
+rendered with the tactile, slightly surreal register seen on vibrant.design (halftone,
+paper grain, pixel and ASCII letterforms used as type specimens, isometric architecture
+diagrams).
+
+Three things from that reference are directly load-bearing here:
+
+1. **ASCII and pixel letterforms as fine art, not hacker costume.** This rescues the one
+   genuinely characterful element of the current site by changing its job: a type
+   specimen rather than a terminal.
+2. **Isometric architecture layers.** The way to render the knowledge graph, the
+   retrieval pipeline and the CNN-Transformer. Better than screenshots for backend and
+   ML work, and it animates well.
+3. **Tactile material texture.** Halftone and paper grain are how this gets strange
+   without adding decoration — and they argue *for* the light palette, since on light
+   they read as print and on dark they read as noise.
 
 ### Palette
 
-Light-primary. Deliberate and contrarian: nearly every developer portfolio is dark, the
+Light primary. Deliberate and contrarian: nearly every developer portfolio is dark, the
 current site is dark, and real application chrome and technical documentation are
-predominantly light. This is the most visible break from the failed genre.
+predominantly light.
 
-| Token | Hex | Role |
+| Token | Light | Role |
 |---|---|---|
 | `surface` | `#F2F3F5` | desktop backdrop, cool light grey |
 | `panel` | `#FFFFFF` | raised panel and window surfaces |
-| `ink` | `#16181D` | primary text, cool near-black |
+| `ink` | `#16181D` | primary text |
 | `ink-dim` | `#5A6069` | secondary text, metadata |
 | `rule` | `#D8DBE0` | hairlines and panel borders |
 | `accent` | `#2D5BD1` | interactive affordances |
@@ -141,108 +176,108 @@ predominantly light. This is the most visible break from the failed genre.
 
 `accent` is a real UI blue, chosen because desktop software signals interactivity in
 blue and the subject is desktop software. It also deliberately avoids the three accents
-that mark generated design right now: terracotta, acid green, vermilion.
+that currently mark generated design: terracotta, acid green, vermilion.
 
 `merged` appears only on merged-MR status. In real version-control interfaces merged
-has a color; here it carries meaning rather than decorating.
+has a colour; here it carries meaning rather than decorating.
 
-### Type
+Dark theme is a derived second theme, not an afterthought — both must pass AA.
 
-One family, two widths. Coherent, and the width contrast does real work.
+### Type — open
 
-- **Display** — IBM Plex Sans Condensed, heavy weights, tight tracking.
-  Condensed grotesques read as instrumentation and equipment labeling, which is the
-  subject matter. Not Inter.
-- **Body** — IBM Plex Sans, regular. Line length under 80 characters.
-- **Data** — IBM Plex Mono, restricted to actual data: hashes, latency figures, MR
-  numbers, versions, metrics. Never body text.
+Two candidates, to be decided from the reference items (see §9):
 
-Tabular numerals everywhere numbers align. There are a lot of numbers on this site and
-they are the point.
+- **A. Technical.** IBM Plex Sans Condensed for display, IBM Plex Sans for body, IBM
+  Plex Mono for data. One family, three widths. Condensed grotesques read as
+  instrumentation and equipment labelling.
+- **B. Contrast.** A high-contrast display face against monospace data, closer to the
+  "minimal serif portfolio hero" and "pixel letterform specimen" register on the
+  reference site. More artistic, more risk.
+
+Either way: monospace is restricted to actual data — hashes, MR numbers, latency,
+metrics. Never body text. Tabular numerals wherever numbers align, because this site is
+mostly numbers and the numbers are the point. Body line length under 80 characters.
 
 ### Layout
 
-Left-aligned, flush left, ragged right. The current hero is centered; centered hero text
-is the generic default. Numeric columns right-align on the decimal with tabular figures.
+Left-aligned, flush left, ragged right. Centred hero text is the generic default and is
+what the current site does. Numeric columns right-align with tabular figures.
 
-The structural device is the **panel with a status header** — used to carry information,
-not as decoration. A panel header states the state of what is inside it:
+The structural device is the **panel with a status header**, carrying information rather
+than decorating:
 
 ```
 ┌─ upstream ─────────────────── 5 merged · 3 repositories ─┐
-│                                                           │
 │  plasma-workspace   !6280   SHA-256 content-hash caching  │
 │                             for the Wallpaper Gallery     │
 │                             · merged                      │
-│                                                           │
 │  plasma-workspace   !6208   KConfig wallpaper directory   │
 │                             persistence across sessions   │
 │                             · merged                      │
-│                                                           │
 │  marknote           !172    todo checkbox inheritance fix │
 │                             · merged                      │
 └───────────────────────────────────────────────────────────┘
 ```
 
-No fake traffic lights, no simulated title bars. That is kitsch. The panel is a real
-container with a real edge and a header that reports real state.
-
-Border radii stay at 2–3px. Elevation differences are small and carry hierarchy rather
-than being applied uniformly to every card.
+No fake traffic lights or simulated title bars — that is kitsch. A real container with a
+real edge and a header reporting real state. Border radii 2–3px. Elevation differences
+small and carrying hierarchy, not applied uniformly to every card.
 
 ### Hero
 
 The most characteristic thing in this subject's world is a system reporting its state
-truthfully. So the hero is a status readout, not a name with a scramble effect.
+truthfully. The hero is a status readout, not a name with a scramble effect.
 
 ```
 Sangam Pratap Singh
 Founding engineer at Retsguide — Copenhagen
 Third year, B.Tech IT + MBA — IIITM Gwalior
 
+in production   Danish rental law as a queryable temporal graph
+retrieval       MRR 0.54 → 0.84 on a 150-question gold set
 upstream        5 MRs merged across KDE Plasma, Marknote, Drawy
-in production   Danish rental-law deposit-dispute reports
 recent          Amazon ML Challenge 2026 — top 50 of 32,000+
 ```
 
-Left-aligned. Tabular. No scramble, no "keep scrolling," no ASCII mascot.
-A recruiter has the full picture before scrolling once.
+Left-aligned, tabular. No scramble, no "keep scrolling," no ASCII mascot. A recruiter has
+the full picture before scrolling once.
 
-### Motion
+## 7. Motion
 
-One orchestrated moment, then stillness.
+Substantial motion is wanted, so motion is where the boldness is spent — everything
+around it stays quiet and disciplined to pay for it.
 
-On load, the status readout fills row by row the way a system reports readiness —
-roughly 600ms total, once, never repeated on scroll. Everything else is static unless
-the user acts on it: hovers, expands a project, opens a panel. Motion that answers an
-action is welcome because it shows what changed.
+**The governing rule: every animation shows a real quantity or a real transformation
+from the work.** Nothing animates merely because it entered the viewport. This is what
+makes the result strange rather than busy, and it is the opposite of the current site's
+fade-up-everything behaviour.
 
-Scattered fade-up-on-scroll across every section is the current site's behavior and is
-one of the clearest generated-design tells. It goes.
+| Moment | Treatment |
+|---|---|
+| Load | Identity readout values resolve in via Torph. Once, ~600ms, never repeated |
+| Metrics | Torph morphs values in place as they are scrubbed: `0.54 → 0.84`. The number animating *is* the result |
+| **Showpiece** | The knowledge graph assembling under scroll: provisions as nodes, cross-references drawing, then 8 amending acts applying as 41 typed edits along a time axis. One big moment, isometric, scrubbed |
+| Retrieval | The same query's results reordering as BM25 → dense → reranked. Shows the reranker doing its job |
+| Forecasting | Predicted curve drawing against actual across horizons |
+| Micro | MR rows expanding, copy-to-clipboard confirmation, panel hover states, theme toggle |
 
-`prefers-reduced-motion` disables the load sequence entirely.
+Banned: fade-up on every section; parallax as decoration; scroll-jacking; progress bars
+that track nothing; "keep scrolling."
 
-### Quality floor
+`prefers-reduced-motion` disables scrubbing and the load sequence, and renders every
+final state statically. The showpiece must be legible as a still image.
 
-Responsive to mobile. Visible keyboard focus rings. WCAG AA contrast throughout — worth
-holding honestly, given there is a merged KDE accessibility MR on this very site.
-Existing SSR prerender and JSON-LD pipeline preserved.
+### Libraries
 
-## 6. Open questions
+- **GSAP + ScrollTrigger** — scroll-driven sequences
+- **Torph** (`torph@0.1.3`, MIT, zero deps, 11.4 kB gz) — text morphing. Pre-1.0 and a
+  solo project, so there is abandonment risk; zero deps and MIT make it vendorable if
+  that happens
+- **Lenis** — already in the project, pairs with ScrollTrigger
+- **Drop `framer-motion`** — carrying two animation libraries is not worth the bundle or
+  the inconsistency
 
-1. **Which lane?** The two resume variants are differently slanted — one general
-   software engineering, one ML/AI. The site can pick a lane or unify. This changes
-   hero ordering and what leads section 1.
-2. **Light palette** — confirm the swing away from dark.
-3. **Screenshots.** This direction is strongest with real software imagery. KDE
-   Wallpaper Gallery and Astra are public. Is any Retsguide UI shareable, or is it
-   under NDA?
-4. **Title.** The resume says "Software Engineer Intern (Founding Engineer)." How
-   should the site phrase it?
-
----
-
-## 7. Personalized pitch routes
+## 8. Personalized pitch routes
 
 `/for/<company>/<person>` — a variant of the same site addressed to one reader.
 `/for/<company>` when no individual is named.
@@ -253,38 +288,37 @@ Not a different site. The same design system, re-pointed:
 
 | Element | Behaviour |
 |---|---|
-| Address line | One line above the identity block: written to that reader |
+| Address line | One line above the identity block, written to that reader |
 | Claim | Re-angled to what that company actually builds |
 | Section 1 | Leads with the work closest to their domain |
 | Work ordering | Re-ranked; irrelevant projects drop to the index |
 | CTA | Specific to them rather than a generic "get in touch" |
 
-Everything factual stays identical. The personalization changes emphasis and order,
-never claims. Nothing on a pitch page may assert something not true on the main site.
+Everything factual stays identical. Personalization changes emphasis and order, never
+claims.
 
-### Architecture consequence — decide this before building
+### Architecture consequence — decide before building
 
-This only works cheaply if the redesign is **data-driven from the first commit**.
-Every section component takes its content and ordering from a config object rather
-than hardcoding it. The main site becomes the default config; a pitch page is another
-config. Retrofitting this later means rewriting every component, which is roughly how
-the last two attempts accumulated cost.
+This only stays cheap if the redesign is **data-driven from the first commit**. Every
+section component takes content and ordering from a config object rather than hardcoding
+it. The main site becomes the default config; a pitch page is another config.
+Retrofitting this later means rewriting every component, which is roughly how the last
+two attempts accumulated cost.
 
 ```
-src/data/site.ts        facts — single source of truth, unchanged
+src/data/site.ts        facts — single source of truth
 src/data/pitches.ts     keyed variants
 src/pages/Portfolio.tsx one component tree, takes a config
 ```
 
 ```ts
-// src/data/pitches.ts
 export const PITCHES = {
   'rippling': {
     company: 'Rippling',
     person: { vatsal: 'Vatsal' },
-    angle: 'systems',
+    angle: 'ml',
     lead: 'retsguide-graph',
-    order: ['retsguide', 'kde', 'astra', 'devtrackr'],
+    order: ['retsguide', 'forecasting', 'kde', 'astra'],
     note: '…one or two honest sentences…',
   },
 } satisfies Record<string, Pitch>;
@@ -292,22 +326,29 @@ export const PITCHES = {
 
 ### Hard requirements
 
-1. **Whitelist only.** A slug not in `PITCHES` redirects to `/`. No echoing arbitrary
-   URL segments into the page — `/for/Urgent/ClickHere` must not render those words.
-   This is both an injection concern and an embarrassment concern.
-2. **Prerendered, not runtime.** Known slugs are added to the `PAGES` list in
-   `scripts/prerender.mjs` and emitted as static HTML at build time. Fast, and no
-   client-side string handling.
+1. **Whitelist only.** A slug not in `PITCHES` redirects to `/`. No echoing arbitrary URL
+   segments into the page — `/for/Urgent/ClickHere` must not render those words. This is
+   both an injection concern and an embarrassment concern.
+2. **Prerendered, not runtime.** Known slugs join the `PAGES` list in
+   `scripts/prerender.mjs` and are emitted as static HTML at build time.
 3. **Never indexed.** The existing `X-Robots-Tag: noindex, follow` rule already covers
-   `/for/*`. Keep `/for/*` out of `sitemap.xml` and add an explicit `robots.txt`
-   disallow.
+   `/for/*`. Keep it out of `sitemap.xml` and add an explicit `robots.txt` disallow.
 4. **No false claims.** The copy may say why the work is relevant to them. It may not
    invent enthusiasm, a referral, or a conversation that did not happen.
 5. **Graceful without JS.** Prerendering gives this for free.
 
-### Open question
+Recommendation on tone: tell the reader plainly, in one sentence, that the page was put
+together for them. Warmer and more honest than pretending the whole site happens to be
+aimed at them.
 
-Is a reader told the page was made for them, or does it read as if the whole site is
-simply well aimed? Being explicit is warmer and more honest, and most people find it
-flattering. Staying implicit avoids any feeling of a mail-merge. Recommendation:
-explicit, in one plain sentence, no gimmick.
+## 9. Still open
+
+1. **Reference items.** Pick 5–8 specific vibrant.design items that you actually like and
+   send the links. This is the highest-value input available — it pins down taste
+   concretely instead of by adjective, which is where attempts 1 and 2 went wrong.
+2. **Typeface** — candidate A or B in §6, decided from those references.
+3. **Retsguide UI** — shareable, or under NDA?
+4. **Quality floor**, non-negotiable: responsive to mobile, visible keyboard focus,
+   WCAG AA in both themes, `prefers-reduced-motion` honoured, existing SSR prerender and
+   JSON-LD pipeline preserved. Worth holding honestly given there is a merged KDE
+   accessibility MR on this résumé.
